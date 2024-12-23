@@ -17,6 +17,9 @@ book:
   date: today
   chapters:
     - index.qmd
+    - part: "Genetic stock identification"
+      chapters:
+      - Baseline Relatedness/BaselineRelatedness.qmd
 
 format:
   html:
@@ -28,8 +31,7 @@ format:
     code-overflow: wrap
     number-depth: 4
     
-    include-in-header:
-      - file: github-corner.html
+
     code-link: true
       
   pdf:
