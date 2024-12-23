@@ -14,10 +14,10 @@ library(tidyverse)
 
 ## Load relatedness
 ```{r}
-#| fig-cap: "Example frequency histogram of Wang relatedness statistics for a single population (Cliff Creek)"
+#| fig-cap: "Frequency histogram of Wang relatedness statistics for a single population (Cliff Creek)"
 base_demerel <- read_rds("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Baseline Relatedness/UpperSnakeRiver_GTseq_Baseline_Relatedness.rds")
-par(mar = c(4,4,3,0.5), mgp = c(2.5,1,0))
-hist(base_demerel[[1]]$Empirical_Relatedness$cliff_NA, main = "Cliff Creek", xlab = "Wang relatedness coefficient")
+par(mar = c(4,4,0.5,0.5), mgp = c(2.5,1,0))
+hist(unlist(base_demerel[[1]]$Empirical_Relatedness), xlab = "Wang relatedness coefficient")
 ```
 
 Convert Wang relatedness estimates to csv
