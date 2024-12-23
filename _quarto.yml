@@ -12,13 +12,11 @@ comments:
     theme: clean
 
 book:
-  title: "Make a Quarto book"
-  author: "Ben Letcher and Tim Lambert"
+  title: "Snake River GSI"
+  author: "Jeff Baldock"
   date: today
   chapters:
     - index.qmd
-    - main.qmd
-    - links.qmd
 
 format:
   html:

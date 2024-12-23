@@ -1,0 +1,12 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Snake River GSI",
+    "section": "",
+    "text": "1 Introduction\nThis book provides a visual story of the Upper Snake River Genetic Stock Identification Project. Our goals are to (1) assess the degree to which tributary contributions to the Snake River population of Yellowstone cutthroat trout vary across space and time, (2) quantify the effect of tributary characteristics (distance to the mainstem, catchment size, and groundwater availability) on proportional contributions to the mainstem, and (3) evaluate the extent to which tributary characteristics are associated with carry-over effects on growth and how carry-over effects vary across life stages.\nThis information is preliminary or provisional and is subject to revision. It is being provided to meet the need for timely best science. The information has not received final approval by the U.S. Geological Survey (USGS) and is provided on the condition that neither the USGS nor the U.S. Government shall be held liable for any damages resulting from the authorized or unauthorized use of the information.\nProject team: Jeff Baldock, Will Rosenthal, Robert Al-Chokhachy, Matt Campbell, Katie Wagner, and Annika Walters\n\n\nSession Information\n\n\n\n\nCodesessionInfo()\n\nR version 4.4.1 (2024-06-14)\nPlatform: x86_64-apple-darwin20\nRunning under: macOS Monterey 12.6.2\n\nMatrix products: default\nBLAS:   /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/lib/libRblas.0.dylib \nLAPACK: /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.0\n\nlocale:\n[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8\n\ntime zone: America/Los_Angeles\ntzcode source: internal\n\nattached base packages:\n[1] stats     graphics  grDevices utils     datasets  methods   base     \n\nloaded via a namespace (and not attached):\n [1] htmlwidgets_1.6.4 compiler_4.4.1    fastmap_1.2.0     cli_3.6.2        \n [5] tools_4.4.1       htmltools_0.5.8.1 rstudioapi_0.16.0 rmarkdown_2.27   \n [9] knitr_1.46        jsonlite_1.8.8    xfun_0.44         digest_0.6.35    \n[13] rlang_1.1.3       evaluate_0.23",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction</span>"
+    ]
+  }
+]
