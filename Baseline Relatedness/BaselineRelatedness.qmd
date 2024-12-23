@@ -1,0 +1,105 @@
+# Baseline Relatedness
+
+Purpose: estimate relatedness within baseline populations
+
+Notes: 
+
+* This needs to run on an older version of R (e.g., 3.6.1)
+* I could not install fts and Demerelate packages on my Mac, but was successful on the Walters Lab PC
+  + Load previously run relatedness R object and re-generate outputs locally
+
+```{r echo=FALSE}
+library(tidyverse)
+```
+
+## Load relatedness
+```{r}
+#| fig-cap: "Example frequency histogram of Wang relatedness statistics for a single population (Cliff Creek)"
+base_demerel <- read_rds("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Baseline Relatedness/UpperSnakeRiver_GTseq_Baseline_Relatedness.rds")
+par(mar = c(4,4,3,0.5), mgp = c(2.5,1,0))
+hist(base_demerel[[1]]$Empirical_Relatedness$cliff_NA, main = "Cliff Creek", xlab = "Wang relatedness coefficient")
+```
+
+Convert Wang relatedness estimates to csv
+```{r}
+pops <- names(base_demerel[[1]]$Empirical_Relatedness)
+wanglist <- list()
+for (i in 1:length(pops)) {
+  wanglist[[i]] <- tibble(repunit = pops[i],
+                          compar = names(unlist(base_demerel[[1]]$Empirical_Relatedness[i])),
+                          wang = unlist(base_demerel[[1]]$Empirical_Relatedness[i]))
+}
+wangtib <- do.call(rbind, wanglist)
+wangtib <- wangtib %>% 
+  mutate(tmp = str_split(compar, "[.]")) %>% 
+  mutate(compar2 = map_chr(tmp, 2)) %>% 
+  select(-tmp) %>%
+  mutate(tmp = str_split(compar2, "_")) %>%
+  mutate(indiv1 = paste(map_chr(tmp, 1), map_chr(tmp, 2), sep = "_"),
+         indiv2 = paste(map_chr(tmp, 3), map_chr(tmp, 4), sep = "_")) %>%
+  select(-tmp) %>%
+  select(repunit, compar2, indiv1, indiv2, wang) %>%
+  rename(compar = compar2)
+str(wangtib)
+write_csv(wangtib, "/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Baseline Relatedness/UpperSnakeRiver_GTseq_Baseline_Relatedness_Wang.csv")
+```
+
+How many pairs of individuals exceed relatedness threshold of 0.4? (sensu Kallo et al. 2023)
+```{r}
+dim(wangtib %>% filter(wang >= 0.4))[1]
+```
+
+
+## Filter by relatedness
+
+What might we expect the relatedness coefficient to be for full siblings?
+```{r fig.width=4, fig.height=4}
+# view full sib simulations
+range(base_demerel[[1]]$Randomized_Populations_for_Relatedness_Statistics[[1]]$Randomized_Fullssibs)
+par(mar = c(4,4,1,1))
+boxplot(base_demerel[[1]]$Randomized_Populations_for_Relatedness_Statistics[[1]]$Randomized_Fullssibs, ylab = "Wang relatedness coef.")
+```
+
+## Identify full siblings
+
+Identify full siblings and create list of full sibs to drop, retaining two full sibs per family (see recommendations in Ostergren et al 2020 Mol Ecol Res).
+```{r}
+# pull out only highly related individuals (full siblings)
+wt2 <- wangtib %>% filter(wang >= 0.4) # 0.4 is ~ conservative given the simulated/randomied full sib stats above
+
+# create full sibling famlies
+group_pairs <- function(vector_1, vector_2) {
+  groups_of_ids <- list()
+  df <- cbind(vector_1, vector_2)
+  ids_grouped <- c()
+  for (id_group in unique(unlist(df))) {
+    if (id_group %in% ids_grouped) {
+      next
+    }
+    id <- id_group
+    while (length(id) > 0) {
+      newid <- unique(unlist(df[which(df[, 1] %in% id | df[, 2] %in% id), ]))
+      id <- newid[!newid %in% id_group]
+      id_group <- c(id_group, id)
+    }
+    ids_grouped <- c(ids_grouped, id_group)
+    groups_of_ids[[length(groups_of_ids) + 1]] <- sort(unique(id_group))
+  }
+  return(groups_of_ids)
+}
+full_sibs_list <- group_pairs(wt2$indiv1, wt2$indiv2)
+full_sibs <- unlist(full_sibs_list)
+
+# these should match
+# length(unique(c(wt2$indiv1, wt2$indiv2))) # number of unique individuals from pairwise Wang estimates, where wang >= 0.4
+# length(unlist(full_sibs)) # number of unique individuals from list of full-sib families
+
+# extract 2 sibling from each full-sib family 
+fam_rep <- c(sapply(full_sibs_list, "[[", 1), sapply(full_sibs_list, "[[", 2))
+
+# identify individuals to drop
+drop_sibs <- full_sibs[!full_sibs %in% fam_rep]
+write_csv(tibble(drop_sibs), "/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Baseline Relatedness/UpperSnakeRiver_GTseq_Baseline_DropFullSiblings.csv")
+```
+
+

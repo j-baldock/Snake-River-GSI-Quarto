@@ -8,5 +8,38 @@
     "crumbs": [
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction</span>"
     ]
+  },
+  {
+    "objectID": "Baseline Relatedness/BaselineRelatedness.html",
+    "href": "Baseline Relatedness/BaselineRelatedness.html",
+    "title": "\n2  Baseline Relatedness\n",
+    "section": "",
+    "text": "2.1 Load relatedness\nCodebase_demerel &lt;- read_rds(\"/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Baseline Relatedness/UpperSnakeRiver_GTseq_Baseline_Relatedness.rds\")\npar(mar = c(4,4,3,0.5), mgp = c(2.5,1,0))\nhist(base_demerel[[1]]$Empirical_Relatedness$cliff_NA, main = \"Cliff Creek\", xlab = \"Wang relatedness coefficient\")\n\n\n\nExample frequency histogram of Wang relatedness statistics for a single population (Cliff Creek)\nConvert Wang relatedness estimates to csv\nCodepops &lt;- names(base_demerel[[1]]$Empirical_Relatedness)\nwanglist &lt;- list()\nfor (i in 1:length(pops)) {\n  wanglist[[i]] &lt;- tibble(repunit = pops[i],\n                          compar = names(unlist(base_demerel[[1]]$Empirical_Relatedness[i])),\n                          wang = unlist(base_demerel[[1]]$Empirical_Relatedness[i]))\n}\nwangtib &lt;- do.call(rbind, wanglist)\nwangtib &lt;- wangtib %&gt;% \n  mutate(tmp = str_split(compar, \"[.]\")) %&gt;% \n  mutate(compar2 = map_chr(tmp, 2)) %&gt;% \n  select(-tmp) %&gt;%\n  mutate(tmp = str_split(compar2, \"_\")) %&gt;%\n  mutate(indiv1 = paste(map_chr(tmp, 1), map_chr(tmp, 2), sep = \"_\"),\n         indiv2 = paste(map_chr(tmp, 3), map_chr(tmp, 4), sep = \"_\")) %&gt;%\n  select(-tmp) %&gt;%\n  select(repunit, compar2, indiv1, indiv2, wang) %&gt;%\n  rename(compar = compar2)\nstr(wangtib)\n\ntibble [34,156 × 5] (S3: tbl_df/tbl/data.frame)\n $ repunit: chr [1:34156] \"bacon_NA\" \"bacon_NA\" \"bacon_NA\" \"bacon_NA\" ...\n $ compar : chr [1:34156] \"OclVARI23G_0550_OclVARI23G_0551\" \"OclVARI23G_0550_OclVARI23G_0552\" \"OclVARI23G_0551_OclVARI23G_0552\" \"OclVARI23G_0550_OclVARI23G_0553\" ...\n $ indiv1 : chr [1:34156] \"OclVARI23G_0550\" \"OclVARI23G_0550\" \"OclVARI23G_0551\" \"OclVARI23G_0550\" ...\n $ indiv2 : chr [1:34156] \"OclVARI23G_0551\" \"OclVARI23G_0552\" \"OclVARI23G_0552\" \"OclVARI23G_0553\" ...\n $ wang   : Named num [1:34156] -0.0464 0.38679 0.07555 -0.06005 0.00333 ...\n  ..- attr(*, \"names\")= chr [1:34156] \"bacon_NA.OclVARI23G_0550_OclVARI23G_0551\" \"bacon_NA.OclVARI23G_0550_OclVARI23G_0552\" \"bacon_NA.OclVARI23G_0551_OclVARI23G_0552\" \"bacon_NA.OclVARI23G_0550_OclVARI23G_0553\" ...\n\nCodewrite_csv(wangtib, \"/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Baseline Relatedness/UpperSnakeRiver_GTseq_Baseline_Relatedness_Wang.csv\")\nHow many pairs of individuals exceed relatedness threshold of 0.4? (sensu Kallo et al. 2023)\nCodedim(wangtib %&gt;% filter(wang &gt;= 0.4))[1]\n\n[1] 967",
+    "crumbs": [
+      "Genetic stock identification",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Baseline Relatedness</span>"
+    ]
+  },
+  {
+    "objectID": "Baseline Relatedness/BaselineRelatedness.html#filter-by-relatedness",
+    "href": "Baseline Relatedness/BaselineRelatedness.html#filter-by-relatedness",
+    "title": "\n2  Baseline Relatedness\n",
+    "section": "\n2.2 Filter by relatedness",
+    "text": "2.2 Filter by relatedness\nWhat might we expect the relatedness coefficient to be for full siblings?\n\nCode# view full sib simulations\nrange(base_demerel[[1]]$Randomized_Populations_for_Relatedness_Statistics[[1]]$Randomized_Fullssibs)\n\n[1] 0.3520966 0.6464401\n\nCodepar(mar = c(4,4,1,1))\nboxplot(base_demerel[[1]]$Randomized_Populations_for_Relatedness_Statistics[[1]]$Randomized_Fullssibs, ylab = \"Wang relatedness coef.\")",
+    "crumbs": [
+      "Genetic stock identification",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Baseline Relatedness</span>"
+    ]
+  },
+  {
+    "objectID": "Baseline Relatedness/BaselineRelatedness.html#identify-full-siblings",
+    "href": "Baseline Relatedness/BaselineRelatedness.html#identify-full-siblings",
+    "title": "\n2  Baseline Relatedness\n",
+    "section": "\n2.3 Identify full siblings",
+    "text": "2.3 Identify full siblings\nIdentify full siblings and create list of full sibs to drop, retaining two full sibs per family (see recommendations in Ostergren et al 2020 Mol Ecol Res).\n\nCode# pull out only highly related individuals (full siblings)\nwt2 &lt;- wangtib %&gt;% filter(wang &gt;= 0.4) # 0.4 is ~ conservative given the simulated/randomied full sib stats above\n\n# create full sibling famlies\ngroup_pairs &lt;- function(vector_1, vector_2) {\n  groups_of_ids &lt;- list()\n  df &lt;- cbind(vector_1, vector_2)\n  ids_grouped &lt;- c()\n  for (id_group in unique(unlist(df))) {\n    if (id_group %in% ids_grouped) {\n      next\n    }\n    id &lt;- id_group\n    while (length(id) &gt; 0) {\n      newid &lt;- unique(unlist(df[which(df[, 1] %in% id | df[, 2] %in% id), ]))\n      id &lt;- newid[!newid %in% id_group]\n      id_group &lt;- c(id_group, id)\n    }\n    ids_grouped &lt;- c(ids_grouped, id_group)\n    groups_of_ids[[length(groups_of_ids) + 1]] &lt;- sort(unique(id_group))\n  }\n  return(groups_of_ids)\n}\nfull_sibs_list &lt;- group_pairs(wt2$indiv1, wt2$indiv2)\nfull_sibs &lt;- unlist(full_sibs_list)\n\n# these should match\n# length(unique(c(wt2$indiv1, wt2$indiv2))) # number of unique individuals from pairwise Wang estimates, where wang &gt;= 0.4\n# length(unlist(full_sibs)) # number of unique individuals from list of full-sib families\n\n# extract 2 sibling from each full-sib family \nfam_rep &lt;- c(sapply(full_sibs_list, \"[[\", 1), sapply(full_sibs_list, \"[[\", 2))\n\n# identify individuals to drop\ndrop_sibs &lt;- full_sibs[!full_sibs %in% fam_rep]\nwrite_csv(tibble(drop_sibs), \"/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Baseline Relatedness/UpperSnakeRiver_GTseq_Baseline_DropFullSiblings.csv\")",
+    "crumbs": [
+      "Genetic stock identification",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Baseline Relatedness</span>"
+    ]
   }
 ]
