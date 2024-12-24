@@ -1,6 +1,6 @@
 # Baseline Testing
 
-Purpose: test baseline reporting groups for accuracy and efficiency using 100% simulations, self-assignment tests, and simulated mixtures
+Purpose: test baseline reporting groups for accuracy and efficiency using 100% simulations, self-assignment tests, and simulated mixtures. up
 
 ```{r echo=FALSE}
 library(rubias)
@@ -9,6 +9,9 @@ library(knitr)
 library(ggforce)
 library(reactable)
 library(reactablefmtr)
+
+knitr::opts_chunk$set(cache = TRUE, warning = FALSE, 
+                      message = FALSE, cache.lazy = FALSE)
 ```
 
 ## Data
