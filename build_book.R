@@ -9,6 +9,6 @@ quarto::quarto_render("index.qmd",
                       #cache_refresh = TRUE, # default is FALSE
                       output_format = "html")
 
-quarto::quarto_render("BaselineRelatedness.qmd", 
+quarto::quarto_render("Baseline Relatedness/BaselineRelatedness.qmd", 
                       #cache_refresh = TRUE, # default is FALSE
                       output_format = "html")

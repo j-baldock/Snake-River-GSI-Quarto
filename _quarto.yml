@@ -20,6 +20,7 @@ book:
     - part: "Genetic stock identification"
       chapters:
       - Baseline Relatedness/BaselineRelatedness.qmd
+      - Baseline Testing/BaselineDataTesting.qmd
 
 format:
   html:
