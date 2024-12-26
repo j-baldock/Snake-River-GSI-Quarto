@@ -1,0 +1,1657 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.555">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Snake River GSI - 4&nbsp; Baseline Fst</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../Baseline Testing/BaselineDataTesting.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark"><script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script><script type="application/json" class="js-hypothesis-config">
+{
+  "theme": "clean"
+}
+</script><script async="" src="https://hypothes.is/embed.js"></script><script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script><script src="../site_libs/core-js-2.5.3/shim.min.js"></script><script src="../site_libs/react-18.2.0/react.min.js"></script><script src="../site_libs/react-18.2.0/react-dom.min.js"></script><script src="../site_libs/reactwidget-2.0.0/react-tools.js"></script><link href="../site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+<script src="../site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script><link href="../site_libs/reactable-0.4.4/reactable.css" rel="stylesheet">
+<script src="../site_libs/reactable-binding-0.4.4/reactable.js"></script>
+</head>
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../Baseline Relatedness/BaselineRelatedness.html">Genetic stock identification</a></li><li class="breadcrumb-item"><a href="../Baseline Fst/BaselineFst.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Baseline Fst</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Snake River GSI</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Genetic stock identification</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Baseline Relatedness/BaselineRelatedness.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Baseline Relatedness</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Baseline Testing/BaselineDataTesting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Baseline Testing</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Baseline Fst/BaselineFst.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Baseline Fst</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+    </ul>
+</div>
+</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+<li><a href="#load-data" id="toc-load-data" class="nav-link active" data-scroll-target="#load-data"><span class="header-section-number">4.1</span> Load data</a></li>
+  <li><a href="#pairwise-fst" id="toc-pairwise-fst" class="nav-link" data-scroll-target="#pairwise-fst"><span class="header-section-number">4.2</span> Pairwise Fst</a></li>
+  </ul></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../Baseline Relatedness/BaselineRelatedness.html">Genetic stock identification</a></li><li class="breadcrumb-item"><a href="../Baseline Fst/BaselineFst.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Baseline Fst</span></a></li></ol></nav><div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">
+<span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Baseline Fst</span>
+</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header><p>Purpose: calculate index of genetic differentiation (Fst) among baseline reporting groups. See Willing et al.&nbsp;(2012, PLoS One) for details on how number of SNPs and sample size (# of individuals) affects the accuracy of Fst.</p>
+<section id="load-data" class="level2" data-number="4.1"><h2 data-number="4.1" class="anchored" data-anchor-id="load-data">
+<span class="header-section-number">4.1</span> Load data</h2>
+<p>Load genotyp data, calculate reporting group sample size, and load GPS location data:</p>
+<div class="cell">
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># load genotype data</span></span>
+<span><span class="va">refdat</span> <span class="op">&lt;-</span> <span class="fu">read_csv</span><span class="op">(</span><span class="st">"/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Baseline Testing/UpperSnakeRiver_GTseq_InputData_NoSibs_clean_baseline.csv"</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">mutate_all</span><span class="op">(</span><span class="op">~</span><span class="fu">replace_na</span><span class="op">(</span><span class="va">.</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># get sample size</span></span>
+<span><span class="va">ss</span> <span class="op">&lt;-</span> <span class="va">refdat</span> <span class="op">%&gt;%</span> <span class="fu">group_by</span><span class="op">(</span><span class="va">repunit</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">summarize</span><span class="op">(</span>ss <span class="op">=</span> <span class="fu">n</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># location data for sorting by latitude</span></span>
+<span><span class="va">gps</span> <span class="op">&lt;-</span> <span class="fu">read_csv</span><span class="op">(</span><span class="st">"/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Landscape Covariates/RepUnit_LatLong.csv"</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">arrange</span><span class="op">(</span><span class="fu">desc</span><span class="op">(</span><span class="va">lat</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Reformat genotype data for hierfstat:</p>
+<div class="cell">
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">refdat_sub</span> <span class="op">&lt;-</span> <span class="va">refdat</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">5</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">refdat</span><span class="op">)</span><span class="op">)</span><span class="op">]</span> <span class="op">%&gt;%</span> <span class="fu">unite</span><span class="op">(</span><span class="va">vnew</span>, sep <span class="op">=</span> <span class="st">""</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
+<span>  <span class="fu">separate</span><span class="op">(</span><span class="va">vnew</span>, into <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">refdat</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">5</span>, to <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">refdat</span><span class="op">)</span>, by <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">]</span>, sep <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">2</span>, to <span class="op">=</span> <span class="fl">532</span>, by <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> </span>
+<span><span class="va">refdat_sub</span> <span class="op">&lt;-</span> <span class="fu">as_tibble</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span><span class="op">(</span><span class="va">refdat_sub</span>, <span class="va">as.numeric</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">mutate_all</span><span class="op">(</span><span class="op">~</span><span class="fu">na_if</span><span class="op">(</span><span class="va">.</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">refdat_sub</span><span class="op">$</span><span class="va">repunit</span> <span class="op">&lt;-</span> <span class="va">refdat</span><span class="op">$</span><span class="va">repunit</span></span>
+<span><span class="va">refdat_sub</span> <span class="op">&lt;-</span> <span class="va">refdat_sub</span> <span class="op">%&gt;%</span> <span class="fu">relocate</span><span class="op">(</span><span class="va">repunit</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Calculate basic statistics:</p>
+<div class="cell">
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mybs</span> <span class="op">&lt;-</span> <span class="fu">basic.stats</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="va">refdat_sub</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">mybs</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>$perloc
+                                 Ho     Hs     Ht     Dst    Htp    Dstp
+IDFG_YCT_v2_Ocl89640_61      0.0761 0.0740 0.0796  0.0056 0.0797  0.0057
+IDFG_YCT_v2_Ocl72577_41      0.0511 0.0479 0.0503  0.0024 0.0503  0.0025
+IDFG_YCT_v1_Ocl36010_70      0.0544 0.0642 0.0670  0.0028 0.0671  0.0029
+IDFG_YCT_v2_Ocl55949_70      0.0707 0.0686 0.0720  0.0034 0.0721  0.0034
+Ocl_Chr11_35455748_82543634  0.0635 0.0651 0.0672  0.0020 0.0672  0.0021
+IDFG_YCT_v2_Ocl2550_72       0.0580 0.0590 0.0609  0.0019 0.0609  0.0019
+Ocl_Chr26_24390262_169834458 0.0743 0.0670 0.0717  0.0047 0.0718  0.0048
+Ocl_Chr20_31497051_141180625 0.0622 0.0620 0.0636  0.0016 0.0637  0.0017
+Houston_Oc32144_118          0.0601 0.0596 0.0609  0.0013 0.0610  0.0014
+IDFG_YCT_v2_Ocl96084_64      0.1021 0.1044 0.1108  0.0064 0.1109  0.0065
+IDFG_YCT_v2_Ocl46339_34      0.0907 0.0941 0.0964  0.0023 0.0965  0.0024
+IDFG_YCT_v1_Ocl81780_58      0.1223 0.1289 0.1390  0.0101 0.1392  0.0103
+IDFG_YCT_v2_Ocl54206_70      0.1189 0.1216 0.1335  0.0119 0.1337  0.0121
+OclYSD123205_Garza           0.1168 0.1175 0.1285  0.0111 0.1288  0.0113
+IDFG_YCT_v2_Ocl11368_65      0.1306 0.1267 0.1358  0.0091 0.1360  0.0093
+Houston_Oc26415_290          0.1077 0.1273 0.1367  0.0095 0.1369  0.0097
+Ocl_Chr13_35713851_98470555  0.1408 0.1382 0.1430  0.0049 0.1431  0.0050
+Amish_ONCB_RAD_10777         0.1557 0.1409 0.1455  0.0046 0.1456  0.0047
+Ocl_Chr03_72820636_23938332  0.1462 0.1434 0.1497  0.0064 0.1499  0.0065
+IDFG_YCT_v2_Ocl519_41        0.1658 0.1581 0.1643  0.0062 0.1644  0.0063
+Amish_YCT_RAD_VAR_10439      0.1544 0.1542 0.1593  0.0051 0.1594  0.0052
+IDFG_YCT_v2_Ocl64283_57      0.1587 0.1548 0.1618  0.0070 0.1619  0.0072
+Houston_Oc14458_107          0.1837 0.1760 0.1854  0.0093 0.1855  0.0095
+IDFG_YCT_v2_Ocl74070_69      0.1774 0.1735 0.1845  0.0110 0.1847  0.0112
+IDFG_YCT_v2_Ocl81521_63      0.1876 0.1834 0.1915  0.0081 0.1917  0.0083
+IDFG_YCT_v2_Ocl82356_38      0.1651 0.1579 0.1714  0.0135 0.1716  0.0137
+IDFG_YCT_v2_Ocl30726_53      0.1671 0.1662 0.1713  0.0051 0.1714  0.0052
+IDFG_YCT_v2_Ocl49571_62      0.1904 0.1891 0.1951  0.0061 0.1953  0.0062
+IDFG_YCT_v2_Ocl2084_35       0.2259 0.2109 0.2203  0.0094 0.2205  0.0096
+IDFG_YCT_v2_Ocl11239_43      0.2040 0.2020 0.2350  0.0330 0.2356  0.0336
+IDFG_YCT_v2_Ocl55778_72      0.2066 0.2104 0.2219  0.0115 0.2221  0.0117
+IDFG_YCT_v2_Ocl50017_60      0.2022 0.2046 0.2245  0.0198 0.2249  0.0202
+IDFG_YCT_v2_Ocl70919_58      0.2252 0.2291 0.2475  0.0185 0.2479  0.0188
+Ocl_Chr11_54823421_84757779  0.1834 0.1834 0.2042  0.0207 0.2046  0.0211
+IDFG_YCT_v1_Ocl19676_45      0.2113 0.2207 0.2414  0.0207 0.2418  0.0211
+Ocl_Chr08_23127002_59937218  0.2311 0.2224 0.2346  0.0122 0.2348  0.0125
+IDFG_YCT_v2_Ocl265_70        0.2768 0.2761 0.3027  0.0267 0.3033  0.0272
+Amish_YCT_RAD_VAR_5315       0.2387 0.2225 0.2282  0.0057 0.2283  0.0058
+IDFG_YCT_v2_Ocl49447_63      0.2257 0.2301 0.2555  0.0255 0.2560  0.0260
+Ocl_Chr17_20643875_121278476 0.5252 0.6457 0.6325 -0.0132 0.6317 -0.0140
+IDFG_YCT_v2_Ocl17893_44      0.2040 0.1975 0.2086  0.0111 0.2088  0.0113
+Ocl_Chr01_1245617_71241      0.2431 0.2322 0.2365  0.0043 0.2365  0.0044
+Houston_Oc7137_365           0.2239 0.2287 0.2375  0.0089 0.2377  0.0090
+IDFG_YCT_v2_Ocl66566_29      0.1680 0.2546 0.2780  0.0234 0.2785  0.0238
+IDFG_YCT_v2_Ocl65458_43      0.2300 0.2250 0.2340  0.0091 0.2342  0.0092
+IDFG_YCT_v2_Ocl1388_66       0.2604 0.2590 0.2707  0.0118 0.2710  0.0120
+IDFG_YCT_v2_Ocl67496_54      0.2353 0.2471 0.2587  0.0116 0.2589  0.0118
+IDFG_YCT_v1_Ocl10752_37      0.2378 0.2490 0.2732  0.0243 0.2737  0.0247
+IDFG_YCT_v2_Ocl6421_62       0.2822 0.2763 0.2867  0.0104 0.2869  0.0106
+IDFG_YCT_v2_Ocl13566_60      0.2538 0.2467 0.2533  0.0066 0.2534  0.0068
+IDFG_YCT_v2_Ocl65556_55      0.2625 0.2734 0.2924  0.0190 0.2928  0.0194
+Amish_YCT_RAD_VAR_524        0.2942 0.2569 0.2685  0.0116 0.2687  0.0118
+IDFG_YCT_v2_Ocl1427_32       0.2490 0.2442 0.2600  0.0158 0.2603  0.0161
+IDFG_YCT_v2_Ocl67304_74      0.2670 0.2682 0.2798  0.0115 0.2800  0.0118
+Ocl_Chr01_49304682_5059357   0.4505 0.4787 0.5451  0.0663 0.5474  0.0687
+IDFG_YCT_v1_Ocl37592_62      0.3217 0.3229 0.3409  0.0179 0.3412  0.0183
+IDFG_YCT_v1_Ocl14778_68      0.2355 0.2389 0.2524  0.0135 0.2527  0.0137
+IDFG_YCT_v1_Ocl34660_49      0.2795 0.3290 0.3495  0.0205 0.3499  0.0209
+Ocl_Chr25_60480751_165272387 0.3574 0.3398 0.3625  0.0227 0.3629  0.0231
+IDFG_YCT_v2_Ocl90760_67      0.2971 0.2988 0.3159  0.0171 0.3163  0.0174
+IDFG_YCT_v1_Ocl94063_37      0.3104 0.3055 0.3237  0.0182 0.3241  0.0186
+IDFG_YCT_v2_Ocl68734_33      0.2585 0.2543 0.2713  0.0170 0.2716  0.0174
+BCT_Amish_RAD_VAR_162        0.2629 0.2836 0.2953  0.0117 0.2955  0.0119
+Ocl_Chr28_15322293_176508570 0.4912 0.5499 0.5657  0.0159 0.5662  0.0164
+IDFG_YCT_v1_Ocl59008_57      0.3270 0.3165 0.3400  0.0235 0.3405  0.0239
+BCT_Amish_RAD_VAR_123        0.3307 0.3374 0.3549  0.0175 0.3552  0.0178
+Ocl_Chr04_34213356_28219597  0.5424 0.5120 0.6174  0.1054 0.6220  0.1100
+IDFG_YCT_v2_Ocl14551_39      0.3153 0.3155 0.3338  0.0183 0.3341  0.0187
+IDFG_YCT_v2_Ocl36520_63      0.3329 0.3308 0.3586  0.0278 0.3592  0.0283
+IDFG_YCT_v1_Ocl84938_50      0.3654 0.3698 0.3905  0.0207 0.3909  0.0211
+IDFG_YCT_v2_Ocl12924_45      0.3041 0.3148 0.3265  0.0117 0.3267  0.0120
+Ocl_Chr12_30853101_89944910  0.3198 0.3123 0.3307  0.0183 0.3310  0.0187
+IDFG_YCT_v2_Ocl16282_49      0.3104 0.3035 0.3304  0.0269 0.3309  0.0274
+IDFG_YCT_v1_Ocl15057_51      0.3967 0.3343 0.3453  0.0110 0.3455  0.0112
+IDFG_YCT_v2_Ocl52778_33      0.3668 0.3186 0.3356  0.0171 0.3360  0.0174
+IDFG_YCT_v2_Ocl92711_46      0.4205 0.3430 0.3547  0.0117 0.3550  0.0120
+IDFG_YCT_v2_Ocl75459_71      0.3464 0.3444 0.3622  0.0178 0.3625  0.0182
+IDFG_YCT_v2_Ocl34053_56      0.3420 0.3498 0.3669  0.0171 0.3673  0.0175
+Ocl_Chr29_17780195_180714945 0.3779 0.3552 0.3751  0.0199 0.3755  0.0203
+IDFG_YCT_v2_Ocl7485_51       0.3194 0.3231 0.3435  0.0204 0.3439  0.0208
+Ocl_Chr27_16961377_172557845 0.3308 0.3322 0.3504  0.0182 0.3507  0.0185
+IDFG_YCT_v2_Ocl43873_47      0.3600 0.3720 0.3969  0.0249 0.3974  0.0254
+IDFG_YCT_v2_Ocl422_41        0.3364 0.3508 0.3763  0.0254 0.3768  0.0259
+IDFG_YCT_v1_Ocl22037_73      0.3483 0.3706 0.3880  0.0174 0.3883  0.0177
+IDFG_YCT_v2_Ocl9569_56       0.3839 0.3828 0.4048  0.0220 0.4053  0.0224
+Ocl_Chr29_14439470_180329363 0.3721 0.3577 0.3869  0.0292 0.3875  0.0298
+Ocl_Chr25_24758789_161407476 0.4096 0.3868 0.3862 -0.0007 0.3861 -0.0007
+Amish_ONCB_RAD_31309         0.4034 0.3698 0.3807  0.0109 0.3809  0.0111
+IDFG_YCT_v1_Ocl60310_26      0.3754 0.3777 0.4176  0.0399 0.4184  0.0407
+IDFG_YCT_v2_Ocl85546_44      0.3437 0.3714 0.3948  0.0235 0.3953  0.0239
+Ocl_Chr19_44285651_136670064 0.3689 0.3689 0.4092  0.0403 0.4100  0.0411
+Houston_Oc12653_72           0.4066 0.3614 0.3900  0.0285 0.3905  0.0291
+Ocl_Chr18_26129647_129072958 0.3799 0.3898 0.4354  0.0456 0.4363  0.0465
+Ocl_Chr02_10093148_9366995   0.4141 0.3985 0.4143  0.0158 0.4146  0.0162
+IDFG_YCT_v2_Ocl6060_34       0.3454 0.3537 0.3810  0.0273 0.3816  0.0278
+IDFG_YCT_v2_Ocl27300_47      0.3736 0.3568 0.3844  0.0276 0.3849  0.0282
+IDFG_YCT_v2_Ocl56509_52      0.3639 0.3743 0.3953  0.0210 0.3957  0.0215
+IDFG_YCT_v2_Ocl5447_29       0.0333 0.3905 0.4178  0.0273 0.4183  0.0278
+IDFG_YCT_v2_Ocl42464_53      0.4138 0.3995 0.4214  0.0219 0.4218  0.0223
+IDFG_YCT_v2_Ocl44431_43      0.3714 0.4024 0.4249  0.0225 0.4254  0.0229
+Ocl_Chr16_21297075_114698152 0.4908 0.4455 0.4983  0.0527 0.4994  0.0538
+Ocl_Chr18_45469522_131108058 0.4067 0.4042 0.4333  0.0292 0.4339  0.0297
+Ocl_Chr01_4263947_240975     0.4236 0.4132 0.4630  0.0498 0.4640  0.0508
+IDFG_YCT_v2_Ocl37211_48      0.3925 0.3997 0.4423  0.0426 0.4432  0.0434
+IDFG_YCT_v2_Ocl55445_29      0.4104 0.4016 0.4289  0.0273 0.4294  0.0278
+Ocl_Chr11_39252193_82950896  0.3433 0.4110 0.4611  0.0501 0.4621  0.0510
+IDFG_YCT_v1_Ocl71780_28      0.3866 0.3886 0.4224  0.0338 0.4231  0.0345
+Ocl_Chr15_19410515_108579195 0.4040 0.4147 0.4318  0.0171 0.4322  0.0175
+IDFG_YCT_v2_Ocl21864_63      0.3283 0.4479 0.4743  0.0264 0.4748  0.0269
+Ocl_Chr09_39167685_69625176  0.4076 0.4022 0.4173  0.0152 0.4176  0.0155
+IDFG_YCT_v1_Ocl63987_50      0.4189 0.4165 0.4383  0.0217 0.4387  0.0221
+Ocl_Chr17_58461865_125358635 0.4256 0.4223 0.4597  0.0374 0.4604  0.0381
+Ocl_Chr11_6830863_79676696   0.4540 0.4619 0.4934  0.0314 0.4940  0.0321
+Ocl_Chr02_58755685_14645010  0.4273 0.4131 0.4501  0.0370 0.4508  0.0377
+Ocl_Chr06_35552627_45862909  0.4268 0.4256 0.4516  0.0260 0.4521  0.0265
+IDFG_YCT_v2_Ocl2146_52       0.4603 0.4351 0.4546  0.0195 0.4550  0.0199
+IDFG_YCT_v2_Ocl31182_39      0.4034 0.4253 0.4517  0.0264 0.4522  0.0269
+Ocl_Chr17_9605415_120120519  0.4623 0.4593 0.4907  0.0313 0.4913  0.0319
+IDFG_YCT_v2_Ocl60614_28      0.4272 0.4353 0.4816  0.0463 0.4825  0.0472
+IDFG_YCT_v1_Ocl40511_53      0.4255 0.4281 0.4554  0.0273 0.4559  0.0278
+IDFG_YCT_v1_Ocl61681_32      0.4401 0.4579 0.4858  0.0278 0.4863  0.0284
+IDFG_YCT_v2_Ocl56279_67      0.4351 0.4381 0.4827  0.0446 0.4835  0.0454
+Ocl_Chr20_36341695_141577269 0.4463 0.4671 0.5044  0.0373 0.5051  0.0380
+Ocl_Chr10_54394964_78034790  0.4791 0.4624 0.4829  0.0205 0.4833  0.0209
+IDFG_YCT_v2_Ocl55912_68      0.4236 0.4249 0.4543  0.0293 0.4548  0.0299
+IDFG_YCT_v1_Ocl71066_31      0.4370 0.4539 0.4721  0.0181 0.4724  0.0185
+Ocl_Chr16_5821040_113058367  0.4430 0.4331 0.4540  0.0209 0.4544  0.0213
+IDFG_YCT_v2_Ocl54533_63      0.4418 0.4535 0.4897  0.0362 0.4905  0.0370
+IDFG_YCT_v2_Ocl78611_27      0.4613 0.4672 0.4886  0.0215 0.4891  0.0219
+IDFG_YCT_v2_Ocl54193_34      0.4492 0.4391 0.4831  0.0439 0.4839  0.0448
+IDFG_YCT_v2_Ocl23695_55      0.4366 0.4679 0.4946  0.0267 0.4951  0.0272
+IDFG_YCT_v1_Ocl46627_28      0.4457 0.4466 0.4763  0.0298 0.4769  0.0303
+IDFG_YCT_v2_Ocl60251_33      0.4548 0.4451 0.4741  0.0290 0.4746  0.0295
+IDFG_YCT_v1_Ocl84360_65      0.5351 0.4538 0.4731  0.0193 0.4735  0.0197
+IDFG_YCT_v2_Ocl77748_54      0.4363 0.4374 0.4787  0.0413 0.4795  0.0421
+IDFG_YCT_v2_Ocl44830_68      0.4680 0.4478 0.4861  0.0383 0.4869  0.0390
+Ocl_Chr14_80074953_107013785 0.4465 0.4369 0.4809  0.0440 0.4818  0.0449
+BCT_Amish_RAD_VAR_22888      0.3582 0.4595 0.4924  0.0329 0.4931  0.0335
+IDFG_YCT_v1_Ocl34332_29      0.4219 0.4296 0.4499  0.0203 0.4503  0.0207
+IDFG_YCT_v2_Ocl85788_72      0.4350 0.4491 0.4749  0.0258 0.4754  0.0263
+IDFG_YCT_v2_Ocl27652_74      0.4227 0.4603 0.5002  0.0399 0.5010  0.0407
+IDFG_YCT_v1_Ocl91407_50      0.4557 0.4526 0.4792  0.0266 0.4797  0.0271
+Ocl_Chr21_45679568_145746560 0.4433 0.4540 0.4959  0.0419 0.4968  0.0427
+IDFG_YCT_v2_Ocl89557_55      0.4837 0.4541 0.4812  0.0270 0.4817  0.0276
+IDFG_YCT_v2_Ocl62064_52      0.4885 0.4675 0.4971  0.0296 0.4977  0.0302
+BCT_Amish_RAD_VAR_47         0.4569 0.4652 0.4851  0.0199 0.4855  0.0203
+Ocl_Chr18_35134435_130052437 0.4471 0.4528 0.4701  0.0173 0.4705  0.0177
+IDFG_YCT_v2_Ocl38706_58      0.4373 0.4637 0.4886  0.0249 0.4891  0.0254
+IDFG_YCT_v1_Ocl77417_51      0.4796 0.4629 0.4951  0.0322 0.4957  0.0328
+Ocl_Chr29_23441334_181337945 0.4686 0.4508 0.4747  0.0239 0.4752  0.0244
+X2017SDYCUT                  0.6374 0.4328 0.4344  0.0015 0.4344  0.0016
+IDFG_YCT_v2_Ocl76462_53      0.4699 0.4597 0.4821  0.0224 0.4825  0.0228
+IDFG_YCT_v2_Ocl94003_28      0.4668 0.4563 0.4846  0.0283 0.4852  0.0288
+Ocl_Chr01_23856908_2184084   0.4816 0.4593 0.4922  0.0329 0.4928  0.0335
+IDFG_YCT_v1_Ocl42695_26      0.5179 0.4742 0.4978  0.0236 0.4982  0.0240
+IDFG_YCT_v2_Ocl91717_43      0.4553 0.4624 0.4898  0.0274 0.4904  0.0280
+Ocl_Chr13_34569062_98344570  0.6294 0.4639 0.4807  0.0168 0.4811  0.0172
+IDFG_YCT_v1_Ocl77114_57      0.4551 0.4595 0.4927  0.0332 0.4933  0.0339
+BCT_Amish_RAD_VAR_147        0.4446 0.4560 0.4824  0.0264 0.4830  0.0269
+Ocl_Chr01_65204432_6778384   0.4797 0.4511 0.4960  0.0450 0.4969  0.0459
+IDFG_YCT_v1_Ocl88159_69      0.3898 0.4414 0.4843  0.0429 0.4851  0.0437
+Ocl_Chr24_16906646_157657003 0.4191 0.4299 0.4607  0.0308 0.4614  0.0314
+IDFG_YCT_v2_Ocl40834_41      0.4607 0.4585 0.4888  0.0303 0.4894  0.0309
+Houston_Oc29335_82           0.4249 0.4709 0.4982  0.0273 0.4987  0.0278
+IDFG_YCT_v2_Ocl92807_65      0.4379 0.4702 0.4973  0.0272 0.4979  0.0277
+Houston_Oc4332_250           0.4910 0.4759 0.5001  0.0243 0.5006  0.0247
+IDFG_YCT_v2_Ocl11315_52      0.4865 0.4823 0.4964  0.0141 0.4966  0.0143
+IDFG_YCT_v2_Ocl88352_46      0.4613 0.4723 0.4961  0.0238 0.4966  0.0242
+IDFG_YCT_v2_Ocl95170_53      0.4690 0.4705 0.4977  0.0272 0.4982  0.0277
+IDFG_YCT_v2_Ocl26454_40      0.4598 0.4602 0.4808  0.0206 0.4812  0.0210
+IDFG_YCT_v2_Ocl32300_38      0.4892 0.4715 0.4964  0.0249 0.4969  0.0253
+Ocl_Chr09_132589_65891972    0.4788 0.4724 0.4994  0.0270 0.4999  0.0275
+IDFG_YCT_v2_Ocl50071_45      0.4550 0.4681 0.4996  0.0315 0.5002  0.0321
+Houston_Oc15873_229          0.4451 0.4604 0.4991  0.0387 0.4999  0.0395
+IDFG_YCT_v2_Ocl63356_62      0.4350 0.4599 0.4777  0.0178 0.4780  0.0181
+IDFG_YCT_v1_Ocl76788_41      0.4899 0.4760 0.4978  0.0218 0.4982  0.0222
+IDFG_YCT_v1_Ocl31603_69      0.5997 0.4588 0.4795  0.0207 0.4799  0.0211
+Ocl_Chr03_54445579_22006371  0.4587 0.4977 0.5475  0.0498 0.5485  0.0508
+Ocl_Chr11_21392774_81080130  0.5551 0.5642 0.6187  0.0546 0.6201  0.0560
+Ocl_Chr20_6483466_138507676  0.4992 0.4931 0.5196  0.0265 0.5201  0.0270
+Ocl_Chr19_22044194_134075134 0.4995 0.4950 0.5340  0.0389 0.5347  0.0397
+Ocl_Chr05_61430172_39368537  0.4832 0.4844 0.4990  0.0146 0.4992  0.0149
+Ocl_Chr02_76311531_16531892  0.5140 0.5034 0.5356  0.0322 0.5363  0.0329
+Ocl_Chr06_56703154_48022435  0.5329 0.5135 0.5518  0.0383 0.5525  0.0391
+BCT_Amish_ONCB_RAD_44581     0.5129 0.4713 0.4983  0.0270 0.4989  0.0275
+Ocl_Chr18_36418251_130188244 0.5452 0.5297 0.5742  0.0445 0.5750  0.0454
+Ocl_Chr05_18555027_34575154  0.5518 0.5379 0.5762  0.0382 0.5769  0.0390
+Ocl_Chr10_22333094_74392487  0.5957 0.5286 0.5551  0.0265 0.5556  0.0270
+Ocl_Chr06_12420435_43129369  0.5106 0.5155 0.5419  0.0264 0.5424  0.0270
+Ocl_Chr09_41620059_69897246  0.5761 0.5701 0.6061  0.0360 0.6068  0.0368
+Ocl_Chr27_22043133_173151182 0.5058 0.5244 0.5390  0.0146 0.5393  0.0149
+Ocl_Chr04_4678489_25012683   0.5451 0.5505 0.6182  0.0677 0.6195  0.0691
+Ocl_Chr24_3186803_156112670  0.5725 0.5791 0.6413  0.0622 0.6425  0.0634
+Ocl_Chr25_69908699_166328532 0.5498 0.5536 0.6162  0.0626 0.6174  0.0638
+Ocl_Chr14_62417220_105680075 0.5869 0.5733 0.5959  0.0226 0.5963  0.0231
+Ocl_Chr03_46187757_21021777  0.5420 0.5495 0.5851  0.0356 0.5858  0.0363
+Ocl_Chr17_26126051_121852980 0.5848 0.5648 0.6106  0.0458 0.6115  0.0467
+Ocl_Chr08_74452534_65317301  0.5311 0.5390 0.5900  0.0510 0.5910  0.0520
+Ocl_Chr19_33933079_135391160 0.7189 0.6269 0.6636  0.0367 0.6644  0.0375
+Ocl_Chr06_32944093_45564942  0.5457 0.5316 0.5571  0.0255 0.5576  0.0260
+Ocl_Chr06_71071691_49699566  0.4564 0.5602 0.6070  0.0468 0.6079  0.0477
+Ocl_Chr16_65382802_119281196 0.5691 0.5698 0.5999  0.0301 0.6005  0.0307
+Ocl_Chr19_28187340_134737135 0.5578 0.5675 0.6020  0.0345 0.6026  0.0352
+Ocl_Chr27_26384321_173647407 0.5666 0.5669 0.6229  0.0560 0.6240  0.0571
+Ocl_Chr05_42479354_37280182  0.5801 0.5801 0.6212  0.0411 0.6220  0.0419
+Ocl_Chr11_18904366_80819009  0.6001 0.5936 0.6483  0.0547 0.6494  0.0558
+Ocl_Chr04_37222382_28545529  0.5688 0.5602 0.6019  0.0417 0.6027  0.0425
+Ocl_Chr06_49347522_47229937  0.6223 0.6039 0.6305  0.0266 0.6310  0.0271
+Ocl_Chr16_63319498_119126301 0.5588 0.5670 0.5895  0.0225 0.5900  0.0229
+Ocl_Chr19_58647860_137848971 0.5765 0.5657 0.6052  0.0395 0.6060  0.0403
+Ocl_Chr28_36489115_178685376 0.5703 0.5791 0.6020  0.0229 0.6025  0.0234
+Ocl_Chr09_12790880_66825607  0.5916 0.5964 0.6303  0.0340 0.6310  0.0346
+Ocl_Chr10_53349684_77957625  0.6095 0.6020 0.6575  0.0555 0.6586  0.0566
+Ocl_Chr09_55763419_71454240  0.6181 0.5887 0.6299  0.0412 0.6307  0.0420
+Ocl_Chr20_38432054_141654148 0.5820 0.5901 0.6411  0.0511 0.6421  0.0521
+Ocl_Chr29_38743868_182891893 0.6092 0.5916 0.6336  0.0420 0.6344  0.0428
+Ocl_Chr01_11904953_886586    0.5973 0.5949 0.6471  0.0522 0.6482  0.0533
+Ocl_Chr05_22353480_34975528  0.5820 0.5873 0.6180  0.0306 0.6186  0.0312
+Ocl_Chr23_14630597_152413591 0.5742 0.5680 0.6069  0.0389 0.6077  0.0397
+Ocl_Chr14_20673116_102159336 0.6001 0.5761 0.6239  0.0478 0.6248  0.0488
+Ocl_Chr10_32709329_75590026  0.5988 0.6078 0.6610  0.0533 0.6621  0.0543
+Ocl_Chr15_3073223_107182434  0.5834 0.5936 0.6222  0.0286 0.6228  0.0292
+Ocl_Chr08_7913543_58216480   0.6203 0.6279 0.6659  0.0381 0.6667  0.0388
+Ocl_Chr17_7063635_119896425  0.6292 0.6158 0.6458  0.0300 0.6464  0.0306
+Ocl_Chr25_28253023_161776112 0.5650 0.5711 0.5988  0.0277 0.5994  0.0282
+Ocl_Chr04_76210634_32621008  0.6341 0.6128 0.6487  0.0358 0.6494  0.0365
+Ocl_Chr17_36673466_122916670 0.6361 0.6339 0.6636  0.0297 0.6642  0.0303
+Ocl_Chr28_30520066_178158297 0.5841 0.5759 0.6252  0.0493 0.6261  0.0502
+Ocl_Chr10_35395407_75918540  0.6171 0.5927 0.6364  0.0437 0.6373  0.0446
+Ocl_Chr05_90410498_42131005  0.5915 0.6076 0.6475  0.0399 0.6482  0.0407
+Ocl_Chr09_49571462_70771512  0.6319 0.6210 0.6571  0.0361 0.6579  0.0369
+Ocl_Chr02_41111233_12592907  0.6352 0.6068 0.6371  0.0303 0.6377  0.0309
+Ocl_Chr09_48490705_70660510  0.6029 0.6042 0.6639  0.0597 0.6651  0.0608
+Ocl_Chr09_21685484_67771579  0.6124 0.6002 0.6399  0.0397 0.6407  0.0404
+Ocl_Chr22_8259981_146905324  0.6148 0.6108 0.6415  0.0307 0.6421  0.0313
+Ocl_Chr25_11233782_160156892 0.6193 0.5970 0.6386  0.0416 0.6394  0.0424
+Ocl_Chr21_50128962_145994829 0.6005 0.6048 0.6402  0.0354 0.6409  0.0361
+Ocl_Chr04_28783021_27639317  0.5846 0.6048 0.6310  0.0262 0.6315  0.0267
+Ocl_Chr08_48135323_62498005  0.6063 0.5953 0.6315  0.0361 0.6322  0.0369
+Ocl_Chr08_33342876_61016343  0.6270 0.6173 0.6460  0.0288 0.6466  0.0293
+Ocl_Chr04_66392742_31700304  0.5994 0.6141 0.6668  0.0527 0.6678  0.0537
+Ocl_Chr29_9370320_179810673  0.6209 0.6266 0.6741  0.0475 0.6750  0.0484
+Ocl_Chr02_14036883_9774445   0.6045 0.6135 0.6604  0.0468 0.6613  0.0478
+Ocl_Chr06_28577594_45059601  0.6403 0.6221 0.6515  0.0294 0.6521  0.0300
+Ocl_Chr24_39049170_159471644 0.6270 0.6251 0.6662  0.0412 0.6670  0.0420
+Ocl_Chr20_19804435_139941027 0.5842 0.6020 0.6349  0.0329 0.6356  0.0336
+Ocl_Chr19_32462945_135228332 0.6039 0.6330 0.6645  0.0315 0.6651  0.0322
+Ocl_Chr03_79199746_24455183  0.6271 0.6111 0.6561  0.0449 0.6570  0.0458
+Ocl_Chr04_33023764_28088603  0.6497 0.6379 0.6802  0.0424 0.6811  0.0432
+Ocl_Chr25_44677311_163459109 0.5941 0.6105 0.6455  0.0350 0.6462  0.0357
+Ocl_Chr09_14235478_66977774  0.5986 0.6284 0.6660  0.0376 0.6667  0.0383
+Ocl_Chr07_45996063_54719254  0.6059 0.6178 0.6604  0.0426 0.6613  0.0435
+Ocl_Chr03_36100207_20027295  0.6290 0.6050 0.6389  0.0339 0.6395  0.0345
+Ocl_Chr16_19294381_114484561 0.6305 0.6174 0.6481  0.0307 0.6487  0.0313
+Ocl_Chr03_60635751_22668909  0.6647 0.6449 0.6956  0.0507 0.6966  0.0517
+Ocl_Chr01_47294360_4844114   0.6419 0.6345 0.6691  0.0346 0.6698  0.0353
+Ocl_Chr16_14068105_113855290 0.6181 0.6172 0.6469  0.0296 0.6474  0.0302
+Ocl_Chr29_20234359_180988711 0.9012 0.6187 0.6372  0.0185 0.6376  0.0189
+Ocl_Chr18_38639143_130419135 0.6510 0.6346 0.6629  0.0283 0.6635  0.0289
+Ocl_Chr07_14856486_51326380  0.6395 0.6323 0.6616  0.0293 0.6621  0.0298
+Ocl_Chr15_39936653_110688475 0.6353 0.6430 0.7224  0.0794 0.7240  0.0810
+Ocl_Chr17_46042425_123978835 0.6329 0.6330 0.6724  0.0394 0.6732  0.0401
+Ocl_Chr18_34123442_129934400 0.6292 0.6292 0.6818  0.0526 0.6828  0.0536
+Ocl_Chr06_64424167_48985347  0.6260 0.6362 0.7081  0.0718 0.7095  0.0732
+Ocl_Chr18_44149294_130969040 0.6695 0.6769 0.7232  0.0464 0.7241  0.0473
+Ocl_Chr08_14771460_58941711  0.6838 0.6932 0.7349  0.0417 0.7357  0.0425
+                                 Fst    Fstp     Fis    Dest
+IDFG_YCT_v2_Ocl89640_61       0.0706  0.0719 -0.0282  0.0062
+IDFG_YCT_v2_Ocl72577_41       0.0481  0.0490 -0.0676  0.0026
+IDFG_YCT_v1_Ocl36010_70       0.0422  0.0430  0.1527  0.0031
+IDFG_YCT_v2_Ocl55949_70       0.0469  0.0478 -0.0305  0.0037
+Ocl_Chr11_35455748_82543634   0.0301  0.0307  0.0245  0.0022
+IDFG_YCT_v2_Ocl2550_72        0.0313  0.0319  0.0158  0.0021
+Ocl_Chr26_24390262_169834458  0.0659  0.0672 -0.1097  0.0052
+Ocl_Chr20_31497051_141180625  0.0257  0.0262 -0.0028  0.0018
+Houston_Oc32144_118           0.0221  0.0225 -0.0089  0.0015
+IDFG_YCT_v2_Ocl96084_64       0.0578  0.0588  0.0216  0.0073
+IDFG_YCT_v2_Ocl46339_34       0.0241  0.0245  0.0363  0.0026
+IDFG_YCT_v1_Ocl81780_58       0.0725  0.0738  0.0511  0.0118
+IDFG_YCT_v2_Ocl54206_70       0.0892  0.0908  0.0216  0.0138
+OclYSD123205_Garza            0.0862  0.0877  0.0055  0.0128
+IDFG_YCT_v2_Ocl11368_65       0.0668  0.0680 -0.0307  0.0106
+Houston_Oc26415_290           0.0694  0.0706  0.1534  0.0111
+Ocl_Chr13_35713851_98470555   0.0341  0.0347 -0.0194  0.0058
+Amish_ONCB_RAD_10777          0.0319  0.0325 -0.1053  0.0055
+Ocl_Chr03_72820636_23938332   0.0426  0.0434 -0.0200  0.0076
+IDFG_YCT_v2_Ocl519_41         0.0378  0.0385 -0.0485  0.0075
+Amish_YCT_RAD_VAR_10439       0.0321  0.0327 -0.0012  0.0062
+IDFG_YCT_v2_Ocl64283_57       0.0434  0.0442 -0.0251  0.0085
+Houston_Oc14458_107           0.0503  0.0512 -0.0433  0.0115
+IDFG_YCT_v2_Ocl74070_69       0.0596  0.0607 -0.0225  0.0136
+IDFG_YCT_v2_Ocl81521_63       0.0424  0.0432 -0.0229  0.0101
+IDFG_YCT_v2_Ocl82356_38       0.0787  0.0801 -0.0453  0.0163
+IDFG_YCT_v2_Ocl30726_53       0.0297  0.0303 -0.0055  0.0062
+IDFG_YCT_v2_Ocl49571_62       0.0312  0.0318 -0.0072  0.0076
+IDFG_YCT_v2_Ocl2084_35        0.0428  0.0436 -0.0712  0.0122
+IDFG_YCT_v2_Ocl11239_43       0.1403  0.1427 -0.0099  0.0421
+IDFG_YCT_v2_Ocl55778_72       0.0518  0.0528  0.0179  0.0148
+IDFG_YCT_v2_Ocl50017_60       0.0883  0.0899  0.0120  0.0254
+IDFG_YCT_v2_Ocl70919_58       0.0747  0.0760  0.0169  0.0244
+Ocl_Chr11_54823421_84757779   0.1016  0.1033  0.0001  0.0259
+IDFG_YCT_v1_Ocl19676_45       0.0857  0.0872  0.0427  0.0271
+Ocl_Chr08_23127002_59937218   0.0522  0.0531 -0.0391  0.0160
+IDFG_YCT_v2_Ocl265_70         0.0881  0.0897 -0.0028  0.0376
+Amish_YCT_RAD_VAR_5315        0.0248  0.0253 -0.0727  0.0074
+IDFG_YCT_v2_Ocl49447_63       0.0997  0.1014  0.0191  0.0337
+Ocl_Chr17_20643875_121278476 -0.0209 -0.0222  0.1867 -0.0396
+IDFG_YCT_v2_Ocl17893_44       0.0531  0.0541 -0.0328  0.0141
+Ocl_Chr01_1245617_71241       0.0181  0.0185 -0.0471  0.0057
+Houston_Oc7137_365            0.0373  0.0380  0.0208  0.0117
+IDFG_YCT_v2_Ocl66566_29       0.0841  0.0856  0.3401  0.0320
+IDFG_YCT_v2_Ocl65458_43       0.0387  0.0394 -0.0223  0.0119
+IDFG_YCT_v2_Ocl1388_66        0.0435  0.0443 -0.0055  0.0162
+IDFG_YCT_v2_Ocl67496_54       0.0449  0.0457  0.0476  0.0157
+IDFG_YCT_v1_Ocl10752_37       0.0888  0.0904  0.0448  0.0329
+IDFG_YCT_v2_Ocl6421_62        0.0362  0.0369 -0.0211  0.0146
+IDFG_YCT_v2_Ocl13566_60       0.0262  0.0267 -0.0291  0.0090
+IDFG_YCT_v2_Ocl65556_55       0.0651  0.0663  0.0396  0.0267
+Amish_YCT_RAD_VAR_524         0.0431  0.0439 -0.1451  0.0159
+IDFG_YCT_v2_Ocl1427_32        0.0606  0.0617 -0.0195  0.0213
+IDFG_YCT_v2_Ocl67304_74       0.0413  0.0420  0.0047  0.0161
+Ocl_Chr01_49304682_5059357    0.1217  0.1255  0.0590  0.1318
+IDFG_YCT_v1_Ocl37592_62       0.0525  0.0535  0.0040  0.0270
+IDFG_YCT_v1_Ocl14778_68       0.0534  0.0544  0.0143  0.0180
+IDFG_YCT_v1_Ocl34660_49       0.0586  0.0597  0.1505  0.0311
+Ocl_Chr25_60480751_165272387  0.0626  0.0637 -0.0519  0.0350
+IDFG_YCT_v2_Ocl90760_67       0.0541  0.0551  0.0057  0.0249
+IDFG_YCT_v1_Ocl94063_37       0.0562  0.0573 -0.0162  0.0267
+IDFG_YCT_v2_Ocl68734_33       0.0628  0.0640 -0.0167  0.0233
+BCT_Amish_RAD_VAR_162         0.0396  0.0403  0.0731  0.0166
+Ocl_Chr28_15322293_176508570  0.0280  0.0289  0.1066  0.0364
+IDFG_YCT_v1_Ocl59008_57       0.0690  0.0703 -0.0332  0.0350
+BCT_Amish_RAD_VAR_123         0.0492  0.0501  0.0199  0.0269
+Ocl_Chr04_34213356_28219597   0.1707  0.1768 -0.0594  0.2254
+IDFG_YCT_v2_Ocl14551_39       0.0549  0.0559  0.0004  0.0273
+IDFG_YCT_v2_Ocl36520_63       0.0774  0.0788 -0.0063  0.0423
+IDFG_YCT_v1_Ocl84938_50       0.0529  0.0539  0.0119  0.0334
+IDFG_YCT_v2_Ocl12924_45       0.0360  0.0366  0.0339  0.0175
+Ocl_Chr12_30853101_89944910   0.0554  0.0564 -0.0240  0.0272
+IDFG_YCT_v2_Ocl16282_49       0.0814  0.0828 -0.0229  0.0394
+IDFG_YCT_v1_Ocl15057_51       0.0319  0.0325 -0.1866  0.0169
+IDFG_YCT_v2_Ocl52778_33       0.0508  0.0518 -0.1513  0.0255
+IDFG_YCT_v2_Ocl92711_46       0.0331  0.0337 -0.2260  0.0182
+IDFG_YCT_v2_Ocl75459_71       0.0492  0.0501 -0.0059  0.0277
+IDFG_YCT_v2_Ocl34053_56       0.0467  0.0476  0.0223  0.0269
+Ocl_Chr29_17780195_180714945  0.0531  0.0541 -0.0638  0.0315
+IDFG_YCT_v2_Ocl7485_51        0.0594  0.0605  0.0115  0.0307
+Ocl_Chr27_16961377_172557845  0.0519  0.0529  0.0043  0.0278
+IDFG_YCT_v2_Ocl43873_47       0.0627  0.0639  0.0323  0.0404
+IDFG_YCT_v2_Ocl422_41         0.0676  0.0689  0.0412  0.0400
+IDFG_YCT_v1_Ocl22037_73       0.0448  0.0457  0.0601  0.0282
+IDFG_YCT_v2_Ocl9569_56        0.0544  0.0554 -0.0027  0.0364
+Ocl_Chr29_14439470_180329363  0.0754  0.0768 -0.0402  0.0463
+Ocl_Chr25_24758789_161407476 -0.0018 -0.0018 -0.0588 -0.0011
+Amish_ONCB_RAD_31309          0.0286  0.0292 -0.0910  0.0176
+IDFG_YCT_v1_Ocl60310_26       0.0956  0.0973  0.0061  0.0654
+IDFG_YCT_v2_Ocl85546_44       0.0595  0.0606  0.0744  0.0381
+Ocl_Chr19_44285651_136670064  0.0985  0.1003  0.0001  0.0651
+Houston_Oc12653_72            0.0732  0.0745 -0.1249  0.0456
+Ocl_Chr18_26129647_129072958  0.1048  0.1066  0.0255  0.0762
+Ocl_Chr02_10093148_9366995    0.0382  0.0390 -0.0393  0.0269
+IDFG_YCT_v2_Ocl6060_34        0.0717  0.0730  0.0236  0.0431
+IDFG_YCT_v2_Ocl27300_47       0.0718  0.0731 -0.0472  0.0438
+IDFG_YCT_v2_Ocl56509_52       0.0532  0.0542  0.0277  0.0343
+IDFG_YCT_v2_Ocl5447_29        0.0652  0.0664  0.9149  0.0456
+IDFG_YCT_v2_Ocl42464_53       0.0519  0.0528 -0.0357  0.0371
+IDFG_YCT_v2_Ocl44431_43       0.0529  0.0539  0.0771  0.0384
+Ocl_Chr16_21297075_114698152  0.1058  0.1078 -0.1017  0.0971
+Ocl_Chr18_45469522_131108058  0.0673  0.0685 -0.0063  0.0499
+Ocl_Chr01_4263947_240975      0.1076  0.1095 -0.0253  0.0866
+IDFG_YCT_v2_Ocl37211_48       0.0963  0.0980  0.0182  0.0724
+IDFG_YCT_v2_Ocl55445_29       0.0636  0.0647 -0.0220  0.0465
+Ocl_Chr11_39252193_82950896   0.1086  0.1105  0.1647  0.0867
+IDFG_YCT_v1_Ocl71780_28       0.0801  0.0815  0.0052  0.0564
+Ocl_Chr15_19410515_108579195  0.0396  0.0404  0.0258  0.0298
+IDFG_YCT_v2_Ocl21864_63       0.0556  0.0566  0.2671  0.0487
+Ocl_Chr09_39167685_69625176   0.0363  0.0370 -0.0135  0.0258
+IDFG_YCT_v1_Ocl63987_50       0.0495  0.0505 -0.0057  0.0379
+Ocl_Chr17_58461865_125358635  0.0813  0.0827 -0.0078  0.0659
+Ocl_Chr11_6830863_79676696    0.0637  0.0649  0.0173  0.0596
+Ocl_Chr02_58755685_14645010   0.0821  0.0836 -0.0342  0.0642
+Ocl_Chr06_35552627_45862909   0.0576  0.0587 -0.0028  0.0462
+IDFG_YCT_v2_Ocl2146_52        0.0429  0.0437 -0.0580  0.0352
+IDFG_YCT_v2_Ocl31182_39       0.0584  0.0595  0.0514  0.0468
+Ocl_Chr17_9605415_120120519   0.0638  0.0650 -0.0064  0.0591
+IDFG_YCT_v2_Ocl60614_28       0.0961  0.0978  0.0186  0.0836
+IDFG_YCT_v1_Ocl40511_53       0.0600  0.0611  0.0060  0.0487
+IDFG_YCT_v1_Ocl61681_32       0.0573  0.0583  0.0389  0.0523
+IDFG_YCT_v2_Ocl56279_67       0.0923  0.0940  0.0068  0.0809
+Ocl_Chr20_36341695_141577269  0.0739  0.0753  0.0446  0.0713
+Ocl_Chr10_54394964_78034790   0.0425  0.0433 -0.0362  0.0389
+IDFG_YCT_v2_Ocl55912_68       0.0646  0.0658  0.0032  0.0520
+IDFG_YCT_v1_Ocl71066_31       0.0384  0.0392  0.0374  0.0339
+Ocl_Chr16_5821040_113058367   0.0460  0.0468 -0.0228  0.0375
+IDFG_YCT_v2_Ocl54533_63       0.0740  0.0754  0.0258  0.0676
+IDFG_YCT_v2_Ocl78611_27       0.0439  0.0447  0.0126  0.0411
+IDFG_YCT_v2_Ocl54193_34       0.0909  0.0925 -0.0229  0.0799
+IDFG_YCT_v2_Ocl23695_55       0.0539  0.0549  0.0670  0.0511
+IDFG_YCT_v1_Ocl46627_28       0.0625  0.0636  0.0019  0.0548
+IDFG_YCT_v2_Ocl60251_33       0.0611  0.0623 -0.0218  0.0532
+IDFG_YCT_v1_Ocl84360_65       0.0408  0.0416 -0.1792  0.0360
+IDFG_YCT_v2_Ocl77748_54       0.0862  0.0877  0.0025  0.0748
+IDFG_YCT_v2_Ocl44830_68       0.0787  0.0802 -0.0449  0.0707
+Ocl_Chr14_80074953_107013785  0.0916  0.0932 -0.0220  0.0797
+BCT_Amish_RAD_VAR_22888       0.0668  0.0680  0.2206  0.0621
+IDFG_YCT_v1_Ocl34332_29       0.0452  0.0461  0.0180  0.0364
+IDFG_YCT_v2_Ocl85788_72       0.0543  0.0553  0.0313  0.0477
+IDFG_YCT_v2_Ocl27652_74       0.0797  0.0812  0.0818  0.0753
+IDFG_YCT_v1_Ocl91407_50       0.0555  0.0565 -0.0067  0.0495
+Ocl_Chr21_45679568_145746560  0.0845  0.0860  0.0237  0.0783
+IDFG_YCT_v2_Ocl89557_55       0.0562  0.0573 -0.0650  0.0505
+IDFG_YCT_v2_Ocl62064_52       0.0596  0.0607 -0.0450  0.0567
+BCT_Amish_RAD_VAR_47          0.0410  0.0418  0.0178  0.0379
+Ocl_Chr18_35134435_130052437  0.0369  0.0376  0.0127  0.0323
+IDFG_YCT_v2_Ocl38706_58       0.0510  0.0520  0.0569  0.0474
+IDFG_YCT_v1_Ocl77417_51       0.0650  0.0662 -0.0360  0.0611
+Ocl_Chr29_23441334_181337945  0.0503  0.0513 -0.0395  0.0444
+X2017SDYCUT                   0.0035  0.0036 -0.4727  0.0028
+IDFG_YCT_v2_Ocl76462_53       0.0465  0.0473 -0.0223  0.0423
+IDFG_YCT_v2_Ocl94003_28       0.0583  0.0594 -0.0229  0.0530
+Ocl_Chr01_23856908_2184084    0.0668  0.0681 -0.0485  0.0620
+IDFG_YCT_v1_Ocl42695_26       0.0473  0.0482 -0.0922  0.0457
+IDFG_YCT_v2_Ocl91717_43       0.0560  0.0570  0.0153  0.0520
+Ocl_Chr13_34569062_98344570   0.0350  0.0357 -0.3567  0.0320
+IDFG_YCT_v1_Ocl77114_57       0.0674  0.0686  0.0096  0.0626
+BCT_Amish_RAD_VAR_147         0.0547  0.0557  0.0250  0.0495
+Ocl_Chr01_65204432_6778384    0.0907  0.0923 -0.0634  0.0835
+IDFG_YCT_v1_Ocl88159_69       0.0885  0.0901  0.1170  0.0782
+Ocl_Chr24_16906646_157657003  0.0669  0.0681  0.0252  0.0551
+IDFG_YCT_v2_Ocl40834_41       0.0620  0.0632 -0.0049  0.0571
+Houston_Oc29335_82            0.0548  0.0558  0.0977  0.0526
+IDFG_YCT_v2_Ocl92807_65       0.0546  0.0556  0.0685  0.0523
+Houston_Oc4332_250            0.0485  0.0494 -0.0318  0.0472
+IDFG_YCT_v2_Ocl11315_52       0.0283  0.0289 -0.0087  0.0277
+IDFG_YCT_v2_Ocl88352_46       0.0479  0.0488  0.0233  0.0459
+IDFG_YCT_v2_Ocl95170_53       0.0546  0.0556  0.0033  0.0524
+IDFG_YCT_v2_Ocl26454_40       0.0428  0.0436  0.0009  0.0388
+IDFG_YCT_v2_Ocl32300_38       0.0501  0.0510 -0.0375  0.0480
+Ocl_Chr09_132589_65891972     0.0540  0.0550 -0.0135  0.0521
+IDFG_YCT_v2_Ocl50071_45       0.0631  0.0642  0.0279  0.0604
+Houston_Oc15873_229           0.0775  0.0789  0.0333  0.0731
+IDFG_YCT_v2_Ocl63356_62       0.0372  0.0379  0.0542  0.0335
+IDFG_YCT_v1_Ocl76788_41       0.0438  0.0446 -0.0291  0.0424
+IDFG_YCT_v1_Ocl31603_69       0.0432  0.0440 -0.3072  0.0390
+Ocl_Chr03_54445579_22006371   0.0910  0.0927  0.0783  0.1012
+Ocl_Chr11_21392774_81080130   0.0882  0.0902  0.0160  0.1284
+Ocl_Chr20_6483466_138507676   0.0510  0.0520 -0.0124  0.0533
+Ocl_Chr19_22044194_134075134  0.0729  0.0743 -0.0091  0.0786
+Ocl_Chr05_61430172_39368537   0.0292  0.0298  0.0024  0.0289
+Ocl_Chr02_76311531_16531892   0.0602  0.0613 -0.0211  0.0662
+Ocl_Chr06_56703154_48022435   0.0695  0.0707 -0.0379  0.0803
+BCT_Amish_ONCB_RAD_44581      0.0542  0.0552 -0.0882  0.0521
+Ocl_Chr18_36418251_130188244  0.0775  0.0789 -0.0294  0.0965
+Ocl_Chr05_18555027_34575154   0.0664  0.0676 -0.0258  0.0844
+Ocl_Chr10_22333094_74392487   0.0477  0.0486 -0.1269  0.0572
+Ocl_Chr06_12420435_43129369   0.0488  0.0497  0.0094  0.0556
+Ocl_Chr09_41620059_69897246   0.0595  0.0606 -0.0106  0.0855
+Ocl_Chr27_22043133_173151182  0.0271  0.0277  0.0355  0.0314
+Ocl_Chr04_4678489_25012683    0.1096  0.1115  0.0097  0.1536
+Ocl_Chr24_3186803_156112670   0.0970  0.0987  0.0114  0.1506
+Ocl_Chr25_69908699_166328532  0.1016  0.1033  0.0068  0.1429
+Ocl_Chr14_62417220_105680075  0.0379  0.0387 -0.0238  0.0540
+Ocl_Chr03_46187757_21021777   0.0609  0.0620  0.0137  0.0806
+Ocl_Chr17_26126051_121852980  0.0750  0.0763 -0.0354  0.1073
+Ocl_Chr08_74452534_65317301   0.0864  0.0880  0.0147  0.1128
+Ocl_Chr19_33933079_135391160  0.0554  0.0565 -0.1467  0.1006
+Ocl_Chr06_32944093_45564942   0.0458  0.0467 -0.0264  0.0556
+Ocl_Chr06_71071691_49699566   0.0771  0.0785  0.1853  0.1085
+Ocl_Chr16_65382802_119281196  0.0501  0.0511  0.0012  0.0713
+Ocl_Chr19_28187340_134737135  0.0573  0.0583  0.0170  0.0813
+Ocl_Chr27_26384321_173647407  0.0899  0.0915  0.0006  0.1318
+Ocl_Chr05_42479354_37280182   0.0662  0.0674  0.0000  0.0998
+Ocl_Chr11_18904366_80819009   0.0844  0.0859 -0.0110  0.1373
+Ocl_Chr04_37222382_28545529   0.0693  0.0705 -0.0155  0.0967
+Ocl_Chr06_49347522_47229937   0.0421  0.0429 -0.0304  0.0684
+Ocl_Chr16_63319498_119126301  0.0382  0.0389  0.0146  0.0530
+Ocl_Chr19_58647860_137848971  0.0653  0.0665 -0.0191  0.0928
+Ocl_Chr28_36489115_178685376  0.0381  0.0388  0.0153  0.0555
+Ocl_Chr09_12790880_66825607   0.0539  0.0549  0.0079  0.0858
+Ocl_Chr10_53349684_77957625   0.0844  0.0859 -0.0124  0.1421
+Ocl_Chr09_55763419_71454240   0.0654  0.0666 -0.0499  0.1021
+Ocl_Chr20_38432054_141654148  0.0797  0.0811  0.0137  0.1270
+Ocl_Chr29_38743868_182891893  0.0662  0.0674 -0.0297  0.1048
+Ocl_Chr01_11904953_886586     0.0807  0.0822 -0.0041  0.1315
+Ocl_Chr05_22353480_34975528   0.0496  0.0505  0.0091  0.0757
+Ocl_Chr23_14630597_152413591  0.0642  0.0653 -0.0110  0.0919
+Ocl_Chr14_20673116_102159336  0.0767  0.0781 -0.0417  0.1151
+Ocl_Chr10_32709329_75590026   0.0806  0.0820  0.0148  0.1385
+Ocl_Chr15_3073223_107182434   0.0460  0.0468  0.0172  0.0717
+Ocl_Chr08_7913543_58216480    0.0572  0.0582  0.0120  0.1043
+Ocl_Chr17_7063635_119896425   0.0464  0.0473 -0.0217  0.0796
+Ocl_Chr25_28253023_161776112  0.0462  0.0471  0.0108  0.0658
+Ocl_Chr04_76210634_32621008   0.0552  0.0563 -0.0347  0.0944
+Ocl_Chr17_36673466_122916670  0.0448  0.0456 -0.0034  0.0828
+Ocl_Chr28_30520066_178158297  0.0788  0.0802 -0.0142  0.1185
+Ocl_Chr10_35395407_75918540   0.0687  0.0700 -0.0412  0.1094
+Ocl_Chr05_90410498_42131005   0.0616  0.0628  0.0265  0.1037
+Ocl_Chr09_49571462_70771512   0.0550  0.0560 -0.0176  0.0972
+Ocl_Chr02_41111233_12592907   0.0475  0.0484 -0.0468  0.0786
+Ocl_Chr09_48490705_70660510   0.0899  0.0915  0.0021  0.1537
+Ocl_Chr09_21685484_67771579   0.0620  0.0631 -0.0202  0.1012
+Ocl_Chr22_8259981_146905324   0.0479  0.0488 -0.0066  0.0805
+Ocl_Chr25_11233782_160156892  0.0651  0.0663 -0.0373  0.1052
+Ocl_Chr21_50128962_145994829  0.0553  0.0563  0.0071  0.0913
+Ocl_Chr04_28783021_27639317   0.0415  0.0423  0.0334  0.0676
+Ocl_Chr08_48135323_62498005   0.0572  0.0583 -0.0183  0.0911
+Ocl_Chr08_33342876_61016343   0.0445  0.0453 -0.0157  0.0766
+Ocl_Chr04_66392742_31700304   0.0790  0.0804  0.0239  0.1391
+Ocl_Chr29_9370320_179810673   0.0704  0.0717  0.0090  0.1296
+Ocl_Chr02_14036883_9774445    0.0709  0.0722  0.0147  0.1236
+Ocl_Chr06_28577594_45059601   0.0452  0.0460 -0.0293  0.0794
+Ocl_Chr24_39049170_159471644  0.0618  0.0629 -0.0031  0.1119
+Ocl_Chr20_19804435_139941027  0.0519  0.0528  0.0295  0.0844
+Ocl_Chr19_32462945_135228332  0.0475  0.0483  0.0459  0.0876
+Ocl_Chr03_79199746_24455183   0.0685  0.0697 -0.0261  0.1178
+Ocl_Chr04_33023764_28088603   0.0623  0.0634 -0.0185  0.1193
+Ocl_Chr25_44677311_163459109  0.0542  0.0552  0.0268  0.0916
+Ocl_Chr09_14235478_66977774   0.0565  0.0575  0.0473  0.1032
+Ocl_Chr07_45996063_54719254   0.0646  0.0657  0.0192  0.1137
+Ocl_Chr03_36100207_20027295   0.0530  0.0540 -0.0396  0.0874
+Ocl_Chr16_19294381_114484561  0.0473  0.0482 -0.0212  0.0818
+Ocl_Chr03_60635751_22668909   0.0729  0.0742 -0.0306  0.1455
+Ocl_Chr01_47294360_4844114    0.0517  0.0526 -0.0116  0.0965
+Ocl_Chr16_14068105_113855290  0.0458  0.0467 -0.0014  0.0790
+Ocl_Chr29_20234359_180988711  0.0290  0.0296 -0.4565  0.0495
+Ocl_Chr18_38639143_130419135  0.0427  0.0435 -0.0259  0.0790
+Ocl_Chr07_14856486_51326380   0.0442  0.0450 -0.0114  0.0811
+Ocl_Chr15_39936653_110688475  0.1099  0.1119  0.0120  0.2268
+Ocl_Chr17_46042425_123978835  0.0585  0.0596  0.0002  0.1094
+Ocl_Chr18_34123442_129934400  0.0771  0.0785  0.0001  0.1445
+Ocl_Chr06_64424167_48985347   0.1014  0.1032  0.0161  0.2013
+Ocl_Chr18_44149294_130969040  0.0641  0.0653  0.0109  0.1463
+Ocl_Chr08_14771460_58941711   0.0568  0.0578  0.0135  0.1386
+
+$overall
+     Ho      Hs      Ht     Dst     Htp    Dstp     Fst    Fstp     Fis    Dest 
+ 0.4266  0.4249  0.4527  0.0278  0.4533  0.0283  0.0613  0.0625 -0.0039  0.0492 </code></pre>
+</div>
+</div>
+</section><section id="pairwise-fst" class="level2" data-number="4.2"><h2 data-number="4.2" class="anchored" data-anchor-id="pairwise-fst">
+<span class="header-section-number">4.2</span> Pairwise Fst</h2>
+<p>Calculate pairwise Fst following Weir and Cockerham (1984)…also see Harris et al (2022) Conservation Genetics. NOTE: this takes ~1 hr to run</p>
+<div class="cell">
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># ref_fst &lt;- pairwise.WCfst(data.frame(refdat_sub))</span></span>
+<span><span class="co"># write.csv(data.frame(ref_fst), "GSI Analysis/Baseline Fst/UpperSnakeRiver_GTseq_BaselinePopsFst.csv", row.names = T)</span></span>
+<span><span class="va">ref_fst</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Baseline Fst/UpperSnakeRiver_GTseq_BaselinePopsFst.csv"</span><span class="op">)</span></span>
+<span><span class="va">ref_fst_bylat</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span><span class="va">ref_fst</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"X"</span>, <span class="va">gps</span><span class="op">$</span><span class="va">repunit</span><span class="op">)</span><span class="op">]</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">arrange</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/match.html">match</a></span><span class="op">(</span><span class="va">X</span>, <span class="va">gps</span><span class="op">$</span><span class="va">repunit</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">column_to_rownames</span><span class="op">(</span><span class="st">"X"</span><span class="op">)</span></span>
+<span><span class="fu">reactable</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">ref_fst_bylat</span>, digits <span class="op">=</span> <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output-display">
+<div class="reactable html-widget html-fill-item" id="htmlwidget-f1225aa2e8e424afe0cb" style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-f1225aa2e8e424afe0cb">{"x":{"tag":{"name":"Reactable","attribs":{"data":{".rownames":["northbuffalofork_NA","box_NA","spring_nps","pacific_NA","clear_NA","lava_NA","blackrock_lower","blackrock_upper","spread_uppermainstem","spreadnf_flagstaff","rock_NA","deadmansbar_NA","spread_southfork","cowboycabin_NA","leidy_NA","ditch_NA","snakeriversidechannel_NA","upperbarbc_NA","cottonwood_nps","blacktail_NA","slate_NA","crystal_lower","grosventre_lower","goosewing_NA","cottonwood_grosventre","threechannel_NA","crystal_upper","fish_grosventre","lowerbarbc_NA","flat_NA","spring_tss","fish_NA","fordspring_NA","mosquito_NA","cody_bluecrane","horse_NA","granite_upper","fall_coburn","boulder_NA","willow_NA","dog_NA","granite_lower","shoal_NA","cabin_NA","cliff_NA","dell_NA","bailey_NA","littlegreys_steer","hoback_upper","white_NA","deadman_greys","blindbull_NA"],"northbuffalofork_NA":["NA",0.037,0.054,0.023,0.032,0.05,0.03,0.044,0.024,0.032,0.039,0.039,0.032,0.036,0.153,0.071,0.037,0.029,0.034,0.025,0.078,0.038,0.022,0.038,0.034,0.023,0.047,0.04,0.024,0.038,0.043,0.01,0.03,0.022,0.052,0.044,0.049,0.149,0.048,0.024,0.05,0.043,0.037,0.042,0.055,0.045,0.031,0.049,0.033,0.046,0.056,0.049],"box_NA":[0.037,"NA",0.085,0.053,0.033,0.079,0.048,0.074,0.056,0.065,0.064,0.077,0.062,0.063,0.198,0.107,0.068,0.062,0.069,0.058,0.1,0.068,0.052,0.075,0.064,0.046,0.069,0.07,0.051,0.069,0.074,0.041,0.062,0.051,0.082,0.069,0.067,0.182,0.067,0.052,0.07,0.068,0.061,0.07,0.077,0.08,0.058,0.067,0.05,0.064,0.08,0.072],"spring_nps":[0.054,0.085,"NA",0.053,0.072,0.058,0.055,0.045,0.063,0.056,0.072,0.084,0.055,0.067,0.136,0.072,0.068,0.056,0.054,0.058,0.094,0.07,0.057,0.074,0.058,0.059,0.077,0.067,0.06,0.083,0.114,0.065,0.073,0.062,0.121,0.075,0.077,0.2,0.073,0.057,0.077,0.071,0.059,0.074,0.07,0.084,0.063,0.067,0.062,0.079,0.075,0.078],"pacific_NA":[0.023,0.053,0.053,"NA",0.044,0.058,0.036,0.047,0.04,0.033,0.041,0.038,0.039,0.025,0.148,0.071,0.03,0.027,0.032,0.022,0.073,0.04,0.015,0.033,0.032,0.013,0.052,0.039,0.014,0.039,0.052,0.018,0.024,0.02,0.057,0.043,0.044,0.154,0.046,0.023,0.052,0.044,0.035,0.043,0.049,0.037,0.021,0.049,0.038,0.042,0.052,0.054],"clear_NA":[0.032,0.033,0.072,0.044,"NA",0.077,0.043,0.054,0.044,0.051,0.065,0.064,0.056,0.055,0.182,0.09,0.058,0.052,0.057,0.05,0.099,0.067,0.046,0.069,0.063,0.05,0.07,0.074,0.044,0.061,0.054,0.037,0.054,0.043,0.063,0.066,0.061,0.166,0.064,0.048,0.066,0.062,0.058,0.066,0.076,0.073,0.051,0.066,0.047,0.063,0.072,0.063],"lava_NA":[0.05,0.079,0.058,0.058,0.077,"NA",0.064,0.06,0.07,0.068,0.068,0.079,0.055,0.07,0.154,0.094,0.066,0.067,0.056,0.06,0.113,0.065,0.055,0.069,0.061,0.056,0.069,0.068,0.063,0.079,0.098,0.062,0.066,0.059,0.113,0.066,0.075,0.187,0.079,0.054,0.073,0.077,0.067,0.066,0.074,0.087,0.062,0.077,0.075,0.072,0.082,0.08],"blackrock_lower":[0.03,0.048,0.055,0.036,0.043,0.064,"NA",0.048,0.044,0.046,0.05,0.061,0.044,0.049,0.156,0.081,0.044,0.04,0.049,0.04,0.085,0.055,0.032,0.046,0.048,0.036,0.066,0.056,0.04,0.059,0.075,0.032,0.05,0.041,0.09,0.058,0.057,0.153,0.054,0.04,0.057,0.051,0.045,0.054,0.064,0.053,0.039,0.053,0.04,0.053,0.062,0.059],"blackrock_upper":[0.044,0.074,0.045,0.047,0.054,0.06,0.048,"NA",0.057,0.042,0.066,0.07,0.056,0.058,0.153,0.073,0.061,0.055,0.051,0.049,0.095,0.061,0.047,0.063,0.052,0.058,0.065,0.067,0.048,0.074,0.088,0.045,0.053,0.049,0.097,0.065,0.058,0.162,0.059,0.048,0.066,0.057,0.048,0.06,0.063,0.074,0.049,0.057,0.055,0.064,0.062,0.062],"spread_uppermainstem":[0.024,0.056,0.063,0.04,0.044,0.07,0.044,0.057,"NA",0.02,0.041,0.06,0.02,0.056,0.156,0.084,0.049,0.042,0.047,0.044,0.088,0.056,0.043,0.049,0.046,0.036,0.06,0.051,0.039,0.06,0.059,0.033,0.044,0.036,0.069,0.065,0.063,0.162,0.061,0.044,0.064,0.06,0.049,0.059,0.061,0.055,0.05,0.059,0.045,0.062,0.069,0.065],"spreadnf_flagstaff":[0.032,0.065,0.056,0.033,0.051,0.068,0.046,0.042,0.02,"NA",0.043,0.055,0.027,0.048,0.165,0.079,0.052,0.039,0.043,0.039,0.087,0.054,0.039,0.057,0.046,0.042,0.065,0.053,0.038,0.06,0.071,0.037,0.048,0.04,0.083,0.06,0.054,0.179,0.059,0.04,0.062,0.05,0.043,0.056,0.051,0.058,0.05,0.054,0.041,0.054,0.069,0.063],"rock_NA":[0.039,0.064,0.072,0.041,0.065,0.068,0.05,0.066,0.041,0.043,"NA",0.074,0.045,0.059,0.185,0.088,0.055,0.05,0.056,0.046,0.101,0.063,0.044,0.067,0.056,0.038,0.073,0.066,0.045,0.07,0.082,0.04,0.059,0.045,0.091,0.066,0.065,0.178,0.068,0.044,0.067,0.065,0.053,0.065,0.061,0.059,0.048,0.063,0.047,0.059,0.067,0.069],"deadmansbar_NA":[0.039,0.077,0.084,0.038,0.064,0.079,0.061,0.07,0.06,0.055,0.074,"NA",0.063,0.024,0.186,0.092,0.024,0.024,0.049,0.028,0.098,0.062,0.036,0.078,0.06,0.038,0.075,0.078,0.039,0.048,0.086,0.036,0.045,0.04,0.09,0.065,0.076,0.182,0.073,0.044,0.078,0.068,0.058,0.076,0.07,0.075,0.058,0.072,0.058,0.069,0.089,0.072],"spread_southfork":[0.032,0.062,0.055,0.039,0.056,0.055,0.044,0.056,0.02,0.027,0.045,0.063,"NA",0.045,0.135,0.076,0.045,0.044,0.044,0.044,0.091,0.061,0.038,0.058,0.047,0.041,0.062,0.059,0.038,0.055,0.069,0.033,0.049,0.041,0.072,0.059,0.065,0.163,0.063,0.041,0.066,0.061,0.048,0.06,0.062,0.062,0.044,0.057,0.047,0.06,0.063,0.063],"cowboycabin_NA":[0.036,0.063,0.067,0.025,0.055,0.07,0.049,0.058,0.056,0.048,0.059,0.024,0.045,"NA",0.17,0.081,0.009,0.008,0.039,0.012,0.079,0.044,0.022,0.057,0.039,0.028,0.065,0.054,0.019,0.04,0.065,0.033,0.026,0.027,0.073,0.051,0.049,0.166,0.053,0.027,0.062,0.052,0.041,0.049,0.053,0.046,0.037,0.052,0.042,0.056,0.061,0.055],"leidy_NA":[0.153,0.198,0.136,0.148,0.182,0.154,0.156,0.153,0.156,0.165,0.185,0.186,0.135,0.17,"NA",0.166,0.163,0.163,0.155,0.153,0.189,0.17,0.15,0.191,0.155,0.154,0.167,0.167,0.157,0.187,0.219,0.15,0.182,0.153,0.218,0.18,0.182,0.293,0.172,0.148,0.169,0.165,0.155,0.171,0.167,0.173,0.163,0.154,0.171,0.177,0.179,0.164],"ditch_NA":[0.071,0.107,0.072,0.071,0.09,0.094,0.081,0.073,0.084,0.079,0.088,0.092,0.076,0.081,0.166,"NA",0.078,0.074,0.074,0.07,0.103,0.078,0.078,0.084,0.067,0.079,0.098,0.071,0.077,0.099,0.123,0.082,0.088,0.074,0.128,0.093,0.078,0.202,0.087,0.075,0.09,0.083,0.081,0.083,0.084,0.092,0.075,0.082,0.079,0.081,0.089,0.082],"snakeriversidechannel_NA":[0.037,0.068,0.068,0.03,0.058,0.066,0.044,0.061,0.049,0.052,0.055,0.024,0.045,0.009,0.163,0.078,"NA",0.008,0.038,0.012,0.076,0.047,0.023,0.056,0.046,0.024,0.061,0.056,0.018,0.038,0.07,0.029,0.028,0.028,0.077,0.055,0.055,0.156,0.053,0.03,0.067,0.054,0.044,0.058,0.058,0.047,0.041,0.054,0.043,0.051,0.064,0.055],"upperbarbc_NA":[0.029,0.062,0.056,0.027,0.052,0.067,0.04,0.055,0.042,0.039,0.05,0.024,0.044,0.008,0.163,0.074,0.008,"NA",0.037,0.006,0.075,0.044,0.022,0.052,0.042,0.023,0.064,0.054,0.022,0.039,0.064,0.027,0.037,0.026,0.077,0.049,0.048,0.163,0.047,0.028,0.057,0.046,0.038,0.049,0.05,0.045,0.035,0.051,0.04,0.057,0.063,0.054],"cottonwood_nps":[0.034,0.069,0.054,0.032,0.057,0.056,0.049,0.051,0.047,0.043,0.056,0.049,0.044,0.039,0.155,0.074,0.038,0.037,"NA",0.03,0.081,0.05,0.033,0.048,0.04,0.034,0.062,0.052,0.036,0.046,0.07,0.035,0.033,0.032,0.08,0.057,0.052,0.163,0.057,0.034,0.056,0.053,0.048,0.048,0.058,0.052,0.036,0.055,0.049,0.052,0.062,0.061],"blacktail_NA":[0.025,0.058,0.058,0.022,0.05,0.06,0.04,0.049,0.044,0.039,0.046,0.028,0.044,0.012,0.153,0.07,0.012,0.006,0.03,"NA",0.079,0.043,0.018,0.049,0.038,0.019,0.061,0.047,0.02,0.036,0.063,0.024,0.028,0.027,0.073,0.047,0.045,0.16,0.047,0.023,0.052,0.045,0.038,0.044,0.05,0.042,0.029,0.048,0.036,0.045,0.056,0.049],"slate_NA":[0.078,0.1,0.094,0.073,0.099,0.113,0.085,0.095,0.088,0.087,0.101,0.098,0.091,0.079,0.189,0.103,0.076,0.075,0.081,0.079,"NA",0.059,0.071,0.048,0.052,0.072,0.062,0.058,0.073,0.098,0.113,0.071,0.087,0.059,0.113,0.087,0.077,0.199,0.084,0.069,0.092,0.082,0.08,0.082,0.085,0.088,0.076,0.076,0.076,0.078,0.088,0.079],"crystal_lower":[0.038,0.068,0.07,0.04,0.067,0.065,0.055,0.061,0.056,0.054,0.063,0.062,0.061,0.044,0.17,0.078,0.047,0.044,0.05,0.043,0.059,"NA",0.033,0.038,0.026,0.038,0.017,0.036,0.042,0.059,0.075,0.039,0.042,0.035,0.077,0.057,0.053,0.159,0.051,0.034,0.051,0.048,0.046,0.054,0.053,0.058,0.041,0.052,0.05,0.046,0.062,0.059],"grosventre_lower":[0.022,0.052,0.057,0.015,0.046,0.055,0.032,0.047,0.043,0.039,0.044,0.036,0.038,0.022,0.15,0.078,0.023,0.022,0.033,0.018,0.071,0.033,"NA",0.035,0.032,0.013,0.047,0.045,0.016,0.033,0.052,0.019,0.021,0.02,0.063,0.042,0.04,0.157,0.048,0.019,0.052,0.041,0.037,0.044,0.05,0.038,0.025,0.046,0.039,0.04,0.051,0.047],"goosewing_NA":[0.038,0.075,0.074,0.033,0.069,0.069,0.046,0.063,0.049,0.057,0.067,0.078,0.058,0.057,0.191,0.084,0.056,0.052,0.048,0.049,0.048,0.038,0.035,"NA",0.021,0.041,0.047,0.028,0.043,0.064,0.077,0.04,0.049,0.04,0.092,0.06,0.052,0.184,0.058,0.04,0.06,0.054,0.052,0.052,0.055,0.063,0.038,0.052,0.052,0.06,0.052,0.049],"cottonwood_grosventre":[0.034,0.064,0.058,0.032,0.063,0.061,0.048,0.052,0.046,0.046,0.056,0.06,0.047,0.039,0.155,0.067,0.046,0.042,0.04,0.038,0.052,0.026,0.032,0.021,"NA",0.038,0.032,0.022,0.037,0.056,0.07,0.032,0.047,0.031,0.078,0.044,0.047,0.163,0.048,0.03,0.047,0.042,0.041,0.049,0.049,0.052,0.032,0.045,0.044,0.046,0.048,0.045],"threechannel_NA":[0.023,0.046,0.059,0.013,0.05,0.056,0.036,0.058,0.036,0.042,0.038,0.038,0.041,0.028,0.154,0.079,0.024,0.023,0.034,0.019,0.072,0.038,0.013,0.041,0.038,"NA",0.049,0.046,0.011,0.036,0.056,0.016,0.018,0.019,0.066,0.049,0.044,0.15,0.047,0.018,0.052,0.041,0.036,0.047,0.049,0.036,0.028,0.044,0.031,0.038,0.05,0.042],"crystal_upper":[0.047,0.069,0.077,0.052,0.07,0.069,0.066,0.065,0.06,0.065,0.073,0.075,0.062,0.065,0.167,0.098,0.061,0.064,0.062,0.061,0.062,0.017,0.047,0.047,0.032,0.049,"NA",0.035,0.055,0.076,0.075,0.047,0.052,0.041,0.083,0.066,0.062,0.18,0.061,0.047,0.058,0.056,0.054,0.057,0.062,0.069,0.055,0.054,0.057,0.056,0.056,0.063],"fish_grosventre":[0.04,0.07,0.067,0.039,0.074,0.068,0.056,0.067,0.051,0.053,0.066,0.078,0.059,0.054,0.167,0.071,0.056,0.054,0.052,0.047,0.058,0.036,0.045,0.028,0.022,0.046,0.035,"NA",0.048,0.071,0.077,0.042,0.057,0.043,0.086,0.054,0.058,0.179,0.048,0.037,0.053,0.052,0.048,0.054,0.061,0.056,0.042,0.051,0.05,0.056,0.06,0.055],"lowerbarbc_NA":[0.024,0.051,0.06,0.014,0.044,0.063,0.04,0.048,0.039,0.038,0.045,0.039,0.038,0.019,0.157,0.077,0.018,0.022,0.036,0.02,0.073,0.042,0.016,0.043,0.037,0.011,0.055,0.048,"NA",0.037,0.055,0.014,0.017,0.019,0.057,0.044,0.038,0.149,0.037,0.021,0.052,0.04,0.041,0.043,0.044,0.034,0.028,0.047,0.039,0.041,0.054,0.048],"flat_NA":[0.038,0.069,0.083,0.039,0.061,0.079,0.059,0.074,0.06,0.06,0.07,0.048,0.055,0.04,0.187,0.099,0.038,0.039,0.046,0.036,0.098,0.059,0.033,0.064,0.056,0.036,0.076,0.071,0.037,"NA",0.072,0.032,0.04,0.042,0.074,0.062,0.064,0.165,0.068,0.04,0.068,0.065,0.054,0.066,0.069,0.059,0.046,0.064,0.051,0.058,0.068,0.067],"spring_tss":[0.043,0.074,0.114,0.052,0.054,0.098,0.075,0.088,0.059,0.071,0.082,0.086,0.069,0.065,0.219,0.123,0.07,0.064,0.07,0.063,0.113,0.075,0.052,0.077,0.07,0.056,0.075,0.077,0.055,0.072,"NA",0.041,0.045,0.056,0.037,0.076,0.078,0.191,0.079,0.058,0.078,0.071,0.069,0.076,0.087,0.076,0.063,0.084,0.067,0.089,0.086,0.084],"fish_NA":[0.01,0.041,0.065,0.018,0.037,0.062,0.032,0.045,0.033,0.037,0.04,0.036,0.033,0.033,0.15,0.082,0.029,0.027,0.035,0.024,0.071,0.039,0.019,0.04,0.032,0.016,0.047,0.042,0.014,0.032,0.041,"NA",0.021,0.016,0.043,0.04,0.04,0.144,0.042,0.016,0.049,0.04,0.036,0.038,0.045,0.039,0.023,0.043,0.03,0.039,0.051,0.044],"fordspring_NA":[0.03,0.062,0.073,0.024,0.054,0.066,0.05,0.053,0.044,0.048,0.059,0.045,0.049,0.026,0.182,0.088,0.028,0.037,0.033,0.028,0.087,0.042,0.021,0.049,0.047,0.018,0.052,0.057,0.017,0.04,0.045,0.021,"NA",0.023,0.054,0.05,0.042,0.169,0.046,0.023,0.054,0.042,0.037,0.04,0.049,0.044,0.037,0.048,0.034,0.043,0.05,0.046],"mosquito_NA":[0.022,0.051,0.062,0.02,0.043,0.059,0.041,0.049,0.036,0.04,0.045,0.04,0.041,0.027,0.153,0.074,0.028,0.026,0.032,0.027,0.059,0.035,0.02,0.04,0.031,0.019,0.041,0.043,0.019,0.042,0.056,0.016,0.023,"NA",0.058,0.031,0.031,0.143,0.037,0.016,0.038,0.032,0.025,0.032,0.036,0.036,0.021,0.033,0.027,0.031,0.04,0.041],"cody_bluecrane":[0.052,0.082,0.121,0.057,0.063,0.113,0.09,0.097,0.069,0.083,0.091,0.09,0.072,0.073,0.218,0.128,0.077,0.077,0.08,0.073,0.113,0.077,0.063,0.092,0.078,0.066,0.083,0.086,0.057,0.074,0.037,0.043,0.054,0.058,"NA",0.085,0.083,0.188,0.09,0.063,0.088,0.081,0.082,0.082,0.095,0.084,0.067,0.083,0.073,0.092,0.094,0.091],"horse_NA":[0.044,0.069,0.075,0.043,0.066,0.066,0.058,0.065,0.065,0.06,0.066,0.065,0.059,0.051,0.18,0.093,0.055,0.049,0.057,0.047,0.087,0.057,0.042,0.06,0.044,0.049,0.066,0.054,0.044,0.062,0.076,0.04,0.05,0.031,0.085,"NA",0.046,0.173,0.048,0.031,0.044,0.041,0.042,0.032,0.051,0.059,0.028,0.046,0.044,0.048,0.056,0.055],"granite_upper":[0.049,0.067,0.077,0.044,0.061,0.075,0.057,0.058,0.063,0.054,0.065,0.076,0.065,0.049,0.182,0.078,0.055,0.048,0.052,0.045,0.077,0.053,0.04,0.052,0.047,0.044,0.062,0.058,0.038,0.064,0.078,0.04,0.042,0.031,0.083,0.046,"NA",0.162,0.025,0.028,0.041,0.022,0.029,0.039,0.027,0.05,0.028,0.034,0.027,0.044,0.046,0.042],"fall_coburn":[0.149,0.182,0.2,0.154,0.166,0.187,0.153,0.162,0.162,0.179,0.178,0.182,0.163,0.166,0.293,0.202,0.156,0.163,0.163,0.16,0.199,0.159,0.157,0.184,0.163,0.15,0.18,0.179,0.149,0.165,0.191,0.144,0.169,0.143,0.188,0.173,0.162,"NA",0.157,0.13,0.152,0.155,0.145,0.147,0.149,0.162,0.16,0.147,0.154,0.166,0.18,0.166],"boulder_NA":[0.048,0.067,0.073,0.046,0.064,0.079,0.054,0.059,0.061,0.059,0.068,0.073,0.063,0.053,0.172,0.087,0.053,0.047,0.057,0.047,0.084,0.051,0.048,0.058,0.048,0.047,0.061,0.048,0.037,0.068,0.079,0.042,0.046,0.037,0.09,0.048,0.025,0.157,"NA",0.026,0.036,0.01,0.018,0.036,0.027,0.05,0.031,0.033,0.023,0.046,0.052,0.051],"willow_NA":[0.024,0.052,0.057,0.023,0.048,0.054,0.04,0.048,0.044,0.04,0.044,0.044,0.041,0.027,0.148,0.075,0.03,0.028,0.034,0.023,0.069,0.034,0.019,0.04,0.03,0.018,0.047,0.037,0.021,0.04,0.058,0.016,0.023,0.016,0.063,0.031,0.028,0.13,0.026,"NA",0.03,0.021,0.018,0.02,0.028,0.03,0.012,0.032,0.024,0.026,0.036,0.031],"dog_NA":[0.05,0.07,0.077,0.052,0.066,0.073,0.057,0.066,0.064,0.062,0.067,0.078,0.066,0.062,0.169,0.09,0.067,0.057,0.056,0.052,0.092,0.051,0.052,0.06,0.047,0.052,0.058,0.053,0.052,0.068,0.078,0.049,0.054,0.038,0.088,0.044,0.041,0.152,0.036,0.03,"NA",0.036,0.036,0.018,0.041,0.056,0.019,0.038,0.041,0.037,0.04,0.043],"granite_lower":[0.043,0.068,0.071,0.044,0.062,0.077,0.051,0.057,0.06,0.05,0.065,0.068,0.061,0.052,0.165,0.083,0.054,0.046,0.053,0.045,0.082,0.048,0.041,0.054,0.042,0.041,0.056,0.052,0.04,0.065,0.071,0.04,0.042,0.032,0.081,0.041,0.022,0.155,0.01,0.021,0.036,"NA",0.019,0.033,0.02,0.04,0.028,0.036,0.026,0.041,0.045,0.042],"shoal_NA":[0.037,0.061,0.059,0.035,0.058,0.067,0.045,0.048,0.049,0.043,0.053,0.058,0.048,0.041,0.155,0.081,0.044,0.038,0.048,0.038,0.08,0.046,0.037,0.052,0.041,0.036,0.054,0.048,0.041,0.054,0.069,0.036,0.037,0.025,0.082,0.042,0.029,0.145,0.018,0.018,0.036,0.019,"NA",0.033,0.021,0.037,0.023,0.037,0.021,0.039,0.047,0.038],"cabin_NA":[0.042,0.07,0.074,0.043,0.066,0.066,0.054,0.06,0.059,0.056,0.065,0.076,0.06,0.049,0.171,0.083,0.058,0.049,0.048,0.044,0.082,0.054,0.044,0.052,0.049,0.047,0.057,0.054,0.043,0.066,0.076,0.038,0.04,0.032,0.082,0.032,0.039,0.147,0.036,0.02,0.018,0.033,0.033,"NA",0.034,0.052,0.012,0.03,0.034,0.025,0.029,0.039],"cliff_NA":[0.055,0.077,0.07,0.049,0.076,0.074,0.064,0.063,0.061,0.051,0.061,0.07,0.062,0.053,0.167,0.084,0.058,0.05,0.058,0.05,0.085,0.053,0.05,0.055,0.049,0.049,0.062,0.061,0.044,0.069,0.087,0.045,0.049,0.036,0.095,0.051,0.027,0.149,0.027,0.028,0.041,0.02,0.021,0.034,"NA",0.051,0.032,0.036,0.029,0.04,0.048,0.047],"dell_NA":[0.045,0.08,0.084,0.037,0.073,0.087,0.053,0.074,0.055,0.058,0.059,0.075,0.062,0.046,0.173,0.092,0.047,0.045,0.052,0.042,0.088,0.058,0.038,0.063,0.052,0.036,0.069,0.056,0.034,0.059,0.076,0.039,0.044,0.036,0.084,0.059,0.05,0.162,0.05,0.03,0.056,0.04,0.037,0.052,0.051,"NA",0.038,0.053,0.038,0.059,0.063,0.058],"bailey_NA":[0.031,0.058,0.063,0.021,0.051,0.062,0.039,0.049,0.05,0.05,0.048,0.058,0.044,0.037,0.163,0.075,0.041,0.035,0.036,0.029,0.076,0.041,0.025,0.038,0.032,0.028,0.055,0.042,0.028,0.046,0.063,0.023,0.037,0.021,0.067,0.028,0.028,0.16,0.031,0.012,0.019,0.028,0.023,0.012,0.032,0.038,"NA",0.027,0.025,0.025,0.03,0.036],"littlegreys_steer":[0.049,0.067,0.067,0.049,0.066,0.077,0.053,0.057,0.059,0.054,0.063,0.072,0.057,0.052,0.154,0.082,0.054,0.051,0.055,0.048,0.076,0.052,0.046,0.052,0.045,0.044,0.054,0.051,0.047,0.064,0.084,0.043,0.048,0.033,0.083,0.046,0.034,0.147,0.033,0.032,0.038,0.036,0.037,0.03,0.036,0.053,0.027,"NA",0.034,0.02,0.018,0.019],"hoback_upper":[0.033,0.05,0.062,0.038,0.047,0.075,0.04,0.055,0.045,0.041,0.047,0.058,0.047,0.042,0.171,0.079,0.043,0.04,0.049,0.036,0.076,0.05,0.039,0.052,0.044,0.031,0.057,0.05,0.039,0.051,0.067,0.03,0.034,0.027,0.073,0.044,0.027,0.154,0.023,0.024,0.041,0.026,0.021,0.034,0.029,0.038,0.025,0.034,"NA",0.037,0.039,0.041],"white_NA":[0.046,0.064,0.079,0.042,0.063,0.072,0.053,0.064,0.062,0.054,0.059,0.069,0.06,0.056,0.177,0.081,0.051,0.057,0.052,0.045,0.078,0.046,0.04,0.06,0.046,0.038,0.056,0.056,0.041,0.058,0.089,0.039,0.043,0.031,0.092,0.048,0.044,0.166,0.046,0.026,0.037,0.041,0.039,0.025,0.04,0.059,0.025,0.02,0.037,"NA",0.018,0.018],"deadman_greys":[0.056,0.08,0.075,0.052,0.072,0.082,0.062,0.062,0.069,0.069,0.067,0.089,0.063,0.061,0.179,0.089,0.064,0.063,0.062,0.056,0.088,0.062,0.051,0.052,0.048,0.05,0.056,0.06,0.054,0.068,0.086,0.051,0.05,0.04,0.094,0.056,0.046,0.18,0.052,0.036,0.04,0.045,0.047,0.029,0.048,0.063,0.03,0.018,0.039,0.018,"NA",0.017],"blindbull_NA":[0.049,0.072,0.078,0.054,0.063,0.08,0.059,0.062,0.065,0.063,0.069,0.072,0.063,0.055,0.164,0.082,0.055,0.054,0.061,0.049,0.079,0.059,0.047,0.049,0.045,0.042,0.063,0.055,0.048,0.067,0.084,0.044,0.046,0.041,0.091,0.055,0.042,0.166,0.051,0.031,0.043,0.042,0.038,0.039,0.047,0.058,0.036,0.019,0.041,0.018,0.017,"NA"]},"columns":[{"id":".rownames","name":"","type":"character","sortable":false,"filterable":false,"rowHeader":true},{"id":"northbuffalofork_NA","name":"northbuffalofork_NA","type":"numeric"},{"id":"box_NA","name":"box_NA","type":"numeric"},{"id":"spring_nps","name":"spring_nps","type":"numeric"},{"id":"pacific_NA","name":"pacific_NA","type":"numeric"},{"id":"clear_NA","name":"clear_NA","type":"numeric"},{"id":"lava_NA","name":"lava_NA","type":"numeric"},{"id":"blackrock_lower","name":"blackrock_lower","type":"numeric"},{"id":"blackrock_upper","name":"blackrock_upper","type":"numeric"},{"id":"spread_uppermainstem","name":"spread_uppermainstem","type":"numeric"},{"id":"spreadnf_flagstaff","name":"spreadnf_flagstaff","type":"numeric"},{"id":"rock_NA","name":"rock_NA","type":"numeric"},{"id":"deadmansbar_NA","name":"deadmansbar_NA","type":"numeric"},{"id":"spread_southfork","name":"spread_southfork","type":"numeric"},{"id":"cowboycabin_NA","name":"cowboycabin_NA","type":"numeric"},{"id":"leidy_NA","name":"leidy_NA","type":"numeric"},{"id":"ditch_NA","name":"ditch_NA","type":"numeric"},{"id":"snakeriversidechannel_NA","name":"snakeriversidechannel_NA","type":"numeric"},{"id":"upperbarbc_NA","name":"upperbarbc_NA","type":"numeric"},{"id":"cottonwood_nps","name":"cottonwood_nps","type":"numeric"},{"id":"blacktail_NA","name":"blacktail_NA","type":"numeric"},{"id":"slate_NA","name":"slate_NA","type":"numeric"},{"id":"crystal_lower","name":"crystal_lower","type":"numeric"},{"id":"grosventre_lower","name":"grosventre_lower","type":"numeric"},{"id":"goosewing_NA","name":"goosewing_NA","type":"numeric"},{"id":"cottonwood_grosventre","name":"cottonwood_grosventre","type":"numeric"},{"id":"threechannel_NA","name":"threechannel_NA","type":"numeric"},{"id":"crystal_upper","name":"crystal_upper","type":"numeric"},{"id":"fish_grosventre","name":"fish_grosventre","type":"numeric"},{"id":"lowerbarbc_NA","name":"lowerbarbc_NA","type":"numeric"},{"id":"flat_NA","name":"flat_NA","type":"numeric"},{"id":"spring_tss","name":"spring_tss","type":"numeric"},{"id":"fish_NA","name":"fish_NA","type":"numeric"},{"id":"fordspring_NA","name":"fordspring_NA","type":"numeric"},{"id":"mosquito_NA","name":"mosquito_NA","type":"numeric"},{"id":"cody_bluecrane","name":"cody_bluecrane","type":"numeric"},{"id":"horse_NA","name":"horse_NA","type":"numeric"},{"id":"granite_upper","name":"granite_upper","type":"numeric"},{"id":"fall_coburn","name":"fall_coburn","type":"numeric"},{"id":"boulder_NA","name":"boulder_NA","type":"numeric"},{"id":"willow_NA","name":"willow_NA","type":"numeric"},{"id":"dog_NA","name":"dog_NA","type":"numeric"},{"id":"granite_lower","name":"granite_lower","type":"numeric"},{"id":"shoal_NA","name":"shoal_NA","type":"numeric"},{"id":"cabin_NA","name":"cabin_NA","type":"numeric"},{"id":"cliff_NA","name":"cliff_NA","type":"numeric"},{"id":"dell_NA","name":"dell_NA","type":"numeric"},{"id":"bailey_NA","name":"bailey_NA","type":"numeric"},{"id":"littlegreys_steer","name":"littlegreys_steer","type":"numeric"},{"id":"hoback_upper","name":"hoback_upper","type":"numeric"},{"id":"white_NA","name":"white_NA","type":"numeric"},{"id":"deadman_greys","name":"deadman_greys","type":"numeric"},{"id":"blindbull_NA","name":"blindbull_NA","type":"numeric"}],"dataKey":"1c352eabd324a9db0c8bc2212a8f26b3"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>Range of among-population Fst:</p>
+<div class="cell">
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/range.html">range</a></span><span class="op">(</span><span class="va">ref_fst_bylat</span>, na.rm <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.006177708 0.292796059</code></pre>
+</div>
+</div>
+<p>Plot histogram of pairwise Fst values. Vertical red line denotes Fst = 0.01: the recommended minimum pairwise Fst for accurate genetic stock identification (Araujo et al.&nbsp;2014, TAFS). Note that most pariwise comparisons (among reporting groups) are above this threshold.</p>
+<div class="cell">
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span>mar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">1</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html">hist</a></span><span class="op">(</span><span class="va">ref_fst_bylat</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/lower.tri.html">lower.tri</a></span><span class="op">(</span><span class="va">ref_fst_bylat</span><span class="op">)</span><span class="op">]</span>, xlab <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/expression.html">expression</a></span><span class="op">(</span><span class="st">"F"</span><span class="op">[</span><span class="st">"st"</span><span class="op">]</span><span class="op">)</span>, main <span class="op">=</span> <span class="st">""</span>, breaks <span class="op">=</span> <span class="fl">50</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/abline.html">abline</a></span><span class="op">(</span>v <span class="op">=</span> <span class="fl">0.01</span>, col <span class="op">=</span> <span class="st">"red"</span>, lwd <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="BaselineFst_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Proportion of reporting group pairs for which Fst &lt; 0.01</p>
+<div class="cell">
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">rrr</span> <span class="op">&lt;-</span> <span class="va">ref_fst_bylat</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/lower.tri.html">lower.tri</a></span><span class="op">(</span><span class="va">ref_fst_bylat</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">rrr</span><span class="op">[</span><span class="va">rrr</span> <span class="op">&lt;</span> <span class="fl">0.01</span><span class="op">]</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">rrr</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.003016591</code></pre>
+</div>
+</div>
+<p>For which pairs is Fst &lt; 0.01?</p>
+<ul>
+<li>Fst indicates low differentiation/lots of mixing among UBBC, Cowboy Cabin, Snake River Side Channel, and Blacktail.</li>
+</ul>
+<div class="cell">
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">fstlist</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="va">ref_fst_bylat</span> <span class="op">&lt;</span> <span class="fl">0.01</span>, <span class="fl">1</span>, <span class="va">which</span><span class="op">)</span>, <span class="va">names</span><span class="op">)</span></span>
+<span><span class="va">fstlist</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/lengths.html">lengths</a></span><span class="op">(</span><span class="va">fstlist</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>$cowboycabin_NA
+[1] "snakeriversidechannel_NA" "upperbarbc_NA"           
+
+$snakeriversidechannel_NA
+[1] "cowboycabin_NA" "upperbarbc_NA" 
+
+$upperbarbc_NA
+[1] "cowboycabin_NA"           "snakeriversidechannel_NA"
+[3] "blacktail_NA"            
+
+$blacktail_NA
+[1] "upperbarbc_NA"</code></pre>
+</div>
+</div>
+<p>Plot matrix of pairwise Fst:</p>
+<div class="cell">
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># plot color matrix of Fst</span></span>
+<span><span class="va">r2</span> <span class="op">&lt;-</span> <span class="va">ref_fst_bylat</span></span>
+<span><span class="va">r2</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/lower.tri.html">upper.tri</a></span><span class="op">(</span><span class="va">r2</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span>mar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">12</span>,<span class="fl">12</span>,<span class="fl">4</span>,<span class="fl">4</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">r2</span><span class="op">)</span>, main <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/expression.html">expression</a></span><span class="op">(</span><span class="st">"F"</span><span class="op">[</span><span class="st">"st"</span><span class="op">]</span><span class="op">)</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rev.html">rev</a></span><span class="op">(</span><span class="fu">magma</span><span class="op">(</span><span class="fl">20</span><span class="op">)</span><span class="op">)</span>, las <span class="op">=</span> <span class="fl">2</span>, xlab <span class="op">=</span> <span class="st">""</span>, ylab <span class="op">=</span> <span class="st">""</span>, axes <span class="op">=</span> <span class="cn">F</span>, border <span class="op">=</span> <span class="st">"grey50"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/axis.html">axis</a></span><span class="op">(</span><span class="fl">1</span>, cex.axis <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/axis.html">axis</a></span><span class="op">(</span><span class="fl">2</span>, cex.axis <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="BaselineFst_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="1152"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The same plot, but with numbered reporting groups (for supporting information):</p>
+<div class="cell">
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># plot color matrix of Fst</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="va">r2</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">r2</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">r2</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">r2</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span>mar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2.5</span>,<span class="fl">2.5</span>,<span class="fl">1</span>,<span class="fl">4</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">r2</span><span class="op">)</span>, main <span class="op">=</span> <span class="st">""</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rev.html">rev</a></span><span class="op">(</span><span class="fu">magma</span><span class="op">(</span><span class="fl">20</span><span class="op">)</span><span class="op">)</span>, las <span class="op">=</span> <span class="fl">2</span>, xlab <span class="op">=</span> <span class="st">""</span>, ylab <span class="op">=</span> <span class="st">""</span>, axes <span class="op">=</span> <span class="cn">F</span>, border <span class="op">=</span> <span class="st">"grey50"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/axis.html">axis</a></span><span class="op">(</span><span class="fl">1</span>, cex.axis <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/axis.html">axis</a></span><span class="op">(</span><span class="fl">2</span>, cex.axis <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="BaselineFst_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/grDevices/png.html">jpeg</a></span><span class="op">(</span><span class="st">"/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Baseline Fst/BaselinePopsFst_colormatrix_byLat_numbered.jpg"</span>, res <span class="op">=</span> <span class="fl">1000</span>, units <span class="op">=</span> <span class="st">"in"</span>, width <span class="op">=</span> <span class="fl">10</span>, height <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span>mar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2.5</span>,<span class="fl">2.5</span>,<span class="fl">4</span>,<span class="fl">4</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">r2</span><span class="op">)</span>, main <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/expression.html">expression</a></span><span class="op">(</span><span class="st">"F"</span><span class="op">[</span><span class="st">"st"</span><span class="op">]</span><span class="op">)</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rev.html">rev</a></span><span class="op">(</span><span class="fu">magma</span><span class="op">(</span><span class="fl">20</span><span class="op">)</span><span class="op">)</span>, las <span class="op">=</span> <span class="fl">2</span>, xlab <span class="op">=</span> <span class="st">""</span>, ylab <span class="op">=</span> <span class="st">""</span>, axes <span class="op">=</span> <span class="cn">F</span>, border <span class="op">=</span> <span class="st">"grey50"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/axis.html">axis</a></span><span class="op">(</span><span class="fl">1</span>, cex.axis <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/axis.html">axis</a></span><span class="op">(</span><span class="fl">2</span>, cex.axis <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html">dev.off</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>quartz_off_screen 
+                2 </code></pre>
+</div>
+</div>
+<p>For Wy-ACT Fish-Flows manuscript, get range and median Fst among spring creeks with redd count data</p>
+<div class="cell">
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mypops</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"blacktail_NA"</span>, <span class="st">"cody_bluecrane"</span>, <span class="st">"cowboycabin_NA"</span>, <span class="st">"fish_NA"</span>, <span class="st">"flat_NA"</span>, <span class="st">"lowerbarbc_NA"</span>, <span class="st">"snakeriversidechannel_NA"</span>, <span class="st">"spring_tss"</span>, <span class="st">"threechannel_NA"</span>, <span class="st">"upperbarbc_NA"</span><span class="op">)</span></span>
+<span><span class="va">ref_fst2</span> <span class="op">&lt;-</span> <span class="va">ref_fst_bylat</span><span class="op">[</span><span class="va">mypops</span>, <span class="va">mypops</span><span class="op">]</span></span>
+<span><span class="va">ref_fst3</span> <span class="op">&lt;-</span> <span class="va">ref_fst_bylat</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/lower.tri.html">lower.tri</a></span><span class="op">(</span><span class="va">ref_fst2</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/range.html">range</a></span><span class="op">(</span><span class="va">ref_fst3</span>, na.rm <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.006177708 0.292796059</code></pre>
+</div>
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span><span class="op">(</span><span class="va">ref_fst3</span>, na.rm <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.05267749</code></pre>
+</div>
+</div>
+
+
+<!-- -->
+
+</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="../Baseline Testing/BaselineDataTesting.html" class="pagination-link" aria-label="Baseline Testing">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Baseline Testing</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb21" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Baseline Fst</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>Purpose: calculate index of genetic differentiation (Fst) among baseline reporting groups. See Willing et al. (2012, PLoS One) for details on how number of SNPs and sample size (# of individuals) affects the accuracy of Fst.</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="in">```{r echo=FALSE}</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="in">library(tidyverse)</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="in">library(hierfstat)</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="in">library(plot.matrix)</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="in">library(viridis)</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="in">library(reactable)</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a><span class="fu">## Load data</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>Load genotyp data, calculate reporting group sample size, and load GPS location data:</span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a><span class="co"># load genotype data</span></span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>refdat <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Baseline Testing/UpperSnakeRiver_GTseq_InputData_NoSibs_clean_baseline.csv"</span>) <span class="sc">%&gt;%</span> <span class="fu">mutate_all</span>(<span class="sc">~</span><span class="fu">replace_na</span>(., <span class="dv">0</span>))</span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a><span class="co"># get sample size</span></span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>ss <span class="ot">&lt;-</span> refdat <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(repunit) <span class="sc">%&gt;%</span> <span class="fu">summarize</span>(<span class="at">ss =</span> <span class="fu">n</span>())</span>
+<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a><span class="co"># location data for sorting by latitude</span></span>
+<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a>gps <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Landscape Covariates/RepUnit_LatLong.csv"</span>) <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(<span class="fu">desc</span>(lat))</span>
+<span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-28"><a href="#cb21-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-29"><a href="#cb21-29" aria-hidden="true" tabindex="-1"></a>Reformat genotype data for hierfstat:</span>
+<span id="cb21-32"><a href="#cb21-32" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb21-33"><a href="#cb21-33" aria-hidden="true" tabindex="-1"></a>refdat_sub <span class="ot">&lt;-</span> refdat[,<span class="fu">c</span>(<span class="dv">5</span><span class="sc">:</span><span class="fu">ncol</span>(refdat))] <span class="sc">%&gt;%</span> <span class="fu">unite</span>(vnew, <span class="at">sep =</span> <span class="st">""</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb21-34"><a href="#cb21-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(vnew, <span class="at">into =</span> <span class="fu">colnames</span>(refdat)[<span class="fu">c</span>(<span class="fu">seq</span>(<span class="at">from =</span> <span class="dv">5</span>, <span class="at">to =</span> <span class="fu">ncol</span>(refdat), <span class="at">by =</span> <span class="dv">2</span>))], <span class="at">sep =</span> <span class="fu">c</span>(<span class="fu">seq</span>(<span class="at">from =</span> <span class="dv">2</span>, <span class="at">to =</span> <span class="dv">532</span>, <span class="at">by =</span> <span class="dv">2</span>))) </span>
+<span id="cb21-35"><a href="#cb21-35" aria-hidden="true" tabindex="-1"></a>refdat_sub <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(<span class="fu">data.frame</span>(<span class="fu">sapply</span>(refdat_sub, as.numeric))) <span class="sc">%&gt;%</span> <span class="fu">mutate_all</span>(<span class="sc">~</span><span class="fu">na_if</span>(., <span class="dv">0</span>))</span>
+<span id="cb21-36"><a href="#cb21-36" aria-hidden="true" tabindex="-1"></a>refdat_sub<span class="sc">$</span>repunit <span class="ot">&lt;-</span> refdat<span class="sc">$</span>repunit</span>
+<span id="cb21-37"><a href="#cb21-37" aria-hidden="true" tabindex="-1"></a>refdat_sub <span class="ot">&lt;-</span> refdat_sub <span class="sc">%&gt;%</span> <span class="fu">relocate</span>(repunit)</span>
+<span id="cb21-38"><a href="#cb21-38" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-39"><a href="#cb21-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-40"><a href="#cb21-40" aria-hidden="true" tabindex="-1"></a>Calculate basic statistics:</span>
+<span id="cb21-43"><a href="#cb21-43" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb21-44"><a href="#cb21-44" aria-hidden="true" tabindex="-1"></a>mybs <span class="ot">&lt;-</span> <span class="fu">basic.stats</span>(<span class="fu">data.frame</span>(refdat_sub))</span>
+<span id="cb21-45"><a href="#cb21-45" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(mybs)</span>
+<span id="cb21-46"><a href="#cb21-46" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-47"><a href="#cb21-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-48"><a href="#cb21-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-49"><a href="#cb21-49" aria-hidden="true" tabindex="-1"></a><span class="fu">## Pairwise Fst</span></span>
+<span id="cb21-50"><a href="#cb21-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-51"><a href="#cb21-51" aria-hidden="true" tabindex="-1"></a>Calculate pairwise Fst following Weir and Cockerham (1984)...also see Harris et al (2022) Conservation Genetics. NOTE: this takes ~1 hr to run</span>
+<span id="cb21-54"><a href="#cb21-54" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb21-55"><a href="#cb21-55" aria-hidden="true" tabindex="-1"></a><span class="co"># ref_fst &lt;- pairwise.WCfst(data.frame(refdat_sub))</span></span>
+<span id="cb21-56"><a href="#cb21-56" aria-hidden="true" tabindex="-1"></a><span class="co"># write.csv(data.frame(ref_fst), "GSI Analysis/Baseline Fst/UpperSnakeRiver_GTseq_BaselinePopsFst.csv", row.names = T)</span></span>
+<span id="cb21-57"><a href="#cb21-57" aria-hidden="true" tabindex="-1"></a>ref_fst <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Baseline Fst/UpperSnakeRiver_GTseq_BaselinePopsFst.csv"</span>)</span>
+<span id="cb21-58"><a href="#cb21-58" aria-hidden="true" tabindex="-1"></a>ref_fst_bylat <span class="ot">&lt;-</span> <span class="fu">tibble</span>(ref_fst[,<span class="fu">c</span>(<span class="st">"X"</span>, gps<span class="sc">$</span>repunit)]) <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(<span class="fu">match</span>(X, gps<span class="sc">$</span>repunit)) <span class="sc">%&gt;%</span> <span class="fu">column_to_rownames</span>(<span class="st">"X"</span>)</span>
+<span id="cb21-59"><a href="#cb21-59" aria-hidden="true" tabindex="-1"></a><span class="fu">reactable</span>(<span class="fu">round</span>(ref_fst_bylat, <span class="at">digits =</span> <span class="dv">3</span>))</span>
+<span id="cb21-60"><a href="#cb21-60" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-61"><a href="#cb21-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-62"><a href="#cb21-62" aria-hidden="true" tabindex="-1"></a>Range of among-population Fst:</span>
+<span id="cb21-65"><a href="#cb21-65" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb21-66"><a href="#cb21-66" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(ref_fst_bylat, <span class="at">na.rm =</span> T)</span>
+<span id="cb21-67"><a href="#cb21-67" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-68"><a href="#cb21-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-69"><a href="#cb21-69" aria-hidden="true" tabindex="-1"></a>Plot histogram of pairwise Fst values. Vertical red line denotes Fst = 0.01: the recommended minimum pairwise Fst for accurate genetic stock identification (Araujo et al. 2014, TAFS). Note that most pariwise comparisons (among reporting groups) are above this threshold.</span>
+<span id="cb21-72"><a href="#cb21-72" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb21-73"><a href="#cb21-73" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">4</span>,<span class="dv">4</span>,<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb21-74"><a href="#cb21-74" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(ref_fst_bylat[<span class="fu">lower.tri</span>(ref_fst_bylat)], <span class="at">xlab =</span> <span class="fu">expression</span>(<span class="st">"F"</span>[<span class="st">"st"</span>]), <span class="at">main =</span> <span class="st">""</span>, <span class="at">breaks =</span> <span class="dv">50</span>)</span>
+<span id="cb21-75"><a href="#cb21-75" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fl">0.01</span>, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>)</span>
+<span id="cb21-76"><a href="#cb21-76" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-77"><a href="#cb21-77" aria-hidden="true" tabindex="-1"></a><span class="in">```{r echo=FALSE, message=FALSE, results='hide'}</span></span>
+<span id="cb21-78"><a href="#cb21-78" aria-hidden="true" tabindex="-1"></a><span class="in">jpeg("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Baseline Fst/BaselinePopsFst_hist.jpg", res = 1000, units = "in", width = 4.5, height = 4.25)</span></span>
+<span id="cb21-79"><a href="#cb21-79" aria-hidden="true" tabindex="-1"></a><span class="in">par(mar = c(4,4,1,1))</span></span>
+<span id="cb21-80"><a href="#cb21-80" aria-hidden="true" tabindex="-1"></a><span class="in">hist(ref_fst_bylat[lower.tri(ref_fst_bylat)], xlab = expression("F"["st"]), main = "", breaks = 50)</span></span>
+<span id="cb21-81"><a href="#cb21-81" aria-hidden="true" tabindex="-1"></a><span class="in">abline(v = 0.01, col = "red", lwd = 1.5)</span></span>
+<span id="cb21-82"><a href="#cb21-82" aria-hidden="true" tabindex="-1"></a><span class="in">dev.off()</span></span>
+<span id="cb21-83"><a href="#cb21-83" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-84"><a href="#cb21-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-85"><a href="#cb21-85" aria-hidden="true" tabindex="-1"></a>Proportion of reporting group pairs for which Fst &lt; 0.01</span>
+<span id="cb21-88"><a href="#cb21-88" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb21-89"><a href="#cb21-89" aria-hidden="true" tabindex="-1"></a>rrr <span class="ot">&lt;-</span> ref_fst_bylat[<span class="fu">lower.tri</span>(ref_fst_bylat)]</span>
+<span id="cb21-90"><a href="#cb21-90" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(rrr[rrr <span class="sc">&lt;</span> <span class="fl">0.01</span>]) <span class="sc">/</span> <span class="fu">length</span>(rrr)</span>
+<span id="cb21-91"><a href="#cb21-91" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-92"><a href="#cb21-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-93"><a href="#cb21-93" aria-hidden="true" tabindex="-1"></a>For which pairs is Fst &lt; 0.01?</span>
+<span id="cb21-94"><a href="#cb21-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-95"><a href="#cb21-95" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Fst indicates low differentiation/lots of mixing among UBBC, Cowboy Cabin, Snake River Side Channel, and Blacktail.</span>
+<span id="cb21-98"><a href="#cb21-98" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb21-99"><a href="#cb21-99" aria-hidden="true" tabindex="-1"></a>fstlist <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="fu">apply</span>(ref_fst_bylat <span class="sc">&lt;</span> <span class="fl">0.01</span>, <span class="dv">1</span>, which), names)</span>
+<span id="cb21-100"><a href="#cb21-100" aria-hidden="true" tabindex="-1"></a>fstlist[<span class="fu">lengths</span>(fstlist) <span class="sc">&gt;</span> <span class="dv">0</span>]</span>
+<span id="cb21-101"><a href="#cb21-101" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-102"><a href="#cb21-102" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-103"><a href="#cb21-103" aria-hidden="true" tabindex="-1"></a>Plot matrix of pairwise Fst: </span>
+<span id="cb21-104"><a href="#cb21-104" aria-hidden="true" tabindex="-1"></a><span class="in">```{r fig.width=12, fig.height=12}</span></span>
+<span id="cb21-105"><a href="#cb21-105" aria-hidden="true" tabindex="-1"></a><span class="in"># plot color matrix of Fst</span></span>
+<span id="cb21-106"><a href="#cb21-106" aria-hidden="true" tabindex="-1"></a><span class="in">r2 &lt;- ref_fst_bylat</span></span>
+<span id="cb21-107"><a href="#cb21-107" aria-hidden="true" tabindex="-1"></a><span class="in">r2[upper.tri(r2)] &lt;- NA</span></span>
+<span id="cb21-108"><a href="#cb21-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-109"><a href="#cb21-109" aria-hidden="true" tabindex="-1"></a><span class="in">par(mar = c(12,12,4,4))</span></span>
+<span id="cb21-110"><a href="#cb21-110" aria-hidden="true" tabindex="-1"></a><span class="in">plot(as.matrix(r2), main = expression("F"["st"]), col = rev(magma(20)), las = 2, xlab = "", ylab = "", axes = F, border = "grey50")</span></span>
+<span id="cb21-111"><a href="#cb21-111" aria-hidden="true" tabindex="-1"></a><span class="in">axis(1, cex.axis = 0.2)</span></span>
+<span id="cb21-112"><a href="#cb21-112" aria-hidden="true" tabindex="-1"></a><span class="in">axis(2, cex.axis = 0.2)</span></span>
+<span id="cb21-113"><a href="#cb21-113" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-114"><a href="#cb21-114" aria-hidden="true" tabindex="-1"></a><span class="in">```{r echo=FALSE, message=FALSE, results='hide'}</span></span>
+<span id="cb21-115"><a href="#cb21-115" aria-hidden="true" tabindex="-1"></a><span class="in">jpeg("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Baseline Fst/BaselinePopsFst_colormatrix_byLat.jpg", res = 1000, units = "in", width = 12, height = 12)</span></span>
+<span id="cb21-116"><a href="#cb21-116" aria-hidden="true" tabindex="-1"></a><span class="in">par(mar = c(12,12,4,4))</span></span>
+<span id="cb21-117"><a href="#cb21-117" aria-hidden="true" tabindex="-1"></a><span class="in">plot(as.matrix(r2), main = expression("F"["st"]), col = rev(magma(20)), las = 2, xlab = "", ylab = "", axes = F, border = "grey50")</span></span>
+<span id="cb21-118"><a href="#cb21-118" aria-hidden="true" tabindex="-1"></a><span class="in">axis(1, cex.axis = 0.2)</span></span>
+<span id="cb21-119"><a href="#cb21-119" aria-hidden="true" tabindex="-1"></a><span class="in">axis(2, cex.axis = 0.2)</span></span>
+<span id="cb21-120"><a href="#cb21-120" aria-hidden="true" tabindex="-1"></a><span class="in">dev.off()</span></span>
+<span id="cb21-121"><a href="#cb21-121" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-122"><a href="#cb21-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-123"><a href="#cb21-123" aria-hidden="true" tabindex="-1"></a>The same plot, but with numbered reporting groups (for supporting information):</span>
+<span id="cb21-124"><a href="#cb21-124" aria-hidden="true" tabindex="-1"></a><span class="in">```{r fig.width=10, fig.height=10}</span></span>
+<span id="cb21-125"><a href="#cb21-125" aria-hidden="true" tabindex="-1"></a><span class="in"># plot color matrix of Fst</span></span>
+<span id="cb21-126"><a href="#cb21-126" aria-hidden="true" tabindex="-1"></a><span class="in">rownames(r2) &lt;- 1:dim(r2)[1]</span></span>
+<span id="cb21-127"><a href="#cb21-127" aria-hidden="true" tabindex="-1"></a><span class="in">colnames(r2) &lt;- 1:dim(r2)[1]</span></span>
+<span id="cb21-128"><a href="#cb21-128" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-129"><a href="#cb21-129" aria-hidden="true" tabindex="-1"></a><span class="in">par(mar = c(2.5,2.5,1,4))</span></span>
+<span id="cb21-130"><a href="#cb21-130" aria-hidden="true" tabindex="-1"></a><span class="in">plot(as.matrix(r2), main = "", col = rev(magma(20)), las = 2, xlab = "", ylab = "", axes = F, border = "grey50")</span></span>
+<span id="cb21-131"><a href="#cb21-131" aria-hidden="true" tabindex="-1"></a><span class="in">axis(1, cex.axis = 0.2)</span></span>
+<span id="cb21-132"><a href="#cb21-132" aria-hidden="true" tabindex="-1"></a><span class="in">axis(2, cex.axis = 0.2)</span></span>
+<span id="cb21-133"><a href="#cb21-133" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-136"><a href="#cb21-136" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb21-137"><a href="#cb21-137" aria-hidden="true" tabindex="-1"></a><span class="fu">jpeg</span>(<span class="st">"/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Baseline Fst/BaselinePopsFst_colormatrix_byLat_numbered.jpg"</span>, <span class="at">res =</span> <span class="dv">1000</span>, <span class="at">units =</span> <span class="st">"in"</span>, <span class="at">width =</span> <span class="dv">10</span>, <span class="at">height =</span> <span class="dv">10</span>)</span>
+<span id="cb21-138"><a href="#cb21-138" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="fl">2.5</span>,<span class="fl">2.5</span>,<span class="dv">4</span>,<span class="dv">4</span>))</span>
+<span id="cb21-139"><a href="#cb21-139" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">as.matrix</span>(r2), <span class="at">main =</span> <span class="fu">expression</span>(<span class="st">"F"</span>[<span class="st">"st"</span>]), <span class="at">col =</span> <span class="fu">rev</span>(<span class="fu">magma</span>(<span class="dv">20</span>)), <span class="at">las =</span> <span class="dv">2</span>, <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">""</span>, <span class="at">axes =</span> F, <span class="at">border =</span> <span class="st">"grey50"</span>)</span>
+<span id="cb21-140"><a href="#cb21-140" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">1</span>, <span class="at">cex.axis =</span> <span class="fl">0.2</span>)</span>
+<span id="cb21-141"><a href="#cb21-141" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">2</span>, <span class="at">cex.axis =</span> <span class="fl">0.2</span>)</span>
+<span id="cb21-142"><a href="#cb21-142" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span>
+<span id="cb21-143"><a href="#cb21-143" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-144"><a href="#cb21-144" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-145"><a href="#cb21-145" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-146"><a href="#cb21-146" aria-hidden="true" tabindex="-1"></a>For Wy-ACT Fish-Flows manuscript, get range and median Fst among spring creeks with redd count data</span>
+<span id="cb21-149"><a href="#cb21-149" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb21-150"><a href="#cb21-150" aria-hidden="true" tabindex="-1"></a>mypops <span class="ot">&lt;-</span>  <span class="fu">c</span>(<span class="st">"blacktail_NA"</span>, <span class="st">"cody_bluecrane"</span>, <span class="st">"cowboycabin_NA"</span>, <span class="st">"fish_NA"</span>, <span class="st">"flat_NA"</span>, <span class="st">"lowerbarbc_NA"</span>, <span class="st">"snakeriversidechannel_NA"</span>, <span class="st">"spring_tss"</span>, <span class="st">"threechannel_NA"</span>, <span class="st">"upperbarbc_NA"</span>)</span>
+<span id="cb21-151"><a href="#cb21-151" aria-hidden="true" tabindex="-1"></a>ref_fst2 <span class="ot">&lt;-</span> ref_fst_bylat[mypops, mypops]</span>
+<span id="cb21-152"><a href="#cb21-152" aria-hidden="true" tabindex="-1"></a>ref_fst3 <span class="ot">&lt;-</span> ref_fst_bylat[<span class="fu">lower.tri</span>(ref_fst2)]</span>
+<span id="cb21-153"><a href="#cb21-153" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(ref_fst3, <span class="at">na.rm =</span> T)</span>
+<span id="cb21-154"><a href="#cb21-154" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(ref_fst3, <span class="at">na.rm =</span> T)</span>
+<span id="cb21-155"><a href="#cb21-155" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+</body></html>

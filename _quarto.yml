@@ -21,6 +21,7 @@ book:
       chapters:
       - Baseline Relatedness/BaselineRelatedness.qmd
       - Baseline Testing/BaselineDataTesting.qmd
+      - Baseline Fst/BaselineFst.qmd
 
 format:
   html:
