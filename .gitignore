@@ -4,5 +4,6 @@
 .httr-oauth
 .DS_Store
 .quarto
-
 /.quarto/
+/Baseline Testing/BaselineDataTesting_cache/
+/Baseline Testing/Simulated Mixtures/sim_mix.rds
