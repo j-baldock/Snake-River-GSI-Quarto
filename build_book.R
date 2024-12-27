@@ -20,3 +20,7 @@ quarto::quarto_render("Baseline Testing/BaselineDataTesting.qmd",
 quarto::quarto_render("BaselineFst/BaselineFst.qmd", 
                       #cache_refresh = TRUE, # default is FALSE
                       output_format = "html")
+
+quarto::quarto_render("GSI Analysis/GSIAnalysis.qmd", 
+                      #cache_refresh = TRUE, # default is FALSE
+                      output_format = "html")

@@ -1,0 +1,439 @@
+# GSI Analysis
+
+Purpose: Run genetic stock identification analysis and generate various output files.
+
+```{r echo=FALSE}
+library(rubias)
+library(tidyverse)
+library(reactable)
+library(knitr)
+```
+
+
+## Data
+
+Read in formatted genotype data, see BaselineDataTesting.R
+```{r}
+# formatted reference and mixture genotypes
+ref_input <- read_csv("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Baseline Testing/UpperSnakeRiver_GTseq_InputData_NoSibs_clean_baseline.csv")
+mix_input <- read_csv("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Baseline Testing/UpperSnakeRiver_GTseq_InputData_NoSibs_clean_mixture.csv") %>% filter(collection != "snake_jldcattlemens")
+ref_input <- ref_input %>% mutate_if(is.double, as.integer) # make sure everything is an interger
+mix_input <- mix_input %>% mutate_if(is.double, as.integer) # make sure everything is an interger
+```
+
+Get metadata
+```{r}
+# get metadata
+ids <- read_csv("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/LabFieldIDs.csv")
+data <- read_csv("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Snake_GSI_field data_2020-2022_GenOnly_DropNoDrop_090823edit.csv")
+metadata <- left_join(ids, data) %>% 
+  select(indiv, CORRgenID, year, site, TL.mm, TL.in, FL.mm, weight.g, weight.lbs, collection.type, sizecat) %>% 
+  filter(collection.type == "mixture", site != "snake_jldcattlemens")
+metadata[duplicated(metadata$indiv),] # check for duplicates
+```
+
+Get self-assignment test results:
+```{r}
+self_test_exam <- read_csv("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Baseline Testing/Self Assignment/self_assign_results_individuals.csv")
+```
+
+Get groundwater metric and GPS locations for plotting
+```{r}
+# groundwater metrics
+gwmet <- read_csv("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Landscape Covariates/Groundwater/GroundwaterMetrics_raw_RepUnits.csv") %>% 
+  rename(repunit = site) %>% 
+  mutate(logarea = log(areasqkm), loggwi = log(gwi_iew05km)) %>% 
+  mutate(z_logarea = as.numeric(scale(logarea)), z_loggwi = as.numeric(scale(loggwi))) %>%
+  arrange(repunit)
+
+gps <- read_csv("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Landscape Covariates/RepUnit_LatLong.csv")
+```
+
+
+Generate data files year-aware GSI. 
+```{r}
+# mixture global
+# mix_input_global <- mix_input %>% mutate(collection = "snake")
+# unique(mix_input_global$collection)
+
+# mixtures by year
+metayr <- metadata %>% select(indiv, year)
+mix_input_yr <- mix_input %>% left_join(metayr) %>% mutate(collection = paste(collection, year, sep = "_")) %>% select(-year)
+```
+
+See unique collections
+```{r}
+unique(mix_input_yr$collection)
+```
+
+
+## Run GSI - by Section and Year
+
+Run GSI with collections specific to sections and years. Mthod "PB" provides bootstrapped corrected mixing proportions.
+```{r}
+gsi_sectyear <- infer_mixture(reference = ref_input, mixture = mix_input_yr, gen_start_col = 5, method = "PB")
+saveRDS(gsi_sectyear, "/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/GSI Analysis/By Section and Year/UpperSnake_GSI_SectionYear_output.RDS")
+write_csv(gsi_sectyear$bootstrapped_proportions, "/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/GSI Analysis/By Section and Year/UpperSnake_GSI_SectionYear_BootstrappedProportions.csv")
+gsi_sectyear <- readRDS("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/GSI Analysis/By Section and Year/UpperSnake_GSI_SectionYear_output.RDS")
+```
+
+
+### GSI Diagnostics
+
+#### MAP
+
+Get the maximum-a-posteriori population for each individual. Do mainstem individuals assign to a source population (reporting group) with high probability? Do certain reporting groups have many individuals that assign with low certainty? (if so, may suggest missing reporting groups from baseline)
+```{r}
+map_rows <- gsi_sectyear$indiv_posteriors %>%
+  group_by(indiv) %>%
+  top_n(1, PofZ) %>%
+  ungroup()
+ss <- map_rows %>% group_by(repunit) %>% summarise(n = n())
+```
+
+View the distribution of MAP values by reporting group:
+```{r fig.width=7, fig.height=5}
+ggplot(map_rows, aes(x = repunit, y = PofZ)) +
+  geom_boxplot(aes(colour = repunit)) +
+  geom_text(data = ss, mapping = aes(y = 1.025, label = n), angle = 90, hjust = 0, vjust = 0.5, size = 3) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 9, vjust = 0.5)) +
+  ylim(c(NA, 1.05)) +
+  guides(colour = FALSE) +
+  xlab("Reporting group") + ylab("Maximum likelihood")
+```
+
+```{r echo=FALSE, message=FALSE, results='hide'}
+jpeg("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/GSI Analysis/By Section and Year/gsi_IndividualPosteriorAssignmentProbability.jpg", res = 1000, units = "in", width = 7, height = 5)
+ggplot(map_rows, aes(x = repunit, y = PofZ)) +
+  geom_boxplot(aes(colour = repunit)) +
+  geom_text(data = ss, mapping = aes(y = 1.025, label = n), angle = 90, hjust = 0, vjust = 0.5, size = 3) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 9, vjust = 0.5)) +
+  ylim(c(NA, 1.05)) +
+  guides(colour = FALSE) +
+  xlab("Reporting group") + ylab("Maximum likelihood")
+dev.off()
+```
+
+#### Z Scores
+
+Plot density of observed z-scores (blue) against expected (black)...if all contributing pops are represented in the baseline, distributions should be similar.
+
+Generate values from a normal distribition
+```{r}
+normo <- tibble(z_score = rnorm(1e06))
+```
+
+Test for differences between observed and random normal distributions using a Kolmogorov-Smirnov test. p << 0.05 indicates there are problematic individuals (distributions are not the same).
+```{r}
+ks.test(normo, map_rows$z_score)
+```
+
+Plot observed (black) and expected (blue) distributions of z-scores
+```{r }
+ggplot(map_rows, aes(x = z_score)) +
+  geom_density(colour = "blue") +
+  geom_density(data = normo, colour = "black")
+```
+
+```{r echo=FALSE, message=FALSE, results='hide'}
+jpeg("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/GSI Analysis/By Section and Year/gsi_zscore_dist.jpg", res = 1000, units = "in", width = 5, height = 5)
+ggplot(map_rows, aes(x = z_score)) +
+  geom_density(colour = "blue") +
+  geom_density(data = normo, colour = "black")
+dev.off()
+```
+
+View distribution of z-scores by population
+```{r fig.width=9, fig.height=5}
+ggplot(map_rows, aes(x = repunit, y = z_score)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+```
+
+```{r echo=FALSE, message=FALSE, results='hide'}
+jpeg("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/GSI Analysis/By Section and Year/gsi_zscore_dist_bypop.jpg", res = 1000, units = "in", width = 9, height = 5)
+ggplot(map_rows, aes(x = repunit, y = z_score)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+dev.off()
+```
+
+Following Bowersox, Hargrove, et al 2023 (NAJFM), individual likely originated from an unsampled pop if +/- 2 SDs from the mean z-score. Find problematic individuals
+```{r}
+meanz <- mean(map_rows$z_score)
+zproblems <- map_rows %>% filter(z_score > meanz+2 | z_score < meanz-2)
+reactable(zproblems)
+```
+
+Fish originating from pops outside our baseline represent ~6.57% of all fish sampled in the mixture
+```{r}
+dim(zproblems)[1] / dim(map_rows)[1] 
+```
+
+Which section of the mainstem Snake River were these problematic individuals sampled from?
+```{r}
+zproblems %>% mutate(snake_section = str_sub(mixture_collection, 1, str_length(mixture_collection)-5)) %>% group_by(snake_section) %>% summarize(count = n()) %>% kable()
+```
+
+Which reporting group are the problematic individuals assigning to?
+```{r}
+zproblems %>% group_by(repunit) %>% summarize(count = n()) %>% kable()
+```
+
+Other papers compare z-scores from observed mixture data (red) to z-scores generated from the self-assignment tests (blue):
+```{r fig.width=11, fig.height=11}
+par(mfrow = c(6,7), mar = c(2,2.5,3,0.1))
+sites <- sort(unique(map_rows$repunit))
+for (i in 1:length(sites)) {
+  mx <- map_rows %>% filter(repunit == sites[i])
+  bl <- self_test_exam %>% filter(repunit == sites[i])
+  ztib <- tibble(type = c(rep("mx", times = dim(mx)[1]), rep("bl", times = dim(bl)[1])), z = c(mx$z_score, bl$z_score))
+  boxplot(z ~ type, ztib, col = c("blue", "red"), main = sites[i])
+}
+```
+
+```{r echo=FALSE, message=FALSE, results='hide'}
+jpeg("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/GSI Analysis/By Section and Year/zscore_comparison_boxplot.jpg", res = 1000, units = "in", width = 11, height = 11)
+par(mfrow = c(6,7), mar = c(2,2.5,3,0.1))
+sites <- sort(unique(map_rows$repunit))
+for (i in 1:length(sites)) {
+  mx <- map_rows %>% filter(repunit == sites[i])
+  bl <- self_test_exam %>% filter(repunit == sites[i])
+  ztib <- tibble(type = c(rep("mx", times = dim(mx)[1]), rep("bl", times = dim(bl)[1])), z = c(mx$z_score, bl$z_score))
+  boxplot(z ~ type, ztib, col = c("blue", "red"), main = sites[i])
+}
+dev.off()
+```
+
+
+### BS mixing proportions
+
+Inspect bootstrap-corrected mixing proportions, because from self-assignment tests and mixture simulations, we know raw mixing proportions will be somewhat biased. 
+
+Summarize raw and bootstrap corrected mixing proportions by reporting group, calculate mean residual for each collection.
+```{r}
+tt <- gsi_sectyear$mixing_proportions %>% 
+  group_by(mixture_collection, repunit) %>% summarize(pi = sum(pi)) %>% ungroup() %>% 
+  left_join(gsi_sectyear$bootstrapped_proportions) %>%
+  mutate(diff = bs_corrected_repunit_ppn - pi,
+         section = str_sub(mixture_collection, 7, -6),
+         year = str_sub(mixture_collection, -4))
+tt %>% group_by(mixture_collection) %>% summarize(mr = sum(bs_corrected_repunit_ppn - pi) / length(unique(repunit)))
+```
+
+Calculate Pearson's r correlation coefficient between raw and bootstrap-corrected mixing proportions:
+```{r}
+tt <- tt %>% mutate(sectionID = recode(section, 
+                                 "pacificdeadmans" = "A",
+                                 "deadmansmoose" = "B",
+                                 "moosewilson" = "C",
+                                 "wilsonsouthpark" = "D",
+                                 "southparkastoria" = "E",
+                                 "astoriawesttable" = "F"),
+                    year = as.numeric(year))
+tt2 <- add_row(tt, year = 2020, sectionID = "A")
+cor.test(tt2$pi, tt2$bs_corrected_repunit_ppn)
+```
+
+Plot raw vs bootstrap-corrected mixing proportions. Red line = 1:1.
+```{r fig.width=6, fig.height=9}
+tt2 %>% ggplot() + 
+  geom_point(aes(x = pi, y = bs_corrected_repunit_ppn)) + 
+  geom_abline(intercept = 0, slope = 1, col = "red") + 
+  facet_grid(factor(sectionID) ~ year) + 
+  xlab("Uncorrected mixing proportion") + ylab("Bootstrap-corrected mixing proportion") + theme_bw()
+```
+
+```{r echo=FALSE, message=FALSE, results='hide'}
+jpeg("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/GSI Analysis/By Section and Year/gsi_MixingProportions_RawVsBootstrapped.jpg", res = 1000, units = "in", width = 6, height = 9)
+tt2 %>% ggplot() + 
+  geom_point(aes(x = pi, y = bs_corrected_repunit_ppn)) + 
+  geom_abline(intercept = 0, slope = 1, col = "red") + 
+  facet_grid(factor(sectionID) ~ year) + 
+  xlab("Uncorrected mixing proportion") + ylab("Bootstrap-corrected mixing proportion") + theme_bw()
+dev.off()
+```
+
+
+Plot bootstrap-corrected mixing proportions by reporting unit, Snake River section, and year. 
+```{r fig.width=12, fig.height=9}
+tt %>% 
+  add_row(repunit = unique(tt$repunit), bs_corrected_repunit_ppn = rep(0, 52), section = rep("pacificdeadmans", 52), year = rep(2020, 52)) %>% 
+  mutate(year = as.factor(year)) %>%
+  ggplot() +
+  geom_bar(aes(x = repunit, y = bs_corrected_repunit_ppn, fill = year), stat = "identity", position = "dodge", color = "black") +
+  facet_wrap(~ factor(section, levels = c("pacificdeadmans", "deadmansmoose", "moosewilson", "wilsonsouthpark", "southparkastoria", "astoriawesttable")), nrow = 6) +
+  xlab("Reporting Group") + ylab("Corrected Mixture Proportion") + theme_bw() +
+  theme_bw() + theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+```
+
+```{r echo=FALSE, message=FALSE, results='hide'}
+jpeg("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/GSI Analysis/By Section and Year/gsi_MixingProportions_bySectionYear.jpg", res = 1000, units = "in", width = 14, height = 9)
+tt %>% 
+  add_row(repunit = unique(tt$repunit), bs_corrected_repunit_ppn = rep(0, 52), section = rep("pacificdeadmans", 52), year = rep(2020, 52)) %>% 
+  mutate(year = as.factor(year)) %>%
+  ggplot() +
+  geom_bar(aes(x = repunit, y = bs_corrected_repunit_ppn, fill = year), stat = "identity", position = "dodge", color = "black") +
+  facet_wrap(~ factor(section, levels = c("pacificdeadmans", "deadmansmoose", "moosewilson", "wilsonsouthpark", "southparkastoria", "astoriawesttable")), nrow = 6) +
+  xlab("Reporting Group") + ylab("Corrected Mixture Proportion") + theme_bw() +
+  theme_bw() + theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+dev.off()
+```
+
+Produce the same plot as above, except bar height represents mean bootstrap-corrected mixture proportion and error bars represent minimum and maximum (over 3 years of sampling).  
+```{r fig.width=8, fig.height=8}
+mylabs <- tibble(sectionID = c("A", "B", "C", "D", "E", "F"),
+                 mylab = c("A", "B", "C", "D", "E", "F"))
+
+tt %>% 
+  group_by(sectionID, repunit) %>% 
+  summarize(minppn = min(bs_corrected_repunit_ppn),
+            meanppn = mean(bs_corrected_repunit_ppn),
+            maxppn = max(bs_corrected_repunit_ppn)) %>% 
+  ungroup() %>%
+  left_join(gwmet) %>% left_join(gps) %>% 
+  ggplot(aes(x = reorder(repunit, -lat), y = meanppn)) +
+  geom_bar(aes(x = reorder(repunit, -lat), y = meanppn, fill = gwi_iew05km), stat = "identity", color = "black") +
+  geom_errorbar(aes(ymin = minppn, ymax = maxppn), width = 0) +
+  facet_wrap(~ factor(sectionID, levels = c("A", "B", "C", "D", "E", "F")), nrow = 6) +
+  xlab("Reporting group") + ylab("Corrected mixture proportion") + theme_bw() +
+  theme_bw() + theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) + 
+  theme(legend.position = "top", strip.text.x = element_blank(), legend.margin = unit(c(0,0,0,0), "pt"), legend.box.spacing = unit(5, "pt")) + 
+  labs(fill = "Groundwater index") +
+  scale_fill_viridis_c(direction = -1, guide = guide_colorbar(frame.colour = "black", ticks.colour = "black"), alpha = 0.8) +
+  scale_x_discrete(labels = c(1:52)) + 
+  geom_text(data = mylabs, aes(x = Inf, y = Inf, label = mylab, hjust = 1.5, vjust = 1.5), size = 5)
+```
+
+```{r echo=FALSE, message=FALSE, results='hide'}
+jpeg("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/GSI Analysis/By Section and Year/gsi_MixingProportions_bySectionYear_withColors_ErrorBars_byLatitude.jpg", res = 1000, units = "in", width = 8, height = 8)
+tt %>% 
+  group_by(sectionID, repunit) %>% 
+  summarize(minppn = min(bs_corrected_repunit_ppn),
+            meanppn = mean(bs_corrected_repunit_ppn),
+            maxppn = max(bs_corrected_repunit_ppn)) %>% 
+  ungroup() %>%
+  left_join(gwmet) %>% left_join(gps) %>% 
+  ggplot(aes(x = reorder(repunit, -lat), y = meanppn)) +
+  geom_bar(aes(x = reorder(repunit, -lat), y = meanppn, fill = gwi_iew05km), stat = "identity", color = "black") +
+  geom_errorbar(aes(ymin = minppn, ymax = maxppn), width = 0) +
+  facet_wrap(~ factor(sectionID, levels = c("A", "B", "C", "D", "E", "F")), nrow = 6) +
+  xlab("Reporting group") + ylab("Corrected mixture proportion") + theme_bw() +
+  theme_bw() + theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) + 
+  theme(legend.position = "top", strip.text.x = element_blank(), legend.margin = unit(c(0,0,0,0), "pt"), legend.box.spacing = unit(5, "pt")) + 
+  labs(fill = "Groundwater index") +
+  scale_fill_viridis_c(direction = -1, guide = guide_colorbar(frame.colour = "black", ticks.colour = "black"), alpha = 0.8) +
+  scale_x_discrete(labels = c(1:52)) + 
+  geom_text(data = mylabs, aes(x = Inf, y = Inf, label = mylab, hjust = 1.5, vjust = 1.5), size = 5)
+dev.off()
+```
+
+
+## Run GSI - by Section
+
+Run GSI with collections specific to sections, but agnostic to years. Mthod "PB" provides bootstrapped corrected mixing proportions.
+```{r}
+gsi_section <- infer_mixture(reference = ref_input, mixture = mix_input, gen_start_col = 5, method = "PB")
+saveRDS(gsi_section, "/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/GSI Analysis/By Section/UpperSnake_GSI_Section_output.RDS")
+write_csv(gsi_section$bootstrapped_proportions, "/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/GSI Analysis/By Section/UpperSnake_GSI_SectionYear_BootstrappedProportions.csv")
+gsi_section <- readRDS("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/GSI Analysis/By Section/UpperSnake_GSI_Section_output.RDS")
+```
+
+
+### BS mixing proportions
+
+Inspect bootstrap-corrected mixing proportions, because from self-assignment tests and mixture simulations, we know raw mixing proportions will be somewhat biased. 
+
+Summarize raw and bootstrap corrected mixing proportions by reporting group, calculate mean residual for each collection.
+```{r}
+tt <- gsi_section$mixing_proportions %>% 
+  group_by(mixture_collection, repunit) %>% summarize(pi = sum(pi)) %>% ungroup() %>% 
+  left_join(gsi_section$bootstrapped_proportions) %>%
+  mutate(diff = bs_corrected_repunit_ppn - pi)
+tt %>% group_by(mixture_collection) %>% summarize(mr = sum(bs_corrected_repunit_ppn - pi) / length(unique(repunit)))
+```
+
+Plot raw vs bootstrap-corrected mixing proportions. Red line = 1:1.
+```{r}
+tt %>% ggplot() + 
+  geom_point(aes(x = pi, y = bs_corrected_repunit_ppn)) + 
+  geom_abline(intercept = 0, slope = 1, col = "red") + 
+  facet_wrap(~ factor(mixture_collection, levels = c("snake_pacificdeadmans", "snake_deadmansmoose", "snake_moosewilson", "snake_wilsonsouthpark", "snake_southparkastoria", "snake_astoriawesttable"))) + 
+  xlab("Mixture Proportion") + ylab("Corrected Mixture Proportion") + theme_bw()
+```
+
+```{r echo=FALSE, message=FALSE, results='hide'}
+jpeg("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/GSI Analysis/By Section/gsi_MixingProportions_RawVsBootstrapped.jpg", res = 1000, units = "in", width = 7, height = 5)
+tt %>% ggplot() + 
+  geom_point(aes(x = pi, y = bs_corrected_repunit_ppn)) + 
+  geom_abline(intercept = 0, slope = 1, col = "red") + 
+  facet_wrap(~ factor(mixture_collection, levels = c("snake_pacificdeadmans", "snake_deadmansmoose", "snake_moosewilson", "snake_wilsonsouthpark", "snake_southparkastoria", "snake_astoriawesttable"))) + 
+  xlab("Mixture Proportion") + ylab("Corrected Mixture Proportion") + theme_bw()
+dev.off()
+```
+
+
+View (bootstrap corrected) reporting group contributions by river section as bar plots
+```{r fig.width=8, fig.height=9}
+gsi_section$bootstrapped_proportions %>% 
+  ggplot() +
+  geom_bar(aes(x = repunit, y = bs_corrected_repunit_ppn), stat = "identity", fill = "grey70", color = "black") +
+  facet_wrap(~ factor(mixture_collection, levels = c("snake_pacificdeadmans", "snake_deadmansmoose", "snake_moosewilson", "snake_wilsonsouthpark", "snake_southparkastoria", "snake_astoriawesttable")), nrow = 6) +
+  xlab("Reporting Group") + ylab("Corrected Mixture Proportion") + theme_bw() +
+  theme_bw() + theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+```
+
+```{r echo=FALSE, message=FALSE, results='hide'}
+jpeg("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/GSI Analysis/By Section/gsi_MixingProportions_bySection.jpg", res = 1000, units = "in", width = 8, height = 9)
+gsi_section$bootstrapped_proportions %>% 
+  ggplot() +
+  geom_bar(aes(x = repunit, y = bs_corrected_repunit_ppn), stat = "identity", fill = "grey70", color = "black") +
+  facet_wrap(~ factor(mixture_collection, levels = c("snake_pacificdeadmans", "snake_deadmansmoose", "snake_moosewilson", "snake_wilsonsouthpark", "snake_southparkastoria", "snake_astoriawesttable")), nrow = 6) +
+  xlab("Reporting Group") + ylab("Corrected Mixture Proportion") + theme_bw() +
+  theme_bw() + theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+dev.off()
+```
+
+Plot as above, but sort reporting groups by latitude (north to south) and color bars by groundwater influence:
+```{r fig.width=8, fig.height=8}
+# join bootstrapped proportions with groundwater and gps location data
+gsi_dat <- gsi_section$bootstrapped_proportions %>% left_join(gwmet) %>% left_join(gps)
+# new names
+sectnames <- c("snake_pacificdeadmans" = "A. Pacific - Deadman's", 
+               "snake_deadmansmoose" = "B. Deadman's - Moose", 
+               "snake_moosewilson" = "C. Moose - Wilson", 
+               "snake_wilsonsouthpark" = "D. Wilson - South Park", 
+               "snake_southparkastoria" = "E. South Park - Astoria", 
+               "snake_astoriawesttable" = "F. Astoria - West Table")
+mylabs <- tibble(mixture_collection = c("snake_pacificdeadmans", "snake_deadmansmoose", "snake_moosewilson", "snake_wilsonsouthpark", "snake_southparkastoria", "snake_astoriawesttable"),
+                 mylab = c("A", "B", "C", "D", "E", "F"))
+# plot
+gsi_dat %>% 
+  ggplot() +
+  geom_bar(aes(x = reorder(repunit, -lat), y = bs_corrected_repunit_ppn, fill = gwi_iew05km), stat = "identity", color = "black") +
+  facet_wrap(~ factor(mixture_collection, levels = c("snake_pacificdeadmans", "snake_deadmansmoose", "snake_moosewilson", "snake_wilsonsouthpark", "snake_southparkastoria", "snake_astoriawesttable")), nrow = 6, labeller = as_labeller(sectnames)) +
+  xlab("Reporting Group") + ylab("Corrected Mixture Proportion") + theme_bw() +
+  theme_bw() + theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) + 
+  theme(legend.position = "top", strip.text.x = element_blank()) + labs(fill = "Groundwater index") +
+  scale_fill_viridis_c(direction = -1, guide = guide_colorbar(frame.colour = "black", ticks.colour = "black"), alpha = 0.8) +
+  scale_x_discrete(labels = c(1:52)) + 
+  geom_text(data = mylabs, aes(x = Inf, y = Inf, label = mylab, hjust = 1.5, vjust = 1.5), size = 5)
+```
+
+
+```{r echo=FALSE, message=FALSE, results='hide'}
+jpeg("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/GSI Analysis/By Section/gsi_MixingProportions_bySection_withColors_byLatitude.jpg", res = 1000, units = "in", width = 8, height = 8)
+gsi_dat %>% 
+  ggplot() +
+  geom_bar(aes(x = reorder(repunit, -lat), y = bs_corrected_repunit_ppn, fill = gwi_iew05km), stat = "identity", color = "black") +
+  facet_wrap(~ factor(mixture_collection, levels = c("snake_pacificdeadmans", "snake_deadmansmoose", "snake_moosewilson", "snake_wilsonsouthpark", "snake_southparkastoria", "snake_astoriawesttable")), nrow = 6, labeller = as_labeller(sectnames)) +
+  xlab("Reporting Group") + ylab("Corrected Mixture Proportion") + theme_bw() +
+  theme_bw() + theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) + 
+  theme(legend.position = "top", strip.text.x = element_blank()) + labs(fill = "Groundwater index") +
+  scale_fill_viridis_c(direction = -1, guide = guide_colorbar(frame.colour = "black", ticks.colour = "black"), alpha = 0.8) +
+  scale_x_discrete(labels = c(1:52)) + 
+  geom_text(data = mylabs, aes(x = Inf, y = Inf, label = mylab, hjust = 1.5, vjust = 1.5), size = 5)
+dev.off()
+```
+
+
+
+
+
+

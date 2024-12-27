@@ -22,6 +22,7 @@ book:
       - Baseline Relatedness/BaselineRelatedness.qmd
       - Baseline Testing/BaselineDataTesting.qmd
       - Baseline Fst/BaselineFst.qmd
+      - GSI Analysis/GSIAnalysis.qmd
 
 format:
   html:
