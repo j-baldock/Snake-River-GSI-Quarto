@@ -23,6 +23,9 @@ book:
       - Baseline Testing/BaselineDataTesting.qmd
       - Baseline Fst/BaselineFst.qmd
       - GSI Analysis/GSIAnalysis.qmd
+    - part: "Landscape attributes"
+      chapters:
+      - Landscape Covariates/Watershed Delineation/WatershedDelineation.qmd
 
 format:
   html:

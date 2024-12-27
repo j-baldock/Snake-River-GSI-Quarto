@@ -1,0 +1,188 @@
+# Watershed Delineation
+
+Purpose: delineate watersheds for reporting units
+
+```{r echo=FALSE}
+library(tidyverse)
+library(sf)
+library(mapview)
+library(terra)
+library(whitebox)
+```
+
+## Data
+
+Load basin and flowline shapefiles and upper Snake DEM
+```{r}
+# basin
+basin <- vect("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Data/Spatial/Basin Delineation/BasinDelineation/MajorBasins_Watersheds.shp") 
+basin <- subset(basin, basin$site %in% c("UpperSnake", "Greys"))
+
+# flowline
+flowline <- vect("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Landscape Covariates/Watershed Delineation/SnakeGreys_flowline.shp")
+
+# Upper Snake DEM
+dem <- rast("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Landscape Covariates/DEM/SnakeGreys_DEM 2.tif")
+```
+
+Plot upper Snake DEM and flowline
+```{r fig.width=4, fig.height=7}
+options(terra.pal=terrain.colors(100))
+plot(dem)
+lines(flowline, col = "darkblue")
+```
+
+Load and edit reporting unit spatial locations
+```{r eval=FALSE}
+# reporting unit locations
+dat <- read_csv("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Methods/GSI Sampling/Snake_GSI_field data_2020-2022_GenOnly_DropNoDrop_090823edit.csv") %>% 
+  filter(collection.type == "baseline") %>% group_by(site) %>% summarize(lat = unique(start.lat), lon = unique(start.lon)) %>% ungroup() %>% mutate(repunit = site)
+
+# define reporting groups according to GSI
+dat$repunit[which(dat$repunit == "bluecrane_ford")] <- "cody_bluecrane"
+dat$repunit[which(dat$repunit == "cody_moment")] <- "cody_bluecrane"
+dat$repunit[which(dat$repunit == "cowboycabin_springchannels")] <- "cowboycabin_NA"
+dat$repunit[which(dat$repunit == "threechannel_eastfork")] <- "threechannel_NA"
+dat$repunit[which(dat$repunit == "threechannel_westfork")] <- "threechannel_NA"
+dat$repunit[which(dat$repunit == "fish_lower")] <- "fish_NA"
+dat$repunit[which(dat$repunit == "fish_upper")] <- "fish_NA"
+dat$repunit[which(dat$repunit == "slate_lower")] <- "slate_NA"
+dat$repunit[which(dat$repunit == "slate_upper")] <- "slate_NA"
+dat$repunit[which(dat$repunit == "spread_northfork")] <- "spreadnf_flagstaff"
+dat$repunit[which(dat$repunit == "flagstaff_NA")] <- "spreadnf_flagstaff"
+dat$repunit[which(dat$repunit == "fall_upper")] <- "fall_coburn"
+dat$repunit[which(dat$repunit == "fall_lower")] <- "fall_coburn"
+dat$repunit[which(dat$repunit == "coburn_NA")] <- "fall_coburn"
+dat$repunit[which(dat$repunit == "littlegreys_lower")] <- "littlegreys_steer"
+dat$repunit[which(dat$repunit == "littlegreys_upper")] <- "littlegreys_steer"
+dat$repunit[which(dat$repunit == "steer_NA")] <- "littlegreys_steer"
+dat$repunit[which(dat$repunit == "pacific_lower")] <- "pacific_NA"
+dat$repunit[which(dat$repunit == "pacific_upper")] <- "pacific_NA"
+dat$repunit[which(dat$repunit == "deadman _greys")] <- "deadman_greys"
+
+# drop reporting groups that cannot be easily combined
+dat <- dat %>% filter(!repunit %in% c("schwabacher_NA", "southbuffalofork_NA", "jack_NA", "bacon_NA", "bear_NA", "sheep_NA"))
+
+# filter to most downstream sites
+dat <- dat %>% mutate(ds = ifelse(row_number() %in% c(3,4,7,13,18,24,25,29,31,33,34,16,38,37,17,40,44,41,42,80,45,48,51,53,54,58,61,63,64,66,90,71,72,74,77,78,82,84,86,87,91,94), 0, 1))
+dat <- dat %>% filter(ds == 1) %>% select(repunit, lat, lon) %>% group_by(repunit) %>% summarize(lat = mean(lat), lon = mean(lon))
+dat <- dat[-33,] # drop lake crk
+
+# edit lat/long
+dat$lat[which(dat$repunit == "cottonwood_grosventre")] <- 43.55226
+dat$lon[which(dat$repunit == "cottonwood_grosventre")] <- -110.25895
+dat$lat[which(dat$repunit == "threechannel_NA")] <- 43.55138
+dat$lon[which(dat$repunit == "threechannel_NA")] <- -110.79136
+dat$lat[which(dat$repunit == "cody_bluecrane")] <- 43.43554
+dat$lon[which(dat$repunit == "cody_bluecrane")] <- -110.82925
+dat$lat[which(dat$repunit == "flagstaff_NA")] <- 43.78173
+dat$lon[which(dat$repunit == "flagstaff_NA")] <- -110.28081
+dat$lat[which(dat$repunit == "dell_NA")] <- 43.23103
+dat$lon[which(dat$repunit == "dell_NA")] <- -110.42322
+dat$lat[which(dat$repunit == "lowerbarbc_NA")] <- 43.54686
+dat$lon[which(dat$repunit == "lowerbarbc_NA")] <- -110.78555
+dat$lat[which(dat$repunit == "spread_southfork")] <- 43.74837
+dat$lon[which(dat$repunit == "spread_southfork")] <- -110.31922
+dat$lat[which(dat$repunit == "blackrock_lower")] <- 43.82523
+dat$lon[which(dat$repunit == "blackrock_lower")] <- -110.35208
+
+# create spatial data object and project to crs
+datsp <- vect(dat, c("lon", "lat"), crs = "+proj=longlat")
+datsp <- terra::project(datsp, basin)
+
+# write out reporting unit locations
+write_csv(dat, "/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Landscape Covariates/Location Data/RepUnit_LatLong.csv")
+writeVector(datsp, "/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Landscape Covariates/Location Data/RepUnit_SpatialLocations.shp", overwrite = TRUE)
+```
+
+```{r}
+datsp <- vect("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Landscape Covariates/Location Data/RepUnit_SpatialLocations.shp")
+```
+
+View flowline and reporting unit locations
+```{r}
+mapview(st_as_sf(flowline)) + mapview(st_as_sf(datsp), legend = F)
+```
+
+
+## Burn streams into DEM
+
+```{r eval=FALSE}
+# buffer flowline and rasterize to burn into dem
+flowbuff <- buffer(flowline, width = 20)
+flowbuff.rast <- rast(ncols = ncol(dem), nrows = nrow(dem), ext(dem))
+res(flowbuff.rast) <- res(dem) # make sure resolution is identical
+flowbuff.rast <- terra::rasterize(x = flowbuff, y = flowbuff.rast)
+flowbuff.rast2 <- subst(flowbuff.rast, from = c(1, NaN), to = c(10, 0)) # reclassify
+crs(flowbuff.rast2) <- crs(basin)
+
+# burn buffered flowline into dem
+dem_burn <- dem - flowbuff.rast2
+writeRaster(dem_burn, "Landscape Covariates/Watershed Delineation/Working/Snake_mask_dem_burn.tif", overwrite = TRUE)
+
+# then burn streams into dem
+wbt_fill_burn(dem = "Landscape Covariates/Watershed Delineation/Working/Snake_mask_dem_burn.tif",
+              streams = "Landscape Covariates/Watershed Delineation/SnakeGreys_flowline.shp",
+              output = "Landscape Covariates/Watershed Delineation/Working/Snake_mask_dem_burn2.tif")
+```
+
+
+## Delineate watersheds
+
+Delineate watersheds following WhiteboxTools tutorial
+```{r eval=FALSE}
+# fill and breach DEM (burned) depressions
+wbt_breach_depressions_least_cost(dem = "Landscape Covariates/Watershed Delineation/Working/Snake_mask_dem_burn2.tif", output = "Landscape Covariates/Watershed Delineation/Working/Snake_mask_dem_breached.tif", dist = 5, fill = TRUE)
+wbt_fill_depressions_wang_and_liu(dem = "Landscape Covariates/Watershed Delineation/Working/Snake_mask_dem_breached.tif", output = "Landscape Covariates/Watershed Delineation/Working/Snake_mask_dem_filled_breached.tif")
+
+# flow direction
+wbt_d8_pointer(dem = "Landscape Covariates/Watershed Delineation/Working/Snake_mask_dem_filled_breached.tif", output = "Landscape Covariates/Watershed Delineation/Working/Snake_mask_flowdirection.tif")
+
+# rasterize the flowline spatial lines object
+wbt_rasterize_streams(streams = "Landscape Covariates/Watershed Delineation/SnakeGreys_flowline.shp",
+                      base = "Landscape Covariates/SnakeGreys_DEM.tif",
+                      output = "Landscape Covariates/Watershed Delineation/Working/Snake_mask_flowline_raster.tif", nodata = 0)
+
+# snap points to (raster) stream network
+wbt_jenson_snap_pour_points(pour_pts = "Landscape Covariates/RepUnit_SpatialLocations.shp",
+                            streams = "Landscape Covariates/Watershed Delineation/Working/Snake_mask_flowline_raster.tif",
+                            output = "Landscape Covariates/Watershed Delineation/Working/RepUnit_SpatialLocations_snapped.shp",
+                            snap_dist = 300) 
+```
+
+Check correct snapping
+```{r}
+pts.snap <- read_sf(dsn = "/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Landscape Covariates/Watershed Delineation/Working", layer = "RepUnit_SpatialLocations_snapped") #%>% st_set_crs(st_crs(basin)) %>% st_intersection(basin)
+mapview(list(st_as_sf(flowline), st_as_sf(datsp), st_as_sf(pts.snap)), col.regions = list("blue","blue", "red"), col = list("blue","blue", "red"), legend = F)
+```
+
+Iteratively delineate each watershed...allows for overlap
+```{r eval=FALSE}
+sites <- unique(pts.snap$repunit)
+watershed.sec.list <- list()
+st <- Sys.time()
+for (i in 1:length(sites)) {
+  pt.sub <- pts.snap[pts.snap$repunit == sites[i],]
+  st_write(pt.sub, "Landscape Covariates/Watershed Delineation/Working/single_temporary.shp", append = FALSE, delete_layer = TRUE)
+  wbt_watershed(d8_pntr = "Landscape Covariates/Watershed Delineation/Working/Snake_mask_flowdirection.tif",
+                pour_pts = "Landscape Covariates/Watershed Delineation/Working/single_temporary.shp",
+                output = "Landscape Covariates/Watershed Delineation/Working/single_temporary_watershed.tif")
+  ws <- rast("Landscape Covariates/Watershed Delineation/Working/single_temporary_watershed.tif")
+  watershed.sec.list[[i]] <- st_as_sf(as.polygons(ws))
+  print(paste(i, " - ", sites[i], sep = ""))
+}
+et <- Sys.time()
+et - st
+watersheds.sec <- do.call(rbind, watershed.sec.list) %>% st_set_crs(st_crs(st_as_sf(basin))) 
+watersheds.sec <- watersheds.sec %>% mutate(site = sites, areasqkm = as.numeric(st_area(watersheds.sec)/1000000))
+mapview(list(watersheds.sec, pts.snap, st_as_sf(flowline)), legend = F)
+view(watersheds.sec[watersheds.sec$areasqkm<0.1,])
+st_write(watersheds.sec, "Landscape Covariates/Watershed Delineation/RepUnits_Watersheds.shp", append = FALSE, delete_layer = TRUE)
+```
+
+Check delineated watersheds
+```{r}
+watersheds <- read_sf(dsn = "/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Landscape Covariates/Watershed Delineation", layer = "RepUnits_Watersheds") #%>% st_set_crs(st_crs(basin)) %>% st_intersection(basin)
+mapview(list(st_as_sf(flowline), st_as_sf(watersheds), st_as_sf(pts.snap)), col.regions = list("blue","red", "red"), col = list("blue","red", "red"), legend = F)
+```
+
