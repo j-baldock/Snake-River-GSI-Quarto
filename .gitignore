@@ -7,3 +7,6 @@
 /.quarto/
 /Baseline Testing/BaselineDataTesting_cache/
 /Baseline Testing/Simulated Mixtures/sim_mix.rds
+/Landscape Covariates/Watershed Delineation/Working/
+/Landscape Covariates/DEM/
+/Landscape Covariates/Barriers/
