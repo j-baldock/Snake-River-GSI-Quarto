@@ -101,7 +101,7 @@ datsp <- vect("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo
 
 View flowline and reporting unit locations
 ```{r}
-mapview(st_as_sf(flowline)) + mapview(st_as_sf(datsp), legend = F)
+mapview(list(st_as_sf(flowline), st_as_sf(datsp)), col.regions = list("blue","black"), col = list("blue","black"), legend = F)
 ```
 
 
@@ -153,7 +153,7 @@ wbt_jenson_snap_pour_points(pour_pts = "Landscape Covariates/RepUnit_SpatialLoca
 Check correct snapping
 ```{r}
 pts.snap <- read_sf(dsn = "/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Landscape Covariates/Watershed Delineation/Working", layer = "RepUnit_SpatialLocations_snapped") #%>% st_set_crs(st_crs(basin)) %>% st_intersection(basin)
-mapview(list(st_as_sf(flowline), st_as_sf(datsp), st_as_sf(pts.snap)), col.regions = list("blue","blue", "red"), col = list("blue","blue", "red"), legend = F)
+mapview(list(st_as_sf(flowline), st_as_sf(datsp), st_as_sf(pts.snap)), col.regions = list("blue","black", "red"), col = list("blue","black", "red"), legend = F)
 ```
 
 Iteratively delineate each watershed...allows for overlap
@@ -183,6 +183,6 @@ st_write(watersheds.sec, "Landscape Covariates/Watershed Delineation/RepUnits_Wa
 Check delineated watersheds
 ```{r}
 watersheds <- read_sf(dsn = "/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Landscape Covariates/Watershed Delineation", layer = "RepUnits_Watersheds") #%>% st_set_crs(st_crs(basin)) %>% st_intersection(basin)
-mapview(list(st_as_sf(flowline), st_as_sf(watersheds), st_as_sf(pts.snap)), col.regions = list("blue","red", "red"), col = list("blue","red", "red"), legend = F)
+mapview(list(st_as_sf(flowline), st_as_sf(watersheds), st_as_sf(pts.snap)), col.regions = list("blue","red", "black"), col = list("blue","red", "black"), legend = F)
 ```
 

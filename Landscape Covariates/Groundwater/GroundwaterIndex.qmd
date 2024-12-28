@@ -1,0 +1,112 @@
+# Groundwater
+
+Purpose: derive metrics of groundwater influence for reporting unit locations
+
+```{r}
+library(tidyverse)
+library(sf)
+library(mapview)
+library(terra)
+library(knitr)
+library(viridis)
+```
+
+## Data
+
+Load spring prevalence rasters, lakes, basin and flowline
+```{r}
+# spring prevalence from Maxent: complete tiff and buffered/no lake tiff
+spring_full <- rast("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Groundwater Seeps/SpringTIFFs/SpringPrev_SnakeGreys_BedSurf.tif")
+
+# lakes in Upper Snake
+lakes <- vect("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Data/Spatial/Lakes/UpperSnake_Lakes.shp") 
+
+# basin without lakes
+basin <- vect("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Data/Spatial/Basin Delineation/BasinDelineation/MajorBasins_Watersheds.shp") 
+basin <- subset(basin, basin$site %in% c("UpperSnake", "Greys"))
+basin_nolakes <- erase(basin, lakes)
+
+# flowline
+flowline <- vect("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Landscape Covariates/Watershed Delineation/SnakeGreys_flowline.shp")
+flowbuff <- flowline %>% buffer(width = 100)
+```
+
+Remove lakes and buffer to flowline
+```{r eval=FALSE}
+spring_nolakes <- mask(spring_full, basin_nolakes)
+spring_nolakes_buff100 <- mask(spring_nolakes, flowbuff)
+```
+
+Write-out spring prevalence rasters
+```{r eval=FALSE}
+writeRaster(spring_nolakes, "/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Groundwater Seeps/SpringTIFFs/SpringPrev_SnakeGreys_BedSurf_nolakes.tif")
+writeRaster(spring_nolakes_buff100, "/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Groundwater Seeps/SpringTIFFs/SpringPrev_SnakeGreys_BedSurf_nolakes_flowbuff100.tif")
+```
+
+Load spring prevalence rasters
+```{r}
+spring_nolakes <- rast("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Groundwater Seeps/SpringTIFFs/SpringPrev_SnakeGreys_BedSurf_nolakes.tif")
+spring_nolakes_buff100 <- rast("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Groundwater Seeps/SpringTIFFs/SpringPrev_SnakeGreys_BedSurf_nolakes_flowbuff100.tif")
+```
+
+View MaxEnt spring prevalnce raster
+```{r fig.width=4, fig.height=7}
+options(terra.pal=rev(viridis(100)))
+plot(spring_nolakes)
+```
+
+Buffered to flowline...
+```{r fig.width=4, fig.height=7}
+plot(spring_nolakes_buff100)
+```
+
+Reporting unit locations and watersheds
+```{r}
+# reporting unit locations
+sites_repu <- vect("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Landscape Covariates/Location Data/RepUnit_SpatialLocations.shp")
+
+# watershed shapefiles
+sheds_repu <- read_sf(dsn = "/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Landscape Covariates/Watershed Delineation", layer = "RepUnits_Watersheds")
+```
+
+View reporting units and watersheds
+```{r}
+mapview(list(st_as_sf(sites_repu), sheds_repu), col.regions = c("blue", "white"), col = c("blue", "blue"), alpha.regions = c(1,0.2), legend = F)
+```
+
+
+## Derive groundwater metrics
+
+Calculate groundwater metrics for each basin. Extract average and weighted spring prevalence for each basin
+```{r eval=FALSE}
+# 
+sites <- sheds_repu$site
+gwlist <- list()
+st <- Sys.time()
+for (i in 1:length(sites)) {
+  spring_mask <- mask(crop(spring_nolakes_buff100, sheds_repu[sheds_repu$site == sites[i],]), sheds_repu[sheds_repu$site == sites[i],]) # crop and mask by basin
+  dist_rast <- distance(spring_mask, sites_repu[sites_repu$repunit == sites[i],]) %>% mask(spring_mask) # calculate distance between each raster cell and site location
+  gwlist[[i]] <- tibble(site = sites[i],
+                        areasqkm = sheds_repu$aresqkm[i],
+                        gwi_point = terra::extract(spring_nolakes_buff100, sites_repu[sites_repu$repunit == sites[i],], na.rm = TRUE)[,2],
+                        gwi_iew05km = as.numeric(global(spring_mask * (1 / exp(dist_rast/5000)), "sum", na.rm = T) / global(1 / exp(dist_rast/5000), "sum", na.rm = T))
+  )
+  print(i)
+}
+Sys.time() - st
+gwmetrics_repu <- do.call(rbind, gwlist) # bind as tibble
+write_csv(gwmetrics_repu, "Landscape Covariates/Groundwater/GroundwaterMetrics_raw_RepUnits.csv")
+```
+
+```{r}
+gwmetrics_repu <- read_csv("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Landscape Covariates/Groundwater/GroundwaterMetrics_raw_RepUnits.csv")
+gwmetrics_repu %>% kable()
+```
+
+```{r}
+sites_repu <- sort(sites_repu, "repunit")
+gwmetrics_repu <- arrange(gwmetrics_repu, site)
+sites_repu$gwi <- gwmetrics_repu$gwi_iew05km
+mapview(sites_repu, zcol = "gwi", col.regions = viridis::viridis(n = 10, direction = -1))
+```
+
