@@ -1,0 +1,53 @@
+repunit,areasqkm,numbarr,barrier_dens,connectivity,connect_type
+bailey_NA,41.5714362,0,0,1,NA
+blackrock_lower,124.921592,3,0.024015064,1,NA
+blackrock_upper,80.68620457,2,0.024787385,1,NA
+blacktail_NA,61.14455063,0,0,1,NA
+blindbull_NA,36.35174492,3,0.082526988,1,NA
+boulder_NA,53.69998009,0,0,1,NA
+box_NA,29.1414701,0,0,0,low flow
+cabin_NA,23.51004272,0,0,1,NA
+clear_NA,16.60410162,0,0,1,NA
+cliff_NA,158.3813174,9,0.056824884,1,NA
+cody_bluecrane,18.51170711,0,0,1,NA
+cottonwood_grosventre,89.17802925,2,0.022427049,0,low flow
+cottonwood_nps,187.1527021,14,0.074805225,1,NA
+cowboycabin_NA,6.639295264,0,0,1,NA
+crystal_lower,185.1148874,0,0,0,low flow
+crystal_upper,155.6115004,0,0,0,waterfall
+deadman_greys,42.60696343,6,0.140822052,1,NA
+deadmansbar_NA,11.76120832,0,0,1,NA
+dell_NA,118.1568591,1,0.008463326,1,NA
+ditch_NA,67.69148631,1,0.014772907,0,low flow
+dog_NA,31.09048374,1,0.032164183,1,NA
+fall_coburn,116.5315084,1,0.00858137,0,waterfall
+fish_NA,233.3741441,7,0.029994754,1,NA
+fish_grosventre,587.8758585,8,0.013608315,0,low flow
+flat_NA,173.3686411,0,0,1,NA
+fordspring_NA,0.371298461,0,0,1,NA
+goosewing_NA,40.3960756,0,0,0,low flow
+granite_lower,220.3826608,3,0.013612686,1,NA
+granite_upper,131.1747886,3,0.022870248,1,NA
+grosventre_lower,1589.646547,28,0.017613978,0,low flow
+hoback_upper,114.077833,4,0.03506378,1,NA
+horse_NA,63.20355466,2,0.03164379,0,culvert
+lava_NA,65.33372895,0,0,0,diversion dam
+leidy_NA,10.73603313,0,0,1,NA
+littlegreys_steer,179.3457294,3,0.016727468,1,NA
+lowerbarbc_NA,6.396831142,0,0,1,NA
+mosquito_NA,61.64128667,4,0.064891572,1,NA
+northbuffalofork_NA,211.7277107,8,0.037784379,1,NA
+pacific_NA,415.0574929,8,0.019274438,1,NA
+rock_NA,11.985799,0,0,1,NA
+shoal_NA,82.64969488,1,0.012099258,1,NA
+slate_NA,97.25682382,1,0.010282055,0,waterfall
+snakeriversidechannel_NA,18.81037956,0,0,1,NA
+spread_southfork,98.90320212,1,0.010110896,1,NA
+spread_uppermainstem,202.6088599,5,0.024678092,1,NA
+spreadnf_flagstaff,62.10575346,3,0.048304703,1,NA
+spring_nps,4.013031939,0,0,0,culvert
+spring_tss,24.85782944,0,0,1,NA
+threechannel_NA,32.36475483,0,0,1,NA
+upperbarbc_NA,5.737050518,0,0,1,NA
+white_NA,32.67216181,2,0.061214192,1,NA
+willow_NA,185.7033361,2,0.010769866,1,NA

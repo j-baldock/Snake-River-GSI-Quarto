@@ -1,0 +1,75 @@
+# Barriers
+
+Purpose: derive metrics of fragmentation and connectivity for reporting units
+
+```{r include = FALSE}
+library(tidyverse)
+library(mapview)
+library(terra)
+library(sf)
+library(riverdist)
+library(knitr)
+```
+
+
+### Load spatial data
+```{r}
+# basin
+basin <- vect("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Data/Spatial/Basin Delineation/BasinDelineation/MajorBasins_Watersheds.shp") 
+basin <- subset(basin, basin$site %in% c("SnakeHeadwaters"))
+
+# reporting unit watersheds
+watersheds <- vect("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Landscape Covariates/Watershed Delineation/RepUnits_Watersheds.shp")
+
+# waterfalls
+# falls <- terra::vect("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Landscape Covariates/Barriers/SARP Waterfalls/Archive_Falls_Mar082024.gdb")
+# falls <- project(falls, crs(basin))
+# falls <- crop(falls, basin)
+# writeVector(falls, "/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Landscape Covariates/Barriers/SARP Waterfalls/SARP_Waterfalls_SnakeHeadwaters.shp")
+falls <- vect("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Landscape Covariates/Barriers/SARP Waterfalls/SARP_Waterfalls_SnakeHeadwaters.shp")
+falls$BarrierType <- "Waterfall"
+
+mapview(st_as_sf(falls))
+
+# barriers
+barriers <- read_csv("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Landscape Covariates/Barriers/aquatic_barrier_ranks_Jan2025/aquatic_barrier_ranks.csv") %>% filter(Removed == "no", Passability %in% c("Complete barrier", "Partial passability", "Seasonably passable - non salmonid", "Seasonably passable - salmonid"), HasNetwork == "yes")
+barriers <- vect(barriers, geom = c("lon", "lat"), crs = "+proj=longlat +datum=WGS84")
+barriers <- project(barriers, crs(basin))
+
+# combine falls and barriers
+barriers_comb <- union(falls, barriers)
+barriers_comb$BarrierType <- recode(barriers_comb$BarrierType, "Assessed road-related barrier" = "Road")
+
+# map it
+mapview(st_as_sf(watersheds)) + mapview(st_as_sf(barriers_comb), zcol = "BarrierType")
+```
+
+
+### Fragmentation
+
+Derive metric of habitat fragmentation as the number of barriers per square kilometer of watershed area. 
+```{r}
+cell_counts <- terra::extract(watersheds, barriers_comb)
+point_counts <- cell_counts %>% group_by(site) %>% summarise(numbarr = n()) %>% rename(repunit = site)
+
+sitetib <- tibble(repunit = watersheds$site, areasqkm = watersheds$aresqkm) %>% left_join(point_counts) %>% replace_na(list(numbarr = 0)) %>% mutate(barrier_dens = numbarr/areasqkm)
+write_csv(sitetib, "/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Landscape Covariates/Barriers/RepUnits_BarrierSummary.csv")
+```
+
+
+### Connectivity
+
+Define binary variable describing connectivity between downstream extent of reporting unit and mainstem Snake River: 1 = connected and 0 = disconnected. Connectivity may be interrupted by barriers (as mapped above; e.g., waterfalls, culverts, or diversion dams) or by low flow/intermittent reaches (based on field observations/expert opinion...e.g., Spread, Ditch, etc.). Note: all streams in the Gros Ventre River and Spread Creek basins have connectivity = 0 because the lower Gros Vente River (between Hwy 191 and Spring Gulch Road) and lower Spread Creek () is intermittent during typical 
+```{r}
+sitetib$connectivity <- c(1,1,1,1,1,1,0,1,1,1,1,0,1,1,0,0,1,1,1,0,1,0,1,0,1,1,0,1,1,0,1,0,0,1,1,1,1,1,1,1,1,0,1,1,1,1,0,1,1,1,1,1)
+sitetib$connect_type <- c(NA,NA,NA,NA,NA,NA,"low flow",NA,NA,NA,NA,"low flow",NA,NA,"low flow","waterfall",NA,NA,NA,"low flow",NA,"waterfall",NA,"low flow",NA,NA,"low flow",NA,NA,"low flow",NA,"culvert","diversion dam",NA,NA,NA,NA,NA,NA,NA,NA,"waterfall",NA,NA,NA,NA,"culvert",NA,NA,NA,NA,NA)
+```
+
+### Final data
+```{r}
+sitetib %>% kable()
+```
+
+
+
+
