@@ -1,0 +1,68 @@
+# Barriers
+
+Purpose: derive zonal landscover statisitics for reporting unit watersheds
+
+```{r include = FALSE}
+library(tidyverse)
+library(mapview)
+library(terra)
+library(knitr)
+```
+
+
+## Load spatial data
+```{r}
+# basin
+basin <- vect("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Data/Spatial/Basin Delineation/BasinDelineation/MajorBasins_Watersheds.shp") 
+basin <- subset(basin, basin$site %in% c("SnakeHeadwaters"))
+
+# 2020 landcover, access from https://www.mrlc.gov/viewer/ on 20 January 2025
+nlcd <- rast("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Landscape Covariates/Landcover/Annual_NLCD_LndCov_2020.tiff")
+plot(nlcd)
+nlcd <- project(nlcd, crs(basin))
+
+# reporting unit watersheds
+watersheds <- vect("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Landscape Covariates/Watershed Delineation/RepUnits_Watersheds.shp")
+```
+
+
+## Reclassify NLCD
+
+Create reclassification functions:
+```{r}
+# Agricultural
+agfun <- function(x) { ifelse(x %in% c(81:82), 1, 0) }
+
+# Developed
+devfun <- function(x) { ifelse(x %in% c(21:24),1, 0) }
+
+# Agriculture and developed
+ADfun <- function(x) { ifelse(x %in% c(21:24,81:82),1, 0) }
+```
+
+Reclassify NLCD
+```{r fig.width = 8, fig.height = 3}
+nlcd_ag <- app(nlcd, agfun)
+nlcd_dev <- app(nlcd, devfun)
+nlcd_AD <- app(nlcd, ADfun)
+
+par(mfrow = c(1,3))
+plot(nlcd_ag, main = "Agricultural")
+plot(nlcd_dev, main = "Developed")
+plot(nlcd_AD, main = "Ag + Dev")
+```
+
+### Zonal statistics
+
+Compute zonal statistics (proportional cover) for each reporting unit watershed and combine into tibble
+```{r}
+nlcd_tib <- tibble(repunit = watersheds$site,
+                   prop_ag = zonal(nlcd_ag, watersheds, fun = "mean"),
+                   prop_dev = zonal(nlcd_dev, watersheds, fun = "mean"),
+                   prop_agdev = zonal(nlcd_AD, watersheds, fun = "mean"))
+nlcd_tib %>% kable()
+```
+
+
+
+
