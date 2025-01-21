@@ -1,4 +1,4 @@
-# Barriers
+# Landcover
 
 Purpose: derive zonal landscover statisitics for reporting unit watersheds
 
@@ -11,7 +11,9 @@ library(knitr)
 
 
 ## Load spatial data
-```{r}
+
+View 2020 National Landcover Dataset, access from [https://www.mrlc.gov/viewer/] on 20 January 2025
+```{r fig.height=8, fig.width=5}
 # basin
 basin <- vect("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Data/Spatial/Basin Delineation/BasinDelineation/MajorBasins_Watersheds.shp") 
 basin <- subset(basin, basin$site %in% c("SnakeHeadwaters"))
@@ -57,12 +59,16 @@ plot(nlcd_AD, main = "Ag + Dev")
 Compute zonal statistics (proportional cover) for each reporting unit watershed and combine into tibble
 ```{r}
 nlcd_tib <- tibble(repunit = watersheds$site,
-                   prop_ag = zonal(nlcd_ag, watersheds, fun = "mean"),
-                   prop_dev = zonal(nlcd_dev, watersheds, fun = "mean"),
-                   prop_agdev = zonal(nlcd_AD, watersheds, fun = "mean"))
+                   prop_ag = unlist(zonal(nlcd_ag, watersheds, fun = "mean")),
+                   prop_dev = unlist(zonal(nlcd_dev, watersheds, fun = "mean")),
+                   prop_agdev = unlist(zonal(nlcd_AD, watersheds, fun = "mean")))
 nlcd_tib %>% kable()
 ```
 
+Write to file
+```{r}
+write_csv(nlcd_tib, "/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Landscape Covariates/Landcover/RepUnits_LandcoverSummary.csv")
+```
 
 
 

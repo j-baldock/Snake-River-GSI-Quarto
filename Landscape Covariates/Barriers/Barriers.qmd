@@ -13,6 +13,8 @@ library(knitr)
 
 
 ### Load spatial data
+
+Load spatial datasets and view barrier point locations (dams, roads, and waterfalls) in relation to reporting unit watersheds. 
 ```{r}
 # basin
 basin <- vect("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Data/Spatial/Basin Delineation/BasinDelineation/MajorBasins_Watersheds.shp") 
@@ -28,8 +30,6 @@ watersheds <- vect("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock
 # writeVector(falls, "/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Landscape Covariates/Barriers/SARP Waterfalls/SARP_Waterfalls_SnakeHeadwaters.shp")
 falls <- vect("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Landscape Covariates/Barriers/SARP Waterfalls/SARP_Waterfalls_SnakeHeadwaters.shp")
 falls$BarrierType <- "Waterfall"
-
-mapview(st_as_sf(falls))
 
 # barriers
 barriers <- read_csv("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Landscape Covariates/Barriers/aquatic_barrier_ranks_Jan2025/aquatic_barrier_ranks.csv") %>% filter(Removed == "no", Passability %in% c("Complete barrier", "Partial passability", "Seasonably passable - non salmonid", "Seasonably passable - salmonid"), HasNetwork == "yes")
@@ -53,7 +53,6 @@ cell_counts <- terra::extract(watersheds, barriers_comb)
 point_counts <- cell_counts %>% group_by(site) %>% summarise(numbarr = n()) %>% rename(repunit = site)
 
 sitetib <- tibble(repunit = watersheds$site, areasqkm = watersheds$aresqkm) %>% left_join(point_counts) %>% replace_na(list(numbarr = 0)) %>% mutate(barrier_dens = numbarr/areasqkm)
-write_csv(sitetib, "/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Landscape Covariates/Barriers/RepUnits_BarrierSummary.csv")
 ```
 
 
@@ -67,6 +66,8 @@ sitetib$connect_type <- c(NA,NA,NA,NA,NA,NA,"low flow",NA,NA,NA,NA,"low flow",NA
 
 ### Final data
 ```{r}
+write_csv(sitetib, "/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Landscape Covariates/Barriers/RepUnits_BarrierSummary.csv")
+
 sitetib %>% kable()
 ```
 

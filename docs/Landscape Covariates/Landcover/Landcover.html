@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.4.555">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Snake River GSI - 9&nbsp; Barriers</title>
+<title>Snake River GSI - 9&nbsp; Landcover</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -114,7 +114,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../Landscape Covariates/Flowline Distance/FlowlineDist.html">Landscape attributes</a></li><li class="breadcrumb-item"><a href="../../Landscape Covariates/Landcover/Landcover.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Barriers</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../Landscape Covariates/Flowline Distance/FlowlineDist.html">Landscape attributes</a></li><li class="breadcrumb-item"><a href="../../Landscape Covariates/Landcover/Landcover.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Landcover</span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -209,7 +209,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../Landscape Covariates/Landcover/Landcover.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Barriers</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Landcover</span></span></a>
   </div>
 </li>
       </ul>
@@ -232,9 +232,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../Landscape Covariates/Flowline Distance/FlowlineDist.html">Landscape attributes</a></li><li class="breadcrumb-item"><a href="../../Landscape Covariates/Landcover/Landcover.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Barriers</span></a></li></ol></nav><div class="quarto-title">
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../Landscape Covariates/Flowline Distance/FlowlineDist.html">Landscape attributes</a></li><li class="breadcrumb-item"><a href="../../Landscape Covariates/Landcover/Landcover.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Landcover</span></a></li></ol></nav><div class="quarto-title">
 <div class="quarto-title-block"><div><h1 class="title">
-<span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Barriers</span>
+<span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Landcover</span>
 </h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
 </div>
 
@@ -252,6 +252,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header><p>Purpose: derive zonal landscover statisitics for reporting unit watersheds</p>
 <section id="load-spatial-data" class="level2" data-number="9.1"><h2 data-number="9.1" class="anchored" data-anchor-id="load-spatial-data">
 <span class="header-section-number">9.1</span> Load spatial data</h2>
+<p>View 2020 National Landcover Dataset, access from [https://www.mrlc.gov/viewer/] on 20 January 2025</p>
 <div class="cell">
 <details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># basin</span></span>
 <span><span class="va">basin</span> <span class="op">&lt;-</span> <span class="fu">vect</span><span class="op">(</span><span class="st">"/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Data/Spatial/Basin Delineation/BasinDelineation/MajorBasins_Watersheds.shp"</span><span class="op">)</span> </span>
@@ -262,7 +263,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">nlcd</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
 <div>
-<figure class="figure"><p><img src="Landcover_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+<figure class="figure"><p><img src="Landcover_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="480"></p>
 </figure>
 </div>
 </div>
@@ -300,15 +301,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 =========================================
                                           </code></pre>
 </div>
-<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">nlcd_dev</span> <span class="op">&lt;-</span> <span class="fu">app</span><span class="op">(</span><span class="va">nlcd</span>, <span class="va">devfun</span><span class="op">)</span></span>
-<span><span class="va">nlcd_AD</span> <span class="op">&lt;-</span> <span class="fu">app</span><span class="op">(</span><span class="va">nlcd</span>, <span class="va">ADfun</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">nlcd_dev</span> <span class="op">&lt;-</span> <span class="fu">app</span><span class="op">(</span><span class="va">nlcd</span>, <span class="va">devfun</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>
 |---------|---------|---------|---------|
 =========================================
                                           </code></pre>
 </div>
-<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">nlcd_AD</span> <span class="op">&lt;-</span> <span class="fu">app</span><span class="op">(</span><span class="va">nlcd</span>, <span class="va">ADfun</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>
+|---------|---------|---------|---------|
+=========================================
+                                          </code></pre>
+</div>
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">nlcd_ag</span>, main <span class="op">=</span> <span class="st">"Agricultural"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">nlcd_dev</span>, main <span class="op">=</span> <span class="st">"Developed"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">nlcd_AD</span>, main <span class="op">=</span> <span class="st">"Ag + Dev"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -323,335 +330,340 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="header-section-number">9.2.1</span> Zonal statistics</h3>
 <p>Compute zonal statistics (proportional cover) for each reporting unit watershed and combine into tibble</p>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">nlcd_tib</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span>repunit <span class="op">=</span> <span class="va">watersheds</span><span class="op">$</span><span class="va">site</span>,</span>
-<span>                   prop_ag <span class="op">=</span> <span class="fu">zonal</span><span class="op">(</span><span class="va">nlcd_ag</span>, <span class="va">watersheds</span>, fun <span class="op">=</span> <span class="st">"mean"</span><span class="op">)</span>,</span>
-<span>                   prop_dev <span class="op">=</span> <span class="fu">zonal</span><span class="op">(</span><span class="va">nlcd_dev</span>, <span class="va">watersheds</span>, fun <span class="op">=</span> <span class="st">"mean"</span><span class="op">)</span>,</span>
-<span>                   prop_agdev <span class="op">=</span> <span class="fu">zonal</span><span class="op">(</span><span class="va">nlcd_AD</span>, <span class="va">watersheds</span>, fun <span class="op">=</span> <span class="st">"mean"</span><span class="op">)</span><span class="op">)</span></span>
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">nlcd_tib</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span>repunit <span class="op">=</span> <span class="va">watersheds</span><span class="op">$</span><span class="va">site</span>,</span>
+<span>                   prop_ag <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="fu">zonal</span><span class="op">(</span><span class="va">nlcd_ag</span>, <span class="va">watersheds</span>, fun <span class="op">=</span> <span class="st">"mean"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>                   prop_dev <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="fu">zonal</span><span class="op">(</span><span class="va">nlcd_dev</span>, <span class="va">watersheds</span>, fun <span class="op">=</span> <span class="st">"mean"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>                   prop_agdev <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="fu">zonal</span><span class="op">(</span><span class="va">nlcd_AD</span>, <span class="va">watersheds</span>, fun <span class="op">=</span> <span class="st">"mean"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">nlcd_tib</span> <span class="op">%&gt;%</span> <span class="fu">kable</span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <thead><tr class="header">
 <th style="text-align: left;">repunit</th>
-<th style="text-align: left;">prop_ag</th>
-<th style="text-align: left;">prop_dev</th>
-<th style="text-align: left;">prop_agdev</th>
+<th style="text-align: right;">prop_ag</th>
+<th style="text-align: right;">prop_dev</th>
+<th style="text-align: right;">prop_agdev</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">bailey_NA</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">0.000000e+00</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000000</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">blackrock_lower</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">8.703909e-04</td>
-<td style="text-align: left;">8.703909e-04</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0008272</td>
+<td style="text-align: right;">0.0008272</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">blackrock_upper</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">5.234378e-04</td>
-<td style="text-align: left;">5.234378e-04</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0004900</td>
+<td style="text-align: right;">0.0004900</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">blacktail_NA</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">1.468644e-04</td>
-<td style="text-align: left;">1.468644e-04</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0001469</td>
+<td style="text-align: right;">0.0001469</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">blindbull_NA</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">4.943276e-05</td>
-<td style="text-align: left;">4.943276e-05</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000494</td>
+<td style="text-align: right;">0.0000494</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">boulder_NA</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">1.338957e-04</td>
-<td style="text-align: left;">1.338957e-04</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0001339</td>
+<td style="text-align: right;">0.0001339</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">box_NA</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">0.000000e+00</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000000</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">cabin_NA</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">0.000000e+00</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000000</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">clear_NA</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">5.412427e-05</td>
-<td style="text-align: left;">5.412427e-05</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000541</td>
+<td style="text-align: right;">0.0000541</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">cliff_NA</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">1.758646e-04</td>
-<td style="text-align: left;">1.758646e-04</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0001702</td>
+<td style="text-align: right;">0.0001702</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">cody_bluecrane</td>
-<td style="text-align: left;">8.381489e-02</td>
-<td style="text-align: left;">7.089788e-03</td>
-<td style="text-align: left;">9.090468e-02</td>
+<td style="text-align: right;">0.0836206</td>
+<td style="text-align: right;">0.0068955</td>
+<td style="text-align: right;">0.0905162</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">cottonwood_grosventre</td>
-<td style="text-align: left;">2.014139e-05</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">2.014139e-05</td>
+<td style="text-align: right;">0.0000201</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000201</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">cottonwood_nps</td>
-<td style="text-align: left;">4.801045e-06</td>
-<td style="text-align: left;">4.032878e-04</td>
-<td style="text-align: left;">4.080888e-04</td>
+<td style="text-align: right;">0.0000048</td>
+<td style="text-align: right;">0.0004033</td>
+<td style="text-align: right;">0.0004081</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">cowboycabin_NA</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">0.000000e+00</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000000</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">crystal_lower</td>
-<td style="text-align: left;">1.596886e-03</td>
-<td style="text-align: left;">1.456127e-04</td>
-<td style="text-align: left;">1.742499e-03</td>
+<td style="text-align: right;">0.0015920</td>
+<td style="text-align: right;">0.0001456</td>
+<td style="text-align: right;">0.0017376</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">crystal_upper</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">0.000000e+00</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000000</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">deadman_greys</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">0.000000e+00</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000000</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">deadmansbar_NA</td>
-<td style="text-align: left;">1.836688e-03</td>
-<td style="text-align: left;">1.147930e-03</td>
-<td style="text-align: left;">2.984618e-03</td>
+<td style="text-align: right;">0.0018367</td>
+<td style="text-align: right;">0.0010714</td>
+<td style="text-align: right;">0.0029081</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">dell_NA</td>
-<td style="text-align: left;">2.031132e-02</td>
-<td style="text-align: left;">5.475160e-04</td>
-<td style="text-align: left;">2.085884e-02</td>
+<td style="text-align: right;">0.0202733</td>
+<td style="text-align: right;">0.0005171</td>
+<td style="text-align: right;">0.0207904</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">ditch_NA</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">0.000000e+00</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000000</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">dog_NA</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">0.000000e+00</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000000</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">fall_coburn</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">1.310545e-04</td>
-<td style="text-align: left;">1.310545e-04</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0001233</td>
+<td style="text-align: right;">0.0001233</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">fish_NA</td>
-<td style="text-align: left;">3.699470e-02</td>
-<td style="text-align: left;">8.125669e-03</td>
-<td style="text-align: left;">4.512036e-02</td>
+<td style="text-align: right;">0.0369139</td>
+<td style="text-align: right;">0.0080294</td>
+<td style="text-align: right;">0.0449433</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">fish_grosventre</td>
-<td style="text-align: left;">4.584436e-06</td>
-<td style="text-align: left;">1.191953e-04</td>
-<td style="text-align: left;">1.237798e-04</td>
+<td style="text-align: right;">0.0000046</td>
+<td style="text-align: right;">0.0001116</td>
+<td style="text-align: right;">0.0001161</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">flat_NA</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">1.140044e-04</td>
-<td style="text-align: left;">1.140044e-04</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0001036</td>
+<td style="text-align: right;">0.0001036</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">fordspring_NA</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">0.000000e+00</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000000</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">goosewing_NA</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">0.000000e+00</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000000</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">granite_lower</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">1.752634e-04</td>
-<td style="text-align: left;">1.752634e-04</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0001753</td>
+<td style="text-align: right;">0.0001753</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">granite_upper</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">0.000000e+00</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000000</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">grosventre_lower</td>
-<td style="text-align: left;">4.424779e-04</td>
-<td style="text-align: left;">9.437268e-05</td>
-<td style="text-align: left;">5.368506e-04</td>
+<td style="text-align: right;">0.0004402</td>
+<td style="text-align: right;">0.0000899</td>
+<td style="text-align: right;">0.0005301</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">hoback_upper</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">5.512288e-05</td>
-<td style="text-align: left;">5.512288e-05</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000472</td>
+<td style="text-align: right;">0.0000472</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">horse_NA</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">0.000000e+00</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000000</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">lava_NA</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">1.374570e-05</td>
-<td style="text-align: left;">1.374570e-05</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000137</td>
+<td style="text-align: right;">0.0000137</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">leidy_NA</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">0.000000e+00</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000000</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">littlegreys_steer</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">2.003346e-04</td>
-<td style="text-align: left;">2.003346e-04</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0002003</td>
+<td style="text-align: right;">0.0002003</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">lowerbarbc_NA</td>
-<td style="text-align: left;">3.229517e-01</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">3.229517e-01</td>
+<td style="text-align: right;">0.3226712</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.3226712</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">mosquito_NA</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">2.914262e-05</td>
-<td style="text-align: left;">2.914262e-05</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000146</td>
+<td style="text-align: right;">0.0000146</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">northbuffalofork_NA</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">4.242897e-06</td>
-<td style="text-align: left;">4.242897e-06</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000042</td>
+<td style="text-align: right;">0.0000042</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">pacific_NA</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">1.060494e-04</td>
-<td style="text-align: left;">1.060494e-04</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0001039</td>
+<td style="text-align: right;">0.0001039</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">rock_NA</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">0.000000e+00</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000000</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">shoal_NA</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">0.000000e+00</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000000</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">slate_NA</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">8.312015e-05</td>
-<td style="text-align: left;">8.312015e-05</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000739</td>
+<td style="text-align: right;">0.0000739</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">snakeriversidechannel_NA</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">1.431639e-04</td>
-<td style="text-align: left;">1.431639e-04</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0001432</td>
+<td style="text-align: right;">0.0001432</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">spread_southfork</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">0.000000e+00</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000000</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">spread_uppermainstem</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">3.990140e-05</td>
-<td style="text-align: left;">3.990140e-05</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000355</td>
+<td style="text-align: right;">0.0000355</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">spreadnf_flagstaff</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">7.227731e-05</td>
-<td style="text-align: left;">7.227731e-05</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000723</td>
+<td style="text-align: right;">0.0000723</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">spring_nps</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">8.970621e-04</td>
-<td style="text-align: left;">8.970621e-04</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0006728</td>
+<td style="text-align: right;">0.0006728</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">spring_tss</td>
-<td style="text-align: left;">1.854008e-01</td>
-<td style="text-align: left;">3.362378e-03</td>
-<td style="text-align: left;">1.887632e-01</td>
+<td style="text-align: right;">0.1850392</td>
+<td style="text-align: right;">0.0032539</td>
+<td style="text-align: right;">0.1882931</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">threechannel_NA</td>
-<td style="text-align: left;">2.492437e-02</td>
-<td style="text-align: left;">1.060257e-02</td>
-<td style="text-align: left;">3.552694e-02</td>
+<td style="text-align: right;">0.0248411</td>
+<td style="text-align: right;">0.0103528</td>
+<td style="text-align: right;">0.0351939</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">upperbarbc_NA</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">6.263702e-04</td>
-<td style="text-align: left;">6.263702e-04</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0006264</td>
+<td style="text-align: right;">0.0006264</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">white_NA</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">0.000000e+00</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000000</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">willow_NA</td>
-<td style="text-align: left;">0.000000e+00</td>
-<td style="text-align: left;">1.934517e-05</td>
-<td style="text-align: left;">1.934517e-05</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000193</td>
+<td style="text-align: right;">0.0000193</td>
 </tr>
 </tbody>
 </table>
 </div>
+</div>
+<p>Write to file</p>
+<div class="cell">
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">write_csv</span><span class="op">(</span><span class="va">nlcd_tib</span>, <span class="st">"/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Landscape Covariates/Landcover/RepUnits_LandcoverSummary.csv"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 
 
@@ -1268,73 +1280,79 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   <div class="nav-page nav-page-next">
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb12" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Barriers</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>Purpose: derive zonal landscover statisitics for reporting unit watersheds</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="in">```{r include = FALSE}</span></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="in">library(tidyverse)</span></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="in">library(mapview)</span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="in">library(terra)</span></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="in">library(knitr)</span></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="fu">## Load spatial data</span></span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="co"># basin</span></span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>basin <span class="ot">&lt;-</span> <span class="fu">vect</span>(<span class="st">"/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Data/Spatial/Basin Delineation/BasinDelineation/MajorBasins_Watersheds.shp"</span>) </span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>basin <span class="ot">&lt;-</span> <span class="fu">subset</span>(basin, basin<span class="sc">$</span>site <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"SnakeHeadwaters"</span>))</span>
-<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a><span class="co"># 2020 landcover, access from https://www.mrlc.gov/viewer/ on 20 January 2025</span></span>
-<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>nlcd <span class="ot">&lt;-</span> <span class="fu">rast</span>(<span class="st">"/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Landscape Covariates/Landcover/Annual_NLCD_LndCov_2020.tiff"</span>)</span>
-<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(nlcd)</span>
-<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>nlcd <span class="ot">&lt;-</span> <span class="fu">project</span>(nlcd, <span class="fu">crs</span>(basin))</span>
-<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a><span class="co"># reporting unit watersheds</span></span>
-<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>watersheds <span class="ot">&lt;-</span> <span class="fu">vect</span>(<span class="st">"/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Landscape Covariates/Watershed Delineation/RepUnits_Watersheds.shp"</span>)</span>
-<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a><span class="fu">## Reclassify NLCD</span></span>
-<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>Create reclassification functions:</span>
-<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a><span class="co"># Agricultural</span></span>
-<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a>agfun <span class="ot">&lt;-</span> <span class="cf">function</span>(x) { <span class="fu">ifelse</span>(x <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">81</span><span class="sc">:</span><span class="dv">82</span>), <span class="dv">1</span>, <span class="dv">0</span>) }</span>
-<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a><span class="co"># Developed</span></span>
-<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a>devfun <span class="ot">&lt;-</span> <span class="cf">function</span>(x) { <span class="fu">ifelse</span>(x <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">21</span><span class="sc">:</span><span class="dv">24</span>),<span class="dv">1</span>, <span class="dv">0</span>) }</span>
-<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a><span class="co"># Agriculture and developed</span></span>
-<span id="cb12-44"><a href="#cb12-44" aria-hidden="true" tabindex="-1"></a>ADfun <span class="ot">&lt;-</span> <span class="cf">function</span>(x) { <span class="fu">ifelse</span>(x <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">21</span><span class="sc">:</span><span class="dv">24</span>,<span class="dv">81</span><span class="sc">:</span><span class="dv">82</span>),<span class="dv">1</span>, <span class="dv">0</span>) }</span>
-<span id="cb12-45"><a href="#cb12-45" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb12-46"><a href="#cb12-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-47"><a href="#cb12-47" aria-hidden="true" tabindex="-1"></a>Reclassify NLCD</span>
-<span id="cb12-48"><a href="#cb12-48" aria-hidden="true" tabindex="-1"></a><span class="in">```{r fig.width = 8, fig.height = 3}</span></span>
-<span id="cb12-49"><a href="#cb12-49" aria-hidden="true" tabindex="-1"></a><span class="in">nlcd_ag &lt;- app(nlcd, agfun)</span></span>
-<span id="cb12-50"><a href="#cb12-50" aria-hidden="true" tabindex="-1"></a><span class="in">nlcd_dev &lt;- app(nlcd, devfun)</span></span>
-<span id="cb12-51"><a href="#cb12-51" aria-hidden="true" tabindex="-1"></a><span class="in">nlcd_AD &lt;- app(nlcd, ADfun)</span></span>
-<span id="cb12-52"><a href="#cb12-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-53"><a href="#cb12-53" aria-hidden="true" tabindex="-1"></a><span class="in">par(mfrow = c(1,3))</span></span>
-<span id="cb12-54"><a href="#cb12-54" aria-hidden="true" tabindex="-1"></a><span class="in">plot(nlcd_ag, main = "Agricultural")</span></span>
-<span id="cb12-55"><a href="#cb12-55" aria-hidden="true" tabindex="-1"></a><span class="in">plot(nlcd_dev, main = "Developed")</span></span>
-<span id="cb12-56"><a href="#cb12-56" aria-hidden="true" tabindex="-1"></a><span class="in">plot(nlcd_AD, main = "Ag + Dev")</span></span>
-<span id="cb12-57"><a href="#cb12-57" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb12-58"><a href="#cb12-58" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-59"><a href="#cb12-59" aria-hidden="true" tabindex="-1"></a><span class="fu">### Zonal statistics</span></span>
-<span id="cb12-60"><a href="#cb12-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-61"><a href="#cb12-61" aria-hidden="true" tabindex="-1"></a>Compute zonal statistics (proportional cover) for each reporting unit watershed and combine into tibble</span>
-<span id="cb12-64"><a href="#cb12-64" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb12-65"><a href="#cb12-65" aria-hidden="true" tabindex="-1"></a>nlcd_tib <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">repunit =</span> watersheds<span class="sc">$</span>site,</span>
-<span id="cb12-66"><a href="#cb12-66" aria-hidden="true" tabindex="-1"></a>                   <span class="at">prop_ag =</span> <span class="fu">zonal</span>(nlcd_ag, watersheds, <span class="at">fun =</span> <span class="st">"mean"</span>),</span>
-<span id="cb12-67"><a href="#cb12-67" aria-hidden="true" tabindex="-1"></a>                   <span class="at">prop_dev =</span> <span class="fu">zonal</span>(nlcd_dev, watersheds, <span class="at">fun =</span> <span class="st">"mean"</span>),</span>
-<span id="cb12-68"><a href="#cb12-68" aria-hidden="true" tabindex="-1"></a>                   <span class="at">prop_agdev =</span> <span class="fu">zonal</span>(nlcd_AD, watersheds, <span class="at">fun =</span> <span class="st">"mean"</span>))</span>
-<span id="cb12-69"><a href="#cb12-69" aria-hidden="true" tabindex="-1"></a>nlcd_tib <span class="sc">%&gt;%</span> <span class="fu">kable</span>()</span>
-<span id="cb12-70"><a href="#cb12-70" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb12-71"><a href="#cb12-71" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-72"><a href="#cb12-72" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-73"><a href="#cb12-73" aria-hidden="true" tabindex="-1"></a></span>
+<div class="sourceCode" id="cb15" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Landcover</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>Purpose: derive zonal landscover statisitics for reporting unit watersheds</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="in">```{r include = FALSE}</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="in">library(tidyverse)</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="in">library(mapview)</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="in">library(terra)</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="in">library(knitr)</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="fu">## Load spatial data</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>View 2020 National Landcover Dataset, access from <span class="co">[</span><span class="ot">https://www.mrlc.gov/viewer/</span><span class="co">]</span> on 20 January 2025</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a><span class="in">```{r fig.height=8, fig.width=5}</span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a><span class="in"># basin</span></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a><span class="in">basin &lt;- vect("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Data/Spatial/Basin Delineation/BasinDelineation/MajorBasins_Watersheds.shp") </span></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a><span class="in">basin &lt;- subset(basin, basin$site %in% c("SnakeHeadwaters"))</span></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a><span class="in"># 2020 landcover, access from https://www.mrlc.gov/viewer/ on 20 January 2025</span></span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a><span class="in">nlcd &lt;- rast("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Landscape Covariates/Landcover/Annual_NLCD_LndCov_2020.tiff")</span></span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a><span class="in">plot(nlcd)</span></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a><span class="in">nlcd &lt;- project(nlcd, crs(basin))</span></span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a><span class="in"># reporting unit watersheds</span></span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a><span class="in">watersheds &lt;- vect("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Landscape Covariates/Watershed Delineation/RepUnits_Watersheds.shp")</span></span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a><span class="fu">## Reclassify NLCD</span></span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>Create reclassification functions:</span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a><span class="co"># Agricultural</span></span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a>agfun <span class="ot">&lt;-</span> <span class="cf">function</span>(x) { <span class="fu">ifelse</span>(x <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">81</span><span class="sc">:</span><span class="dv">82</span>), <span class="dv">1</span>, <span class="dv">0</span>) }</span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a><span class="co"># Developed</span></span>
+<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a>devfun <span class="ot">&lt;-</span> <span class="cf">function</span>(x) { <span class="fu">ifelse</span>(x <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">21</span><span class="sc">:</span><span class="dv">24</span>),<span class="dv">1</span>, <span class="dv">0</span>) }</span>
+<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a><span class="co"># Agriculture and developed</span></span>
+<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a>ADfun <span class="ot">&lt;-</span> <span class="cf">function</span>(x) { <span class="fu">ifelse</span>(x <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">21</span><span class="sc">:</span><span class="dv">24</span>,<span class="dv">81</span><span class="sc">:</span><span class="dv">82</span>),<span class="dv">1</span>, <span class="dv">0</span>) }</span>
+<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-47"><a href="#cb15-47" aria-hidden="true" tabindex="-1"></a>Reclassify NLCD</span>
+<span id="cb15-48"><a href="#cb15-48" aria-hidden="true" tabindex="-1"></a><span class="in">```{r fig.width = 8, fig.height = 3}</span></span>
+<span id="cb15-49"><a href="#cb15-49" aria-hidden="true" tabindex="-1"></a><span class="in">nlcd_ag &lt;- app(nlcd, agfun)</span></span>
+<span id="cb15-50"><a href="#cb15-50" aria-hidden="true" tabindex="-1"></a><span class="in">nlcd_dev &lt;- app(nlcd, devfun)</span></span>
+<span id="cb15-51"><a href="#cb15-51" aria-hidden="true" tabindex="-1"></a><span class="in">nlcd_AD &lt;- app(nlcd, ADfun)</span></span>
+<span id="cb15-52"><a href="#cb15-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-53"><a href="#cb15-53" aria-hidden="true" tabindex="-1"></a><span class="in">par(mfrow = c(1,3))</span></span>
+<span id="cb15-54"><a href="#cb15-54" aria-hidden="true" tabindex="-1"></a><span class="in">plot(nlcd_ag, main = "Agricultural")</span></span>
+<span id="cb15-55"><a href="#cb15-55" aria-hidden="true" tabindex="-1"></a><span class="in">plot(nlcd_dev, main = "Developed")</span></span>
+<span id="cb15-56"><a href="#cb15-56" aria-hidden="true" tabindex="-1"></a><span class="in">plot(nlcd_AD, main = "Ag + Dev")</span></span>
+<span id="cb15-57"><a href="#cb15-57" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-58"><a href="#cb15-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-59"><a href="#cb15-59" aria-hidden="true" tabindex="-1"></a><span class="fu">### Zonal statistics</span></span>
+<span id="cb15-60"><a href="#cb15-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-61"><a href="#cb15-61" aria-hidden="true" tabindex="-1"></a>Compute zonal statistics (proportional cover) for each reporting unit watershed and combine into tibble</span>
+<span id="cb15-64"><a href="#cb15-64" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-65"><a href="#cb15-65" aria-hidden="true" tabindex="-1"></a>nlcd_tib <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">repunit =</span> watersheds<span class="sc">$</span>site,</span>
+<span id="cb15-66"><a href="#cb15-66" aria-hidden="true" tabindex="-1"></a>                   <span class="at">prop_ag =</span> <span class="fu">unlist</span>(<span class="fu">zonal</span>(nlcd_ag, watersheds, <span class="at">fun =</span> <span class="st">"mean"</span>)),</span>
+<span id="cb15-67"><a href="#cb15-67" aria-hidden="true" tabindex="-1"></a>                   <span class="at">prop_dev =</span> <span class="fu">unlist</span>(<span class="fu">zonal</span>(nlcd_dev, watersheds, <span class="at">fun =</span> <span class="st">"mean"</span>)),</span>
+<span id="cb15-68"><a href="#cb15-68" aria-hidden="true" tabindex="-1"></a>                   <span class="at">prop_agdev =</span> <span class="fu">unlist</span>(<span class="fu">zonal</span>(nlcd_AD, watersheds, <span class="at">fun =</span> <span class="st">"mean"</span>)))</span>
+<span id="cb15-69"><a href="#cb15-69" aria-hidden="true" tabindex="-1"></a>nlcd_tib <span class="sc">%&gt;%</span> <span class="fu">kable</span>()</span>
+<span id="cb15-70"><a href="#cb15-70" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-71"><a href="#cb15-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-72"><a href="#cb15-72" aria-hidden="true" tabindex="-1"></a>Write to file</span>
+<span id="cb15-75"><a href="#cb15-75" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-76"><a href="#cb15-76" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(nlcd_tib, <span class="st">"/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Landscape Covariates/Landcover/RepUnits_LandcoverSummary.csv"</span>)</span>
+<span id="cb15-77"><a href="#cb15-77" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-78"><a href="#cb15-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-79"><a href="#cb15-79" aria-hidden="true" tabindex="-1"></a></span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
