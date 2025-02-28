@@ -11,3 +11,5 @@ forcats
 lubridate
 reactable
 knitr
+DT
+ggpubr

@@ -6,7 +6,9 @@ Purpose: Run genetic stock identification analysis and generate various output f
 library(rubias)
 library(tidyverse)
 library(reactable)
+library(DT)
 library(knitr)
+library(ggpubr)
 ```
 
 
@@ -37,7 +39,7 @@ Get self-assignment test results:
 self_test_exam <- read_csv("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Baseline Testing/Self Assignment/self_assign_results_individuals.csv")
 ```
 
-Get groundwater metric and GPS locations for plotting
+Get groundwater metrics, GPS locations, and repunit-section distances for plotting
 ```{r}
 # groundwater metrics
 gwmet <- read_csv("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Landscape Covariates/Groundwater/GroundwaterMetrics_raw_RepUnits.csv") %>% 
@@ -46,7 +48,9 @@ gwmet <- read_csv("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@
   mutate(z_logarea = as.numeric(scale(logarea)), z_loggwi = as.numeric(scale(loggwi))) %>%
   arrange(repunit)
 
-gps <- read_csv("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Landscape Covariates/RepUnit_LatLong.csv")
+gps <- read_csv("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Landscape Covariates/Location Data/RepUnit_LatLong.csv")
+
+dist <- read_csv("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Landscape Covariates/Flowline Distance/SnakeRiverSections_RepUnits_FlowlineDistance.csv") 
 ```
 
 
@@ -118,7 +122,7 @@ dev.off()
 
 Plot density of observed z-scores (blue) against expected (black)...if all contributing pops are represented in the baseline, distributions should be similar.
 
-Generate values from a normal distribition
+Generate values from a normal distribution
 ```{r}
 normo <- tibble(z_score = rnorm(1e06))
 ```
@@ -158,7 +162,7 @@ Following Bowersox, Hargrove, et al 2023 (NAJFM), individual likely originated f
 ```{r}
 meanz <- mean(map_rows$z_score)
 zproblems <- map_rows %>% filter(z_score > meanz+2 | z_score < meanz-2)
-reactable(zproblems)
+datatable(zproblems)
 ```
 
 Fish originating from pops outside our baseline represent ~6.57% of all fish sampled in the mixture
@@ -168,12 +172,12 @@ dim(zproblems)[1] / dim(map_rows)[1]
 
 Which section of the mainstem Snake River were these problematic individuals sampled from?
 ```{r}
-zproblems %>% mutate(snake_section = str_sub(mixture_collection, 1, str_length(mixture_collection)-5)) %>% group_by(snake_section) %>% summarize(count = n()) %>% kable()
+datatable(zproblems %>% mutate(snake_section = str_sub(mixture_collection, 1, str_length(mixture_collection)-5)) %>% group_by(snake_section) %>% summarize(count = n()))
 ```
 
 Which reporting group are the problematic individuals assigning to?
 ```{r}
-zproblems %>% group_by(repunit) %>% summarize(count = n()) %>% kable()
+datatable(zproblems %>% group_by(repunit) %>% summarize(count = n()))
 ```
 
 Other papers compare z-scores from observed mixture data (red) to z-scores generated from the self-assignment tests (blue):
@@ -289,7 +293,7 @@ tt %>%
   ungroup() %>%
   left_join(gwmet) %>% left_join(gps) %>% 
   ggplot(aes(x = reorder(repunit, -lat), y = meanppn)) +
-  geom_bar(aes(x = reorder(repunit, -lat), y = meanppn, fill = gwi_iew05km), stat = "identity", color = "black") +
+  geom_bar(aes(x = reorder(repunit, -lat), y = meanppn, fill = gwi_iew05km), stat = "identity", color = "black", width = 1) +
   geom_errorbar(aes(ymin = minppn, ymax = maxppn), width = 0) +
   facet_wrap(~ factor(sectionID, levels = c("A", "B", "C", "D", "E", "F")), nrow = 6) +
   xlab("Reporting group") + ylab("Corrected mixture proportion") + theme_bw() +
@@ -298,11 +302,11 @@ tt %>%
   labs(fill = "Groundwater index") +
   scale_fill_viridis_c(direction = -1, guide = guide_colorbar(frame.colour = "black", ticks.colour = "black"), alpha = 0.8) +
   scale_x_discrete(labels = c(1:52)) + 
-  geom_text(data = mylabs, aes(x = Inf, y = Inf, label = mylab, hjust = 1.5, vjust = 1.5), size = 5)
+  geom_text(data = mylabs, aes(x = -Inf, y = Inf, label = mylab, hjust = -1, vjust = 1.5), size = 5)
 ```
 
 ```{r echo=FALSE, message=FALSE, results='hide'}
-jpeg("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/GSI Analysis/By Section and Year/gsi_MixingProportions_bySectionYear_withColors_ErrorBars_byLatitude.jpg", res = 1000, units = "in", width = 8, height = 8)
+jpeg("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/GSI Analysis/By Section and Year/gsi_MixingProportions_bySectionYear_withColors_ErrorBars_byLatitude.jpg", res = 1000, units = "in", width = 7, height = 7)
 tt %>% 
   group_by(sectionID, repunit) %>% 
   summarize(minppn = min(bs_corrected_repunit_ppn),
@@ -311,7 +315,7 @@ tt %>%
   ungroup() %>%
   left_join(gwmet) %>% left_join(gps) %>% 
   ggplot(aes(x = reorder(repunit, -lat), y = meanppn)) +
-  geom_bar(aes(x = reorder(repunit, -lat), y = meanppn, fill = gwi_iew05km), stat = "identity", color = "black") +
+  geom_bar(aes(x = reorder(repunit, -lat), y = meanppn, fill = gwi_iew05km), stat = "identity", color = "black", width = 1) +
   geom_errorbar(aes(ymin = minppn, ymax = maxppn), width = 0) +
   facet_wrap(~ factor(sectionID, levels = c("A", "B", "C", "D", "E", "F")), nrow = 6) +
   xlab("Reporting group") + ylab("Corrected mixture proportion") + theme_bw() +
@@ -320,7 +324,102 @@ tt %>%
   labs(fill = "Groundwater index") +
   scale_fill_viridis_c(direction = -1, guide = guide_colorbar(frame.colour = "black", ticks.colour = "black"), alpha = 0.8) +
   scale_x_discrete(labels = c(1:52)) + 
-  geom_text(data = mylabs, aes(x = Inf, y = Inf, label = mylab, hjust = 1.5, vjust = 1.5), size = 5)
+  geom_text(data = mylabs, aes(x = -Inf, y = Inf, label = mylab, hjust = -1, vjust = 1.5), size = 5)
+dev.off()
+```
+
+```{r echo=FALSE, message=FALSE, results='hide'}
+jpeg("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/GSI Analysis/By Section and Year/gsi_MixingProportions_bySectionYear_withColors_ErrorBars_byLatitude_withNames.jpg", res = 1000, units = "in", width = 7, height = 7)
+mylabs <- tibble(sectionID = c("A", "B", "C", "D", "E", "F"),
+                 mylab = c("A. Pacific - Deadman's", "B. Deadman's - Moose", "C. Moose - Wilson", "D. Wilson - South Park", "E. South Park - Astoria", "F. Astoria - West Table"))
+tt %>% 
+  group_by(sectionID, repunit) %>% 
+  summarize(minppn = min(bs_corrected_repunit_ppn),
+            meanppn = mean(bs_corrected_repunit_ppn),
+            maxppn = max(bs_corrected_repunit_ppn)) %>% 
+  ungroup() %>% 
+  left_join(gwmet) %>% left_join(gps) %>% 
+  mutate(repunit = gsub("_NA", "", repunit)) %>%
+  mutate(repunit = recode(repunit, "snakeriversidechannel" = "srsidechannel", "spread_uppermainstem" = "spread_mainstem", "cottonwood_grosventre" = "cottonwood_gv")) %>%
+  ggplot(aes(x = reorder(repunit, -lat), y = meanppn)) +
+  geom_bar(aes(x = reorder(repunit, -lat), y = meanppn, fill = gwi_iew05km), stat = "identity", color = "black", width = 1) +
+  geom_errorbar(aes(ymin = minppn, ymax = maxppn), width = 0) +
+  facet_wrap(~ factor(sectionID, levels = c("A", "B", "C", "D", "E", "F")), nrow = 6) +
+  xlab("Reporting group") + ylab("Corrected mixture proportion") + theme_bw() +
+  theme_bw() + theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) + 
+  theme(legend.position = "top", strip.text.x = element_blank(), legend.margin = unit(c(0,0,0,0), "pt"), legend.box.spacing = unit(5, "pt")) + 
+  labs(fill = "Groundwater index") +
+  scale_fill_viridis_c(direction = -1, guide = guide_colorbar(frame.colour = "black", ticks.colour = "black"), alpha = 0.8) +
+  #scale_x_discrete(labels = c(1:52)) + 
+  geom_text(data = mylabs, aes(x = 1, y = 0.4, label = mylab, hjust = 0, vjust = 0.5), size = 4)
+dev.off()
+
+
+```
+
+Summarize among-year means as pie charts.
+```{r}
+mypies <- tt %>% 
+  group_by(sectionID, repunit) %>% 
+  summarize(minppn = min(bs_corrected_repunit_ppn),
+            meanppn = mean(bs_corrected_repunit_ppn),
+            maxppn = max(bs_corrected_repunit_ppn)) %>% 
+  ungroup() %>%
+  left_join(gwmet) %>% left_join(gps) %>% 
+  mutate(sectionID = factor(sectionID, levels = c("A", "B", "C", "D", "E", "F"))) %>%
+  arrange(sectionID, desc(gwi_iew05km)) %>%
+  ggplot(aes(x = "", y = meanppn, fill = gwi_iew05km)) +
+  geom_col() +
+  coord_polar("y", start = 0) +
+  facet_wrap(~ factor(sectionID, levels = c("A", "B", "C", "D", "E", "F"))) +
+  theme_bw() + theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) + 
+  theme(legend.position = "none", strip.text.x = element_blank(), axis.title.y = element_blank(), panel.border = element_blank(), panel.grid=element_blank(), axis.ticks = element_blank(), axis.text.x = element_blank()) + 
+  scale_fill_viridis_c(direction = -1, alpha = 0.8) 
+mypies
+```
+
+```{r echo=FALSE, message=FALSE, results='hide'}
+jpeg("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/GSI Analysis/By Section and Year/gsi_MixingProportions_bySection_PieCharts.jpg", res = 1000, units = "in", width = 8, height = 6)
+mypies
+dev.off()
+```
+
+
+### Coarse dispersal distance
+
+Use Kolmogorov-Smirnof tests to test for differences in the distribution of "dispersal distances" among years. No differences.
+
+Note that the distribution of approx. dispersal distance is robust to choice of maximum assignment probability. Min, max, and median dispersal distance is very similar for fish with PofZ > 0.7 and for those with PofZ > 0.95.
+```{r warning=FALSE}
+ddd <- map_rows %>% 
+  mutate(section = substr(mixture_collection, 1, nchar(mixture_collection)-5),
+         year = as.numeric(substr(mixture_collection, nchar(mixture_collection)-3, nchar(mixture_collection)))) %>% 
+  filter(PofZ >= 0.7) %>% left_join(dist)
+
+# pairwise KS tests, do the distributions of distances differ among years?
+ks.test(unlist(ddd %>% filter(year == 2020) %>% select(distkm)), unlist(ddd %>% filter(year == 2021) %>% select(distkm)))
+ks.test(unlist(ddd %>% filter(year == 2020) %>% select(distkm)), unlist(ddd %>% filter(year == 2022) %>% select(distkm)))
+ks.test(unlist(ddd %>% filter(year == 2021) %>% select(distkm)), unlist(ddd %>% filter(year == 2022) %>% select(distkm)))
+```
+
+Minimum, maximum, and median dispersal distances (km)
+```{r}
+min(ddd$distkm)
+max(ddd$distkm)
+median(ddd$distkm)
+```
+
+View distribution. Big bump at 25-30 is largely driven by Fish Creek fish. 
+```{r fig.width=6, fig.height=5}
+par(mar = c(4,4,1,1), mgp = c(2.5,1,0))
+hist(ddd$distkm, breaks = 30, main = "", xlab = "Approximate dispersal distance (km)", ylab = "Number of fish")
+legend("topright", border = NA, bty = "n", legend = c(paste("Median = ", round(median(ddd$distkm)), " km", sep = ""), paste("Maximum = ", round(max(ddd$distkm)), " km", sep = "")))
+```
+
+```{r echo=FALSE, message=FALSE, results='hide'}
+jpeg("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/GSI Analysis/By Section and Year/gsi_DispersalDistance.jpg", res = 1000, units = "in", width = 4.15, height = 3.5)
+par(mar = c(4,4,0.1,1), mgp = c(2.5,1,0))
+hist(ddd$distkm, breaks = 30, main = "", xlab = "Approximate dispersal distance (km)", ylab = "Number of fish")
 dev.off()
 ```
 
