@@ -1,0 +1,40 @@
+model {
+
+##-----------LIKELIHOOD-------------------##
+for (i in 1:Nmix) {
+    for (j in 1:Nrgs) {
+        # Zero-inflation component
+        zero[i,j] ~ dbern(pi[j])
+        y_nonzero[i,j] ~ ddirch(a[i, 1:Nrgs])
+
+        # Observation model: combines zeros and Dirichlet
+        Y[i,j] <- zero[i,j] * 0 + (1 - zero[i,j]) * y_nonzero[i,j]
+        }
+
+    # Linear model for alpha
+    for (j in 1:Nrgs) {
+        log(a[i,j]) <- beta0 + beta1*dist[i,j] + beta2*area[j] + beta3*gw[j]
+        }
+    }
+
+##-----------PRIORS-----------------------##
+
+# Priors for zero-inflation probabilities
+for (j in 1:Nrgs) { pi[j] ~ dbeta(1, 1) }  # Uniform prior on [0, 1]
+
+# INTERCEPT
+beta0 ~ dnorm(0, pow(10, -2))
+
+# SLOPES
+beta1 ~ dnorm(0, pow(10, -2))
+beta2 ~ dnorm(0, pow(10, -2))
+beta3 ~ dnorm(0, pow(10, -2))
+
+##-----------DERIVED VALUES-----------------------##
+for (i in 1:Nmix) {
+    for (j in 1:Nrgs) {
+        y_pred[i,j] <- ddirch(a[i,j])
+    }
+}
+
+}

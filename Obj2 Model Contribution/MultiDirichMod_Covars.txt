@@ -1,0 +1,43 @@
+model {
+
+##-----------LIKELIHOOD-------------------##
+for (i in 1:Nmix) {
+    Y[i,1:Nrgs] ~ dmulti(p[i,1:Nrgs], N[i])
+    for (j in 1:Nrgs) {
+        p[i,j] <- delta[i,j] / sum(delta[i,])
+        delta[i,j] ~ dgamma(a[i,j], 1) T(0.0001,)
+        log(a[i,j]) <- beta0 + beta1*dist[i,j] + beta2*area[j] + beta3*gw[j]
+        loglik[i,j] <- logdensity.gamma(delta[i,j], a[i,j], 1) + logdensity.multi(Y[i,1:Nrgs], p[i,1:Nrgs], N[i])
+    }
+}
+
+##-----------PRIORS-----------------------##
+
+# INTERCEPT
+beta0 ~ dnorm(0, pow(10, -2))
+
+# for (i in 1:Nmix) { phi[i] ~ dgamma(phi_shape, phi_rate) }
+# phi_shape ~ dgamma(1,1)
+# phi_rate ~ dgamma(1,1)
+
+# SLOPES
+beta1 ~ dnorm(0, pow(10, -2))
+beta2 ~ dnorm(0, pow(10, -2))
+beta3 ~ dnorm(0, pow(10, -2))
+
+# # INTENSITY
+# for (i in 1:Nmix) {
+#     theta[i] ~ dunif(0, 4000)
+#     }
+
+##-----------DERIVED VALUES-----------------------##
+for (i in 1:Nmix) {
+    y_pred2[i,1:Nrgs] ~ dmulti(p[i,1:Nrgs], N[i])
+    y_pred[i,1:Nrgs] ~ dmulti(p_pred[i,1:Nrgs], N[i])
+    for (j in 1:Nrgs) {
+        p_pred[i,j] <- delta_pred[i,j] / sum(delta_pred[i,])
+        delta_pred[i,j] ~ dgamma(a[i,j], 1) T(0.0001,)
+    }
+}
+
+}

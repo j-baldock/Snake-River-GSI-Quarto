@@ -1,0 +1,36 @@
+model {
+
+##-----------LIKELIHOOD-------------------##
+
+# for (i in 1:Nobs) {
+#     Y[i] ~ dbeta(p[i], q[i])
+#     p[i] <- mu[i] * phi
+#     q[i] <- (1 - mu[i]) * phi
+#     logit(mu[i]) <- beta0 + beta1 * dist[i] + beta2 * area[i] + beta3 * gw[i]
+# }
+
+for (i in 1:Nobs) {
+    Y[i] ~ dnorm(mu[i], pow(phi, -2))
+    logit(mu[i]) <- beta0 + beta1 * dist[i] + beta2 * area[i] + beta3 * gw[i]
+}
+
+##-----------PRIORS-----------------------##
+
+# INTERCEPT
+beta0 ~ dnorm(0, pow(10, -2))
+
+# SLOPES
+beta1 ~ dnorm(0, pow(10, -2))
+beta2 ~ dnorm(0, pow(10, -2))
+beta3 ~ dnorm(0, pow(10, -2))
+
+# phi ~ dgamma(0.1, 0.1)
+phi ~ dunif(0.0001,100)
+
+##-----------DERIVED VALUES-----------------------##
+
+# for (i in 1:Nobs) { Y_pred[i] ~ dbeta(p[i], q[i]) }
+for (i in 1:Nobs) { Y_pred[i] ~ dnorm(mu[i], pow(phi, -2)) }
+
+
+}

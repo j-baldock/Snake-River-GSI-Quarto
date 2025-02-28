@@ -29,6 +29,9 @@ book:
       - Landscape Covariates/Groundwater/GroundwaterIndex.qmd
       - Landscape Covariates/Barriers/Barriers.qmd
       - Landscape Covariates/Landcover/Landcover.qmd
+    - part: "Modeling"
+      chapters:
+      - Obj2 Model Contribution/ModelContributionZOIB.qmd
       
 
 format:

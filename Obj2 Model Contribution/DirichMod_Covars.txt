@@ -1,0 +1,32 @@
+model {
+
+##-----------LIKELIHOOD-------------------##
+for (i in 1:Nmix) {
+    Y[i,1:Nrgs] ~ ddirch(a[i,1:Nrgs])
+    loglik[i] <- logdensity.dirch(Y[i,1:Nrgs], a[i,1:Nrgs])
+    for (j in 1:Nrgs) {
+        log(a[i,j]) <- beta0 + beta1*dist[i,j] + beta2*area[j] + beta3*gw[j]
+    }
+}
+
+##-----------PRIORS-----------------------##
+
+# INTERCEPT
+beta0 ~ dnorm(0, pow(10, -2))
+
+# SLOPES
+beta1 ~ dnorm(0, pow(10, -2))
+beta2 ~ dnorm(0, pow(10, -2))
+beta3 ~ dnorm(0, pow(10, -2))
+
+# # INTENSITY
+# for (i in 1:Nmix) {
+#     theta[i] ~ dunif(0, 4000)
+#     }
+
+##-----------DERIVED VALUES-----------------------##
+for (i in 1:Nmix) {
+    p_pred[i,1:Nrgs] ~ ddirch(a[i,1:Nrgs])
+}
+
+}
