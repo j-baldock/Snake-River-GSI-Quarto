@@ -1,0 +1,30 @@
+model {
+
+##-----------LIKELIHOOD-------------------##
+for (i in 1:Nmix) {
+    Y[i,1:Nrgs] ~ ddirch(a[i,1:Nrgs])
+    loglik[i] <- logdensity.dirch(Y[i,1:Nrgs], a[i,1:Nrgs])
+    for (j in 1:Nrgs) {
+        log(a[i,j]) <- beta0[section[i], year[i],j]
+    }
+}
+
+##-----------PRIORS-----------------------##
+
+for (s in 1:Nsect) {
+    for (y in 1:Nyear) {
+        for (j in 1:Nrgs) {
+            beta0[s,y,j] ~ dnorm(0,0.01)
+        }
+    }
+}
+
+##-----------DERIVED VALUES-----------------------##
+for (i in 1:Nmix) {
+    for (j in 1:Nrgs) {
+        pred.ppn[i,j] <- a[i,j] / sum(a[i,])
+        res[i,j] <- Y[i,j] - pred.ppn[i,j]
+    }
+}
+
+}

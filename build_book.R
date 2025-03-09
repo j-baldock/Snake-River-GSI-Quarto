@@ -45,6 +45,10 @@ quarto::quarto_render("Landscape Covariates/Landcover/Landcover.qmd",
                       cache_refresh = TRUE, # default is FALSE
                       output_format = "html")
 
+quarto::quarto_render("Obj2 Spatiotemporal Var/SpaceTimeZOID.qmd", 
+                      #cache_refresh = TRUE, # default is FALSE
+                      output_format = "html")
+
 quarto::quarto_render("Obj2 Model Contribution/ModelContributionZOIB.qmd", 
                       #cache_refresh = TRUE, # default is FALSE
                       output_format = "html")
