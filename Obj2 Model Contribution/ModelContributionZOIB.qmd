@@ -86,6 +86,7 @@ data_long <- gsi_dat$bootstrapped_proportions %>%
          year = str_sub(mixture_collection, start = -4)) %>% 
   left_join(gwmet) %>% left_join(dist) %>% left_join(barr %>% select(repunit, barrier_dens, log_barrier_dens, connectivity, z_barrier_dens, z_log_barrier_dens, z_barrier_num, connect_type)) %>% left_join(land)
 head(data_long)
+write_csv(data_long, "/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Obj2 Model Contribution/Contribution_data_long.csv")
 ```
 
 
@@ -166,9 +167,10 @@ summary(mod_zoib1)
 Bayesian R-squared
 ```{r}
 # full model
+par(mar = c(4,4,1,1), mgp = c(2.5,1,0))
 myr2 <- bayes_R2(mod_zoib1, summary = FALSE)
 myr2hdi <- HDInterval::hdi(myr2, credMass = 0.95)
-hist(myr2, xlab = "Bayesian R-squared", xlim = c(0,1), main = "Full model", breaks = 20)
+hist(myr2, xlab = "Bayesian R-squared", xlim = c(0,1), main = "", breaks = 20)
 abline(v = median(myr2), lwd = 3, col = "darkred")
 abline(v = unlist(myr2hdi), lwd = 1, lty = 2, col = "darkred")
 legend("topleft", legend = c(paste("median = ", round(median(myr2), digits = 3), sep = ""), 
@@ -711,21 +713,49 @@ dev.off()
 ### Random effects
 
 Random effect of reporting unit, offset to the global intercept. Random intercepts indicate reporting units that contribute more or less than expected, after account for the effects of distance, area, and groundwater (and zero-inflation and precision components of the model). 
+
+```{r}
+# define spatial clusters/regions
+greys <- c("littlegreys_steer", "white_NA", "blindbull_NA", "deadman_greys")
+hoback <- c("willow_NA", "boulder_NA", "granite_lower", "granite_upper", "shoal_NA", "cliff_NA", "dell_NA", "hoback_upper")
+grosventre <- c("crystal_lower", "crystal_upper", "slate_NA", "goosewing_NA", "cottonwood_grosventre", "fish_grosventre")
+spread <- c("rock_NA", "spread_uppermainstem", "spreadnf_flagstaff", "spread_southfork", "leidy_NA")
+buffalo <- c("blackrock_lower", "blackrock_upper", "lava_NA", "box_NA", "clear_NA", "northbuffalofork_NA", "pacific_NA", "spring_nps")
+
+# load loation data and edit names, regions
+gps <- read_csv("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Landscape Covariates/Location Data/RepUnit_LatLong.csv") %>% 
+  arrange(desc(lat)) %>%
+  mutate(repunit_num = c(1:52)) %>%
+  mutate(repunit2 = gsub("_NA", "", repunit)) %>%
+  mutate(repunit2 = recode(repunit2, "snakeriversidechannel" = "srsidechannel", "spread_uppermainstem" = "spread_mainstem", "cottonwood_grosventre" = "cottonwood_gv")) %>%
+  mutate(name = paste(repunit_num, ". ", repunit2, sep = ""),
+         region = ifelse(repunit %in% greys, "Greys",
+                         ifelse(repunit %in% hoback, "Hoback",
+                                ifelse(repunit %in% grosventre, "Gros Ventre",
+                                       ifelse(repunit %in% spread, "Spread",
+                                              ifelse(repunit %in% buffalo, "Buffalo Fork", "SR Corridor"))))))
+gps
+```
+
+
 ```{r fig.width=6, fig.height=8}
 p1 <- mod_zoib1 %>%
   spread_draws(r_repunit[repunit,]) %>%
   #compare_levels(r_repunit, by = repunit) %>%
   ungroup() %>%
-  mutate(repunit = reorder(repunit, r_repunit)) %>%
-  ggplot(aes(y = repunit, x = r_repunit)) +
+  left_join(gps %>% select(repunit, name, lat, region)) %>%
+  mutate(name = reorder(name, r_repunit)) %>%
+  ggplot(aes(y = name, x = r_repunit)) +
   stat_pointinterval(.width = c(.80, .95)) +
   geom_vline(xintercept = 0, linetype = "dashed") +
-  ylab("Reporting unit") + xlab("Offset to intercept")
+  ylab("Reporting unit") + xlab("Offset to intercept") + 
+  #scale_colour_brewer(palette = "Dark2") +
+  theme_bw()
 print(p1)
 ```
 
 ```{r echo=FALSE, message=FALSE, results='hide'}
-jpeg("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Obj2 Model Contribution/plots/RandomEffects_Repunit.jpg", units = "in", width = 6, height = 8, res = 1000)
+jpeg("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Obj2 Model Contribution/RandomEffects_Repunit.jpg", units = "in", width = 6, height = 8, res = 1000)
 print(p1)
 dev.off()
 ```
@@ -783,6 +813,11 @@ print(p1)
 
 ### Zero-inflation
 
+Inverse logit function
+```{r}
+invlogit <- function(x) { exp(x) / (1 + exp(x)) }
+```
+
 Plot zero-inflation effects: increasing distance increases the probability of observing 0 contribution, whereas increase catchment area and groundwater contribution decreases the probability of observing a 0. Further, probability of observing a 0 is greatest for tributaries in which connectivity is disrupted by a waterfall, intermediate for connected tributaries and those in which connectivity is disrupted by culverts/diversions, and lowest for tributaries in which connectivity is disrupted by low flow. 
 ```{r}
 plot(conditional_effects(mod_zoib1, dpar = "zi"), ask = FALSE, rug = TRUE)
@@ -816,8 +851,166 @@ mod_zoib1 %>%
   gather(conn_culvert_diversion:conn_waterfall, key = "param", value = "estimate") %>%
   ggplot(aes(y = param, x = estimate)) +
   stat_halfeye() + xlab("Probability of observing 0 contribution, difference from type = 'connected' ") + ylab("") + 
-  geom_vline(xintercept = 0, linetype = "dashed")
+  geom_vline(xintercept = 0, linetype = "dashed") +
+  theme_bw()
 ```
+
+#### Pretty plots
+
+##### Connectivity
+```{r}
+mydraws <- mod_zoib1 %>% 
+  spread_draws(b_zi_Intercept, b_zi_connect_typeculvert_diversion, b_zi_connect_typelowflow, b_zi_connect_typewaterfall) %>%
+  mutate(beta_connected = invlogit(b_zi_Intercept),
+         beta_culvdiv = invlogit(b_zi_Intercept + b_zi_connect_typeculvert_diversion),
+         beta_lowflow = invlogit(b_zi_Intercept + b_zi_connect_typelowflow),
+         beta_waterfall = invlogit(b_zi_Intercept + b_zi_connect_typewaterfall)) %>%
+  select(-c(b_zi_Intercept, b_zi_connect_typeculvert_diversion, b_zi_connect_typelowflow, b_zi_connect_typewaterfall)) %>%
+  summarise_draws()
+```
+
+```{r echo=FALSE, message=FALSE, results='hide'}
+jpeg("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Obj2 Model Contribution/ZeroInflation_Connectivity.jpg", units = "in", width = 4, height = 3.5, res = 1000)
+
+# set up
+par(mar = c(4,4,0.5,0.5), mgp = c(2.5,1.25,0))
+mycols <- c("black", brewer.pal(3, "Dark2"))
+uplim <- 0.1
+npreds <- 100
+
+# plot
+plot(c(1:4) ~ c(1:4), ylim = c(0.15,0.65), xlim = c(0.5,4.5), type = "n", pch = NA, bty = "l", xlab = "Connectivity", ylab = "Probability of zero contribution", axes = FALSE)
+axis(1, at = c(1:4), cex.axis = 0.8, labels = c("Connected\n ", " Culvert/\ndiversion", "Low flow\n ", "Waterfall\n "))
+par(mgp = c(2.5,1,0))
+axis(2)
+box(bty = "l")
+arrows(x0 = c(1:4), x1 = c(1:4), y0 = mydraws$median, y1 = mydraws$q95, angle = 90, col = mycols, lwd = 3, length = 0.2)
+arrows(x0 = c(1:4), x1 = c(1:4), y0 = mydraws$median, y1 = mydraws$q5, angle = 90, col = mycols, lwd = 3, length = 0.2)
+points(mydraws$median ~ c(1:4), pch = 21, bg = c("grey60", brewer.pal(3, "Dark2")), cex = 1.7)
+
+dev.off()
+```
+![Marginal effect of connectivity on proportional contribution of tributary streams to the mainstem Snake River population of YCT.](ZeroInflation_Connectivity.jpg)
+
+##### Distance
+
+Connected only
+```{r echo=FALSE, message=FALSE, results='hide'}
+jpeg("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Obj2 Model Contribution/ZeroInflation_Distance_ConnectedOnly.jpg", units = "in", width = 4, height = 3.5, res = 1000)
+
+# set up
+par(mar = c(4,4,0.5,0.5), mgp = c(2.5,1,0))
+mycols <- c("black", brewer.pal(3, "Dark2"))
+uplim <- 0.1
+npreds <- 100
+
+# draws
+mydraws <- mod_zoib1 %>% spread_draws(b_zi_Intercept, b_zi_z_dist, b_zi_connect_typeculvert_diversion, b_zi_connect_typelowflow, b_zi_connect_typewaterfall)
+
+# x values for prediction
+myx <- seq(from = min(data_long$z_dist), to = max(data_long$z_dist), length.out = npreds)
+x.axis <- seq(from = 0, to = 150, by = 50)
+x.scaled <- (x.axis - scltib$mean[scltib$param == "dist"]) / scltib$sd[scltib$param == "dist"]
+x.lim <- (c(0,150) - scltib$mean[scltib$param == "dist"]) / scltib$sd[scltib$param == "dist"]
+
+# set up plot
+plot(seq(from = 0, to = uplim, length.out = npreds) ~ myx, xlim = x.lim, ylim = c(0.15,0.65), type = "n", pch = NA, bty = "l", xlab = "Flowline distance (km)", ylab = "Probability of zero contribution", axes = F)
+axis(1, at = x.scaled, labels = x.axis)
+axis(2)
+box(bty = "l")
+
+# Connected
+pred_dist <- matrix(NA, nrow = nrow(mydraws), ncol = npreds)
+for (i in 1:nrow(pred_dist)) { pred_dist[i,] <- invlogit(unlist(mydraws[i,"b_zi_Intercept"]) + unlist(mydraws[i,"b_zi_z_dist"])*myx) }
+pred_lower <- apply(pred_dist, MARGIN = 2, quantile, prob = 0.025)
+pred_upper <- apply(pred_dist, MARGIN = 2, quantile, prob = 0.975)
+pred_median <- apply(pred_dist, MARGIN = 2, quantile, prob = 0.5)
+polygon(c(myx, rev(myx)), c(pred_upper, rev(pred_lower)), col = scales::alpha(mycols[1], 0.3), lty = 0)
+lines(pred_median ~ myx, lwd = 3, col = mycols[1])
+
+dev.off()
+```
+![Marginal effect of flowline distance (km) on proportional contribution of tributary streams to the mainstem Snake River population of YCT.](ZeroInflation_Distance_ConnectedOnly.jpg)
+
+##### Area 
+
+```{r echo=FALSE, message=FALSE, results='hide'}
+jpeg("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Obj2 Model Contribution/ZeroInflation_Area_ConnectedOnly.jpg", units = "in", width = 4, height = 3.5, res = 1000)
+
+# set up
+par(mar = c(4,4,0.5,0.5), mgp = c(2.5,1,0))
+mycols <- c("black", brewer.pal(3, "Dark2"))
+uplim <- 0.1
+npreds <- 100
+
+# draws
+mydraws <- mod_zoib1 %>% spread_draws(b_zi_Intercept, b_zi_z_logarea, b_zi_connect_typeculvert_diversion, b_zi_connect_typelowflow, b_zi_connect_typewaterfall)
+
+# x values for prediction
+myx <- seq(from = min(data_long$z_logarea), to = max(data_long$z_logarea), length.out = npreds)
+x.axis <- c(1,10,100,1000)
+x.scaled <- (log(x.axis) - scltib$mean[scltib$param == "logarea"]) / scltib$sd[scltib$param == "logarea"]
+#x.lim <- (c(0,150) - scltib$mean[scltib$param == "logarea"]) / scltib$sd[scltib$param == "logarea"]
+
+# set up plot
+plot(seq(from = 0, to = uplim, length.out = npreds) ~ myx, ylim = c(0.15,0.65), type = "n", pch = NA, bty = "l", xlab = expression(paste("Catchment area (km"^"2", ")")), ylab = "Probability of zero contribution", axes = F)
+axis(1, at = x.scaled, labels = x.axis)
+axis(2)
+box(bty = "l")
+
+# Connected
+pred_dist <- matrix(NA, nrow = nrow(mydraws), ncol = npreds)
+for (i in 1:nrow(pred_dist)) { pred_dist[i,] <- invlogit(unlist(mydraws[i,"b_zi_Intercept"]) + unlist(mydraws[i,"b_zi_z_logarea"])*myx) }
+pred_lower <- apply(pred_dist, MARGIN = 2, quantile, prob = 0.025)
+pred_upper <- apply(pred_dist, MARGIN = 2, quantile, prob = 0.975)
+pred_median <- apply(pred_dist, MARGIN = 2, quantile, prob = 0.5)
+polygon(c(myx, rev(myx)), c(pred_upper, rev(pred_lower)), col = scales::alpha(mycols[1], 0.3), lty = 0)
+lines(pred_median ~ myx, lwd = 3, col = mycols[1])
+
+dev.off()
+```
+![Marginal effect of (log) catchment area (km^2) on proportional contribution of tributary streams to the mainstem Snake River population of YCT.](ZeroInflation_Area_ConnectedOnly.jpg)
+
+##### Groundwater
+
+Connected only
+```{r echo=FALSE, message=FALSE, results='hide'}
+jpeg("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Obj2 Model Contribution/ZeroInflation_Groundwater_ConnectedOnly.jpg", units = "in", width = 4, height = 3.5, res = 1000)
+
+# set up
+par(mar = c(4,4,0.5,0.5), mgp = c(2.5,1,0))
+mycols <- c("black", brewer.pal(3, "Dark2"))
+uplim <- 0.1
+npreds <- 100
+
+# draws
+mydraws <- mod_zoib1 %>% spread_draws(b_zi_Intercept, b_zi_z_loggwi, b_zi_connect_typeculvert_diversion, b_zi_connect_typelowflow, b_zi_connect_typewaterfall)
+
+# x values for prediction
+myx <- seq(from = min(data_long$z_loggwi), to = max(data_long$z_loggwi), length.out = npreds)
+x.axis <- c(0.025,0.05,0.1,0.2,0.4)
+x.scaled <- (log(x.axis) - scltib$mean[scltib$param == "loggwi"]) / scltib$sd[scltib$param == "loggwi"]
+#x.lim <- (c(0,150) - scltib$mean[scltib$param == "logarea"]) / scltib$sd[scltib$param == "logarea"]
+
+# set up plot
+plot(seq(from = 0, to = uplim, length.out = npreds) ~ myx, ylim = c(0.15,0.65), type = "n", pch = NA, bty = "l", xlab = "Groundwater index", ylab = "Probability of zero contribution", axes = F)
+axis(1, at = x.scaled, labels = x.axis)
+axis(2)
+box(bty = "l")
+
+# Connected
+pred_dist <- matrix(NA, nrow = nrow(mydraws), ncol = npreds)
+for (i in 1:nrow(pred_dist)) { pred_dist[i,] <- invlogit(unlist(mydraws[i,"b_zi_Intercept"]) + unlist(mydraws[i,"b_zi_z_loggwi"])*myx) }
+pred_lower <- apply(pred_dist, MARGIN = 2, quantile, prob = 0.025)
+pred_upper <- apply(pred_dist, MARGIN = 2, quantile, prob = 0.975)
+pred_median <- apply(pred_dist, MARGIN = 2, quantile, prob = 0.5)
+polygon(c(myx, rev(myx)), c(pred_upper, rev(pred_lower)), col = scales::alpha(mycols[1], 0.3), lty = 0)
+lines(pred_median ~ myx, lwd = 3, col = mycols[1])
+
+dev.off()
+```
+![Marginal effect of (log) groundwater availability on proportional contribution of tributary streams to the mainstem Snake River population of YCT.](ZeroInflation_Groundwater_ConnectedOnly.jpg)
+
 
 
 ### Phi (precision)
@@ -826,5 +1019,193 @@ Precision in model estimates increases with increasing distance and decreases wi
 ```{r}
 plot(conditional_effects(mod_zoib1, dpar = "phi"), ask = FALSE, rug = TRUE)
 ```
+
+
+#### Pretty plots
+
+##### Connectivity
+```{r}
+mydraws <- mod_zoib1 %>% 
+  spread_draws(b_phi_Intercept, b_phi_connect_typeculvert_diversion, b_phi_connect_typelowflow, b_phi_connect_typewaterfall) %>%
+  mutate(beta_connected = exp(b_phi_Intercept),
+         beta_culvdiv = exp(b_phi_Intercept + b_phi_connect_typeculvert_diversion),
+         beta_lowflow = exp(b_phi_Intercept + b_phi_connect_typelowflow),
+         beta_waterfall = exp(b_phi_Intercept + b_phi_connect_typewaterfall)) %>%
+  select(-c(b_phi_Intercept, b_phi_connect_typeculvert_diversion, b_phi_connect_typelowflow, b_phi_connect_typewaterfall)) %>%
+  summarise_draws()
+```
+
+```{r echo=FALSE, message=FALSE, results='hide'}
+jpeg("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Obj2 Model Contribution/Precision_Connectivity.jpg", units = "in", width = 4, height = 3.5, res = 1000)
+
+# set up
+par(mar = c(4,4,0.5,0.5), mgp = c(2.5,1.25,0))
+mycols <- c("black", brewer.pal(3, "Dark2"))
+uplim <- 0.1
+npreds <- 100
+
+# plot
+plot(c(1:4) ~ c(1:4), ylim = c(0,2300), xlim = c(0.5,4.5), type = "n", pch = NA, bty = "l", xlab = "Connectivity", ylab = expression(paste("Precision, ", phi, sep = "")), axes = FALSE)
+axis(1, at = c(1:4), cex.axis = 0.8, labels = c("Connected\n ", " Culvert/\ndiversion", "Low flow\n ", "Waterfall\n "))
+par(mgp = c(2.5,1,0))
+axis(2)
+box(bty = "l")
+arrows(x0 = c(1:4), x1 = c(1:4), y0 = mydraws$median, y1 = mydraws$q95, angle = 90, col = mycols, lwd = 3, length = 0.2)
+arrows(x0 = c(1:4), x1 = c(1:4), y0 = mydraws$median, y1 = mydraws$q5, angle = 90, col = mycols, lwd = 3, length = 0.2)
+points(mydraws$median ~ c(1:4), pch = 21, bg = c("grey60", brewer.pal(3, "Dark2")), cex = 1.7)
+
+dev.off()
+```
+![Marginal effect of connectivity on proportional contribution of tributary streams to the mainstem Snake River population of YCT.](Precision_Connectivity.jpg)
+
+##### Distance
+
+Connected only
+```{r echo=FALSE, message=FALSE, results='hide'}
+jpeg("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Obj2 Model Contribution/Precision_Distance_ConnectedOnly.jpg", units = "in", width = 4, height = 3.5, res = 1000)
+
+# set up
+par(mar = c(4,4,0.5,0.5), mgp = c(2.5,1,0))
+mycols <- c("black", brewer.pal(3, "Dark2"))
+uplim <- 0.1
+npreds <- 100
+
+# draws
+mydraws <- mod_zoib1 %>% spread_draws(b_phi_Intercept, b_phi_z_dist, b_phi_connect_typeculvert_diversion, b_phi_connect_typelowflow, b_phi_connect_typewaterfall)
+
+# x values for prediction
+myx <- seq(from = min(data_long$z_dist), to = max(data_long$z_dist), length.out = npreds)
+x.axis <- seq(from = 0, to = 150, by = 50)
+x.scaled <- (x.axis - scltib$mean[scltib$param == "dist"]) / scltib$sd[scltib$param == "dist"]
+x.lim <- (c(0,150) - scltib$mean[scltib$param == "dist"]) / scltib$sd[scltib$param == "dist"]
+
+# set up plot
+plot(seq(from = 0, to = uplim, length.out = npreds) ~ myx, xlim = x.lim, ylim = c(0,2300), type = "n", pch = NA, bty = "l", xlab = "Flowline distance (km)", ylab = expression(paste("Precision, ", phi, sep = "")), axes = F)
+axis(1, at = x.scaled, labels = x.axis)
+axis(2)
+box(bty = "l")
+
+# Connected
+pred_dist <- matrix(NA, nrow = nrow(mydraws), ncol = npreds)
+for (i in 1:nrow(pred_dist)) { pred_dist[i,] <- exp(unlist(mydraws[i,"b_phi_Intercept"]) + unlist(mydraws[i,"b_phi_z_dist"])*myx) }
+pred_lower <- apply(pred_dist, MARGIN = 2, quantile, prob = 0.025)
+pred_upper <- apply(pred_dist, MARGIN = 2, quantile, prob = 0.975)
+pred_median <- apply(pred_dist, MARGIN = 2, quantile, prob = 0.5)
+polygon(c(myx, rev(myx)), c(pred_upper, rev(pred_lower)), col = scales::alpha(mycols[1], 0.3), lty = 0)
+lines(pred_median ~ myx, lwd = 3, col = mycols[1])
+
+# 
+# # Culvert/diversion
+# pred_dist <- matrix(NA, nrow = nrow(mydraws), ncol = npreds)
+# for (i in 1:nrow(pred_dist)) { pred_dist[i,] <- exp(unlist(mydraws[i,"b_phi_Intercept"]) + unlist(mydraws[i,"b_phi_z_dist"])*myx + unlist(mydraws[i,"b_phi_connect_typeculvert_diversion"])) }
+# pred_lower <- apply(pred_dist, MARGIN = 2, quantile, prob = 0.025)
+# pred_upper <- apply(pred_dist, MARGIN = 2, quantile, prob = 0.975)
+# pred_median <- apply(pred_dist, MARGIN = 2, quantile, prob = 0.5)
+# polygon(c(myx, rev(myx)), c(pred_upper, rev(pred_lower)), col = scales::alpha(mycols[2], 0.3), lty = 0)
+# lines(pred_median ~ myx, lwd = 3, col = mycols[2])
+# 
+# # Low flow
+# pred_dist <- matrix(NA, nrow = nrow(mydraws), ncol = npreds)
+# for (i in 1:nrow(pred_dist)) { pred_dist[i,] <- exp(unlist(mydraws[i,"b_phi_Intercept"]) + unlist(mydraws[i,"b_phi_z_dist"])*myx + unlist(mydraws[i,"b_phi_connect_typelowflow"])) }
+# pred_lower <- apply(pred_dist, MARGIN = 2, quantile, prob = 0.025)
+# pred_upper <- apply(pred_dist, MARGIN = 2, quantile, prob = 0.975)
+# pred_median <- apply(pred_dist, MARGIN = 2, quantile, prob = 0.5)
+# polygon(c(myx, rev(myx)), c(pred_upper, rev(pred_lower)), col = scales::alpha(mycols[3], 0.3), lty = 0)
+# lines(pred_median ~ myx, lwd = 3, col = mycols[3])
+# 
+# # waterfall
+# pred_dist <- matrix(NA, nrow = nrow(mydraws), ncol = npreds)
+# for (i in 1:nrow(pred_dist)) { pred_dist[i,] <- exp(unlist(mydraws[i,"b_phi_Intercept"]) + unlist(mydraws[i,"b_phi_z_dist"])*myx + unlist(mydraws[i,"b_phi_connect_typewaterfall"])) }
+# pred_lower <- apply(pred_dist, MARGIN = 2, quantile, prob = 0.025)
+# pred_upper <- apply(pred_dist, MARGIN = 2, quantile, prob = 0.975)
+# pred_median <- apply(pred_dist, MARGIN = 2, quantile, prob = 0.5)
+# polygon(c(myx, rev(myx)), c(pred_upper, rev(pred_lower)), col = scales::alpha(mycols[4], 0.3), lty = 0)
+# lines(pred_median ~ myx, lwd = 3, col = mycols[4])
+# 
+
+dev.off()
+```
+![Marginal effect of flowline distance (km) on proportional contribution of tributary streams to the mainstem Snake River population of YCT.](Precision_Distance_ConnectedOnly.jpg)
+
+##### Area 
+
+```{r echo=FALSE, message=FALSE, results='hide'}
+jpeg("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Obj2 Model Contribution/Precision_Area_ConnectedOnly.jpg", units = "in", width = 4, height = 3.5, res = 1000)
+
+# set up
+par(mar = c(4,4,0.5,0.5), mgp = c(2.5,1,0))
+mycols <- c("black", brewer.pal(3, "Dark2"))
+uplim <- 0.1
+npreds <- 100
+
+# draws
+mydraws <- mod_zoib1 %>% spread_draws(b_phi_Intercept, b_phi_z_logarea, b_phi_connect_typeculvert_diversion, b_phi_connect_typelowflow, b_phi_connect_typewaterfall)
+
+# x values for prediction
+myx <- seq(from = min(data_long$z_logarea), to = max(data_long$z_logarea), length.out = npreds)
+x.axis <- c(1,10,100,1000)
+x.scaled <- (log(x.axis) - scltib$mean[scltib$param == "logarea"]) / scltib$sd[scltib$param == "logarea"]
+#x.lim <- (c(0,150) - scltib$mean[scltib$param == "logarea"]) / scltib$sd[scltib$param == "logarea"]
+
+# set up plot
+plot(seq(from = 0, to = uplim, length.out = npreds) ~ myx, ylim = c(0,2300), type = "n", pch = NA, bty = "l", xlab = expression(paste("Catchment area (km"^"2", ")")), ylab = expression(paste("Precision, ", phi, sep = "")), axes = F)
+axis(1, at = x.scaled, labels = x.axis)
+axis(2)
+box(bty = "l")
+
+# Connected
+pred_dist <- matrix(NA, nrow = nrow(mydraws), ncol = npreds)
+for (i in 1:nrow(pred_dist)) { pred_dist[i,] <- exp(unlist(mydraws[i,"b_phi_Intercept"]) + unlist(mydraws[i,"b_phi_z_logarea"])*myx) }
+pred_lower <- apply(pred_dist, MARGIN = 2, quantile, prob = 0.025)
+pred_upper <- apply(pred_dist, MARGIN = 2, quantile, prob = 0.975)
+pred_median <- apply(pred_dist, MARGIN = 2, quantile, prob = 0.5)
+polygon(c(myx, rev(myx)), c(pred_upper, rev(pred_lower)), col = scales::alpha(mycols[1], 0.3), lty = 0)
+lines(pred_median ~ myx, lwd = 3, col = mycols[1])
+
+dev.off()
+```
+![Marginal effect of (log) catchment area (km^2) on proportional contribution of tributary streams to the mainstem Snake River population of YCT.](Precision_Area_ConnectedOnly.jpg)
+
+
+
+##### Groundwater
+
+Connected only
+```{r echo=FALSE, message=FALSE, results='hide'}
+jpeg("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Obj2 Model Contribution/Precision_Groundwater_ConnectedOnly.jpg", units = "in", width = 4, height = 3.5, res = 1000)
+
+# set up
+par(mar = c(4,4,0.5,0.5), mgp = c(2.5,1,0))
+mycols <- c("black", brewer.pal(3, "Dark2"))
+uplim <- 0.1
+npreds <- 100
+
+# draws
+mydraws <- mod_zoib1 %>% spread_draws(b_phi_Intercept, b_phi_z_loggwi, b_phi_connect_typeculvert_diversion, b_phi_connect_typelowflow, b_phi_connect_typewaterfall)
+
+# x values for prediction
+myx <- seq(from = min(data_long$z_loggwi), to = max(data_long$z_loggwi), length.out = npreds)
+x.axis <- c(0.025,0.05,0.1,0.2,0.4)
+x.scaled <- (log(x.axis) - scltib$mean[scltib$param == "loggwi"]) / scltib$sd[scltib$param == "loggwi"]
+#x.lim <- (c(0,150) - scltib$mean[scltib$param == "logarea"]) / scltib$sd[scltib$param == "logarea"]
+
+# set up plot
+plot(seq(from = 0, to = uplim, length.out = npreds) ~ myx, ylim = c(0,2300), type = "n", pch = NA, bty = "l", xlab = "Groundwater index", ylab = expression(paste("Precision, ", phi, sep = "")), axes = F)
+axis(1, at = x.scaled, labels = x.axis)
+axis(2)
+box(bty = "l")
+
+# Connected
+pred_dist <- matrix(NA, nrow = nrow(mydraws), ncol = npreds)
+for (i in 1:nrow(pred_dist)) { pred_dist[i,] <- exp(unlist(mydraws[i,"b_phi_Intercept"]) + unlist(mydraws[i,"b_phi_z_loggwi"])*myx) }
+pred_lower <- apply(pred_dist, MARGIN = 2, quantile, prob = 0.025)
+pred_upper <- apply(pred_dist, MARGIN = 2, quantile, prob = 0.975)
+pred_median <- apply(pred_dist, MARGIN = 2, quantile, prob = 0.5)
+polygon(c(myx, rev(myx)), c(pred_upper, rev(pred_lower)), col = scales::alpha(mycols[1], 0.3), lty = 0)
+lines(pred_median ~ myx, lwd = 3, col = mycols[1])
+
+dev.off()
+```
+![Marginal effect of (log) groundwater availability on proportional contribution of tributary streams to the mainstem Snake River population of YCT.](Precision_Groundwater_ConnectedOnly.jpg)
 
 
