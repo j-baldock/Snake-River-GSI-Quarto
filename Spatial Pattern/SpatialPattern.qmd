@@ -1,0 +1,503 @@
+---
+title: "Spatial Pattern"
+---
+
+Purpose: conduct post-hoc analyses to explore spatial structure and tributary random intercepts (mean contribution after account for the effects of distance, size, groundwater, and connectivity).
+
+```{r}
+library(tidyverse)
+library(sf)
+library(mapview)
+library(SSNbler)
+library(SSN2)
+library(brms)
+library(bayesplot)
+library(ggpubr)
+library(tidybayes)
+library(gpkg)
+library(RColorBrewer)
+```
+
+
+## Data and objects
+
+Load spatial datasets. Check for geometry type SSNbler/SSN2 compatibility (linestring, point) and matching CRS. 
+
+Upper Snake-Greys-Salt Rivers flowline object
+```{r}
+flowline <- st_read(dsn = "/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Data/Spatial/Flowline/FlowlineEditing/SnakeHeadwaters_flowline_springsclean_fixed.gpkg", layer = "flowline")
+flowline <- flowline[!st_is_empty(flowline),]
+flowline <- flowline %>% st_cast("LINESTRING")
+flowline
+```
+
+Reporting unit locations
+```{r}
+sites_repu <- read_sf("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Landscape Covariates/Location Data/RepUnit_SpatialLocations.shp")
+#sites_repu <- sort(sites_repu, "repunit")
+
+# define spatial clusters/regions
+greys <- c("littlegreys_steer", "white_NA", "blindbull_NA", "deadman_greys")
+hoback <- c("boulder_NA", "granite_lower", "granite_upper", "shoal_NA", "cliff_NA", "dell_NA", "hoback_upper")
+grosventre <- c("crystal_lower", "crystal_upper", "slate_NA", "goosewing_NA", "cottonwood_grosventre", "fish_grosventre")
+spread <- c("rock_NA", "spread_uppermainstem", "spreadnf_flagstaff", "spread_southfork", "leidy_NA")
+buffalo <- c("blackrock_lower", "blackrock_upper", "lava_NA", "box_NA", "clear_NA", "northbuffalofork_NA", "pacific_NA", "spring_nps")
+lowsnake <- c("horse_NA", "fall_coburn", "willow_NA", "dog_NA", "cabin_NA", "bailey_NA")
+gtnp <- c("snakeriversidechannel_NA", "upperbarbc_NA", "cottonwood_NPS", "blacktail_NA", "ditch_NA", "cowboycabin_NA", "deadmansbar_NA")
+
+# load loation data and edit names, regions
+gps <- read_csv("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Landscape Covariates/Location Data/RepUnit_LatLong.csv") %>% 
+  arrange(desc(lat)) %>%
+  mutate(repunit_num = c(1:52)) %>%
+  mutate(repunit2 = gsub("_NA", "", repunit)) %>%
+  mutate(repunit2 = recode(repunit2, "snakeriversidechannel" = "srsidechannel", "spread_uppermainstem" = "spread_mainstem", "cottonwood_grosventre" = "cottonwood_gv")) %>%
+  mutate(name = paste(repunit_num, ". ", repunit2, sep = ""),
+         region = ifelse(repunit %in% greys, "Greys",
+                         ifelse(repunit %in% hoback, "Hoback",
+                                ifelse(repunit %in% grosventre, "Gros Ventre",
+                                       ifelse(repunit %in% spread, "Spread",
+                                              ifelse(repunit %in% buffalo, "Buffalo Fork", 
+                                                     ifelse(repunit %in% lowsnake, "Lower Snake", 
+                                                            ifelse(repunit %in% gtnp, "Grand Teton", "Jackson"))))))))
+```
+
+ZOIB model object
+```{r}
+mod_zoib1 <- readRDS("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Obj2 Model Contribution/brms_fit_zoib_fullmodel.rds")
+```
+
+Join spatial points with model output
+```{r}
+rpint_summ <- mod_zoib1 %>%
+  spread_draws(r_repunit[repunit,]) %>%
+  group_by(repunit) %>%
+  median_qi(r_repunit) %>%
+  ungroup() %>%
+  mutate(repunit = reorder(repunit, r_repunit)) %>%
+  rename("lower" = ".lower", "upper" = ".upper", "width" = ".width", "interval" = ".interval")
+
+sites_repu <- sites_repu %>% left_join(gps) %>% left_join(rpint_summ)
+sites_repu
+```
+
+## Vizualize data
+
+Dot plot of reporting unit random effects
+```{r  fig.width=6, fig.height=8}
+mod_zoib1 %>%
+  spread_draws(r_repunit[repunit,]) %>%
+  #compare_levels(r_repunit, by = repunit) %>%
+  ungroup() %>%
+  left_join(gps %>% select(repunit, name, lat, region)) %>%
+  mutate(name = reorder(name, r_repunit)) %>%
+  ggplot(aes(y = name, x = r_repunit)) +
+  stat_pointinterval(.width = c(.80, .95)) +
+  geom_vline(xintercept = 0, linetype = "dashed") +
+  ylab("Reporting unit") + xlab("Offset to intercept") + 
+  #scale_colour_brewer(palette = "Dark2") +
+  theme_bw()
+```
+
+Map flowline and reporting unit locations colored by random effect value
+```{r fig.width = 5, fig.height = 8}
+# ggplot() + geom_sf(data = flowline) + geom_sf(data = sites_repu, color = "purple") + coord_sf(datum = st_crs(flowline)) + theme_bw()
+mapview(flowline) + mapview(sites_repu, zcol = "r_repunit", col.regions = rev(hcl.colors(10, "Blue-Red")), alpha.regions = 1)
+```
+
+Create static maps to export
+```{r fig.width=6, fig.height=9}
+# lakes
+lakes <- read_sf("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Data/Spatial/Lakes/UpperSnake_Lakes.shp") 
+lakes2 <- read_sf("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Data/Spatial/Lakes/SSB_Lakes/SSB_Lakes.shp") 
+lakes2 <- subset(lakes2, lakes2$GNIS_Name == "Palisades Reservoir")
+lakes2 <- st_transform(lakes2, crs = st_crs(lakes))
+# lakes <- st_union(lakes, lakes2)
+
+# order and colors
+regions <- c("Snake Corridor", "Buffalo Fork", "Spread", "Gros Ventre", "Lower Snake", "Hoback", "Greys")
+jittersites <- c("snakeriversidechannel_NA", "upperbarbc_NA", "cottonwood_NPS", 
+                 "blacktail_NA", "threechannel_NA", "lowerbarbc_NA")
+mycols <- c("grey", brewer.pal(n = 6, "Set2"))
+
+# edit geometry to avoid overlapping points
+sites_repu_edit <- sites_repu
+sites_repu_edit <- sites_repu_edit %>% mutate(geometry = st_sfc(ifelse(repunit == "snakeriversidechannel_NA", st_geometry(sites_repu %>% filter(repunit == "snakeriversidechannel_NA")) + c(0,800), geometry)))
+sites_repu_edit <- sites_repu_edit %>% mutate(geometry = st_sfc(ifelse(repunit == "blacktail_NA", st_geometry(sites_repu %>% filter(repunit == "blacktail_NA")) + c(0,-500), geometry)))
+sites_repu_edit <- sites_repu_edit %>% mutate(geometry = st_sfc(ifelse(repunit == "upperbarbc_NA", st_geometry(sites_repu %>% filter(repunit == "upperbarbc_NA")) + c(2000,0), geometry)))
+sites_repu_edit <- sites_repu_edit %>% mutate(geometry = st_sfc(ifelse(repunit == "cottonwood_nps", st_geometry(sites_repu %>% filter(repunit == "cottonwood_nps")) + c(-1000,0), geometry)))
+sites_repu_edit <- sites_repu_edit %>% mutate(geometry = st_sfc(ifelse(repunit == "threechannel_NA", st_geometry(sites_repu %>% filter(repunit == "threechannel_NA")) + c(0,2000), geometry)))
+sites_repu_edit <- sites_repu_edit %>% mutate(geometry = st_sfc(ifelse(repunit == "fish_grosventre", st_geometry(sites_repu %>% filter(repunit == "fish_grosventre")) + c(1000,0), geometry)))
+sites_repu_edit <- sites_repu_edit %>% mutate(geometry = st_sfc(ifelse(repunit == "fish_NA", st_geometry(sites_repu %>% filter(repunit == "fish_NA")) + c(0,1000), geometry)))
+# reset CRS
+st_crs(sites_repu_edit) <- st_crs(sites_repu)
+
+# point borders colors by region
+p1 <- ggplot() + 
+  geom_sf(data = flowline, color = "grey10") + 
+  geom_sf(data = lakes, color = "grey10", fill = "grey30") + 
+  geom_sf(data = lakes2, color = "grey10", fill = "grey30") + 
+  geom_sf(data = sites_repu_edit, aes(fill = r_repunit, color = factor(region, levels = regions)), shape = 21, size = 7, stroke = 1.5) + 
+  #coord_sf(datum = st_crs(flowline)) + 
+  scale_color_manual(values = mycols) + 
+  scale_fill_gradient2(low = "red", mid = "white", high = "blue", midpoint = 0) +
+  xlim(510000,567000) + ylim(4757000,4857000) +
+  theme_bw() + 
+  theme(legend.position = "none", panel.background = element_rect(fill = "grey50"),
+        panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+# no color by region
+p2 <- ggplot() + 
+  geom_sf(data = flowline, color = "grey10") + 
+  geom_sf(data = lakes, color = "grey10", fill = "grey30") + 
+  geom_sf(data = lakes2, color = "grey10", fill = "grey30") + 
+  geom_sf(data = sites_repu_edit, aes(fill = r_repunit), shape = 21, size = 7) + 
+  #coord_sf(datum = st_crs(flowline)) + 
+  coord_sf(label_axes = list(
+      top = "E",
+      left = "N"
+    )) +
+  scale_color_manual(values = mycols) + 
+  scale_fill_gradient2(low = "red", mid = "white", high = "blue", midpoint = 0) +
+  xlim(510000,567000) + ylim(4757000,4857000) +
+  theme_bw() + 
+  theme(legend.position = "none", panel.background = element_rect(fill = "grey50"),
+        panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.border = element_rect(colour = "black", fill=NA, linewidth=1))
+```
+
+Save maps to file
+```{r}
+jpeg("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Spatial Pattern/RandomIntercepts_Map_Outlined.jpg", height = 8.5, width = 5.5, units = "in", res = 1000)
+p1 
+dev.off()
+
+jpeg("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Spatial Pattern/RandomIntercepts_Map.jpg", height = 8.5, width = 5.5, units = "in", res = 1000)
+p2
+dev.off()
+```
+
+
+## Build the LSN
+
+Specify LSN file path
+```{r}
+lsn.path <- "/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Spatial Pattern/lsn"
+```
+
+
+Convert linestring to landscape network. Ensure 0 topology errors, 1 outlet!
+```{r}
+edges <- lines_to_lsn(
+  streams = flowline,
+  lsn_path = lsn.path,
+  check_topology = TRUE,
+  snap_tolerance = 0.05,
+  topo_tolerance = 20,
+  overwrite = TRUE
+)
+```
+
+Load edges and nodes
+```{r}
+edges <- st_read(dsn = "/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Spatial Pattern/lsn/edges.gpkg", layer = "edges")
+nodes <- st_read(dsn = "/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Spatial Pattern/lsn/nodes.gpkg", layer = "nodes")
+```
+
+View outlet
+```{r}
+mapview(edges, zcol = "FID_1") + mapview(nodes %>% filter(nodecat == "Outlet"), zcol = "nodecat")
+```
+
+View confluences
+```{r}
+mapview(edges, zcol = "FID_1") + mapview(nodes %>% filter(nodecat == "Confluence"), zcol = "nodecat")
+```
+
+View confluences
+```{r}
+mapview(edges, zcol = "FID_1") + mapview(nodes %>% filter(nodecat == "Source"), zcol = "nodecat")
+```
+
+
+## Add sites to LSN
+
+```{r}
+obs <- sites_to_lsn(
+  sites = sites_repu,
+  edges = edges,
+  lsn_path = lsn.path,
+  file_name = "obs",
+  snap_tolerance = 200,
+  save_local = TRUE,
+  overwrite = TRUE
+)
+```
+
+Check snapping
+```{r}
+mapview(edges) + mapview(sites_repu, col.regions = "black") + mapview(obs, col.regions = "red")
+```
+
+
+## Upstream distance
+
+Calculate upstream distance (from outlet) for edges. Not sure if this step is necessary for Torgegram. 
+```{r}
+edges <- updist_edges(
+  edges = edges,
+  save_local = TRUE,
+  lsn_path = lsn.path,
+  calc_length = TRUE
+)
+names(edges) ## View edges column names
+```
+
+Update sites with upstream distance
+```{r}
+site.list <- updist_sites(
+  sites = list(
+    obs = obs
+  ),
+  edges = edges,
+  length_col = "Length",
+  save_local = TRUE,
+  lsn_path = lsn.path
+)
+names(site.list$obs) ## View output site.list names
+```
+
+View upstream distance for edges and sites
+```{r}
+mapview(edges, zcol = "upDist") + mapview(site.list$obs, zcol = "upDist")
+```
+
+
+## Assemble SSN
+
+Assemble SSN object, no prediction sites, no AFVs
+```{r}
+snake_ssn <- ssn_assemble(
+  edges = edges,
+  lsn_path = lsn.path,
+  obs_sites = site.list$obs,
+  #preds_list = site.list[c("pred1km", "CapeHorn")],
+  ssn_path = "/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Spatial Pattern/SnakeHeadwaters.ssn",
+  import = TRUE,
+  check = TRUE,
+  #afv_col = "afvArea",
+  overwrite = TRUE
+)
+```
+
+View object details
+```{r}
+snake_ssn
+```
+
+Check SSN class, names
+```{r}
+class(snake_ssn) ## Get class
+names(snake_ssn) ## print names of SSN object
+names(snake_ssn$obs) ## print names of observation variables
+```
+
+Plot the SSN object
+```{r}
+ggplot() +
+  geom_sf(
+    data = snake_ssn$edges,
+    color = "medium blue",
+  ) +
+  scale_linewidth(range = c(0.1, 2.5)) +
+  geom_sf(
+    data = snake_ssn$obs,
+    size = 1.7,
+    aes(color = r_repunit)
+  ) +
+  scale_color_viridis_c()
+```
+
+Supplement SSN object with hydrologic distance matrices that preserve flow directionality. 
+```{r}
+ssn_create_distmat(
+  ssn.object = snake_ssn,
+  overwrite = TRUE
+)
+```
+
+
+## Torgegram
+
+Plot a Torgegram (Zimmerman and Ver Hoef, 2017) to understand the type and degree of spatial structure in reporting unit random intercepts (i.e., mean contribution from each reporting unit after accounting for the effects of distance, catchment area, groundwater, and connectivity). Interpret Torgram visually sensu McGuire *et al.* (2014, PNAS) and Brennan *et al.* (2016, Geophysical Research Letters)
+
+Compute the Torgegram:
+```{r}
+tg <- Torgegram(
+  formula = r_repunit ~ 1,
+  ssn.object = snake_ssn,
+  type = c("flowuncon", "euclid"),
+  bins = 20
+)
+tg
+```
+
+Plot torgegram
+```{r}
+torg_tib <- bind_rows(tg$flowuncon %>% mutate(type = "Watercourse"),
+                      tg$euclid %>% mutate(type = "Euclidean")) %>%
+  mutate(distkm = dist/1000)
+torg_tib %>% ggplot(aes(x = dist/1000, y = gamma, group = type, color = type)) + 
+  geom_smooth(se = FALSE, span = 0.7) + 
+  scale_color_manual(values = c("darkorange", "dodgerblue")) +
+  geom_point(aes(fill = type, size = np), color = "black", shape = 21) +
+  scale_fill_manual(values = c("darkorange", "dodgerblue")) +
+  xlab("Distance (kms)") + ylab("Semivariance") + #ylim(0.19,0.61) +
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+```
+
+Pretty plot
+```{r}
+# convert to kms
+tg$flowuncon$distkm <- tg$flowuncon$dist/1000
+tg$euclid$distkm <- tg$euclid$dist/1000
+
+# plot
+par(mar = c(4,4,1,1), mgp = c(2.5,1,0))
+plot(gamma ~ distkm, torg_tib, type = "n", xlab = "Distance (kms)", ylab = "Semivariance", bty = "l")
+# euclidean distance
+points(gamma ~ distkm, torg_tib %>% filter(type == "Euclidean"), pch = 21, bg = "black")
+fit <- loess(gamma ~ distkm, tg$euclid[-2,], span = 0.7)
+j <- order(tg$euclid[-2,]$distkm)
+lines(tg$euclid[-2,]$distkm[j], fit$fitted[j], col="black",lwd = 2)
+arrows(x0 = 15, x1 = 15, y0 = 0, y1 = 0.355, lty = 3, lwd = 2, col = "black", length = 0)
+# watercourse distance
+points(gamma ~ distkm, torg_tib %>% filter(type == "Watercourse"), pch = 21, bg = "grey70")
+fit <- loess(gamma ~ distkm, tg$flowuncon, span = 0.7)
+j <- order(tg$flowuncon$distkm)
+lines(tg$flowuncon$distkm[j], fit$fitted[j], col="grey70",lwd = 2)
+arrows(x0 = 44, x1 = 44, y0 = 0, y1 = 0.48, lty = 3, lwd = 2, col = "grey70", length = 0)
+# legend
+legend("topright", legend = c("Euclidean", "Watercourse"), fill = c("black", "grey70"), bty = "n")
+
+```
+
+```{r}
+jpeg("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Spatial Pattern/RandomIntercepts_Torgegram.jpg", height = 3.75, width = 4, units = "in", res = 1000)
+
+# plot
+par(mar = c(3.5,3.5,0.5,0.1), mgp = c(2,0.8,0))
+plot(gamma ~ distkm, torg_tib, type = "n", xlab = "Distance (km)", ylab = "Semivariance", bty = "l")
+# euclidean distance
+fit <- loess(gamma ~ distkm, tg$euclid[-2,], span = 0.7)
+j <- order(tg$euclid[-2,]$distkm)
+lines(tg$euclid[-2,]$distkm[j], fit$fitted[j], col="black", lwd = 3)
+points(gamma ~ distkm, torg_tib %>% filter(type == "Euclidean"), pch = 21, bg = "black", col = "grey60")
+# watercourse distance
+fit <- loess(gamma ~ distkm, tg$flowuncon, span = 0.7)
+j <- order(tg$flowuncon$distkm)
+lines(tg$flowuncon$distkm[j], fit$fitted[j], col="grey60",lwd = 3)
+points(gamma ~ distkm, torg_tib %>% filter(type == "Watercourse"), pch = 21, bg = "grey70")
+# mark inflection points
+arrows(x0 = 15.5, x1 = 15.5, y0 = 0, y1 = 0.355, lty = 3, lwd = 2, col = "black", length = 0)
+arrows(x0 = 44, x1 = 44, y0 = 0, y1 = 0.48, lty = 3, lwd = 2, col = "grey60", length = 0)
+# legend
+legend("topright", legend = c("Euclidean", "Watercourse"), fill = c("black", "grey70"), bty = "n")
+dev.off()
+```
+
+
+## Basin comparison
+
+Organize data
+```{r}
+# order and colors
+regions <- c("Buffalo Fork", "Spread", "Grand Teton", "Gros Ventre", "Jackson", "Lower Snake", "Hoback", "Greys")
+region_short <- c("BF", "SP", "GT", "GV", "JK", "LS", "HB", "GR")
+mycols <- c("grey", brewer.pal(n = 7, "Set2"))
+
+coltib <- tibble(region = factor(regions, levels = regions), cols = mycols, region_short = factor(region_short, levels = region_short))
+
+# pull data
+repunittib <- tibble(sites_repu) %>%
+  mutate(region = factor(region, levels = regions)) %>%
+  left_join(coltib) %>%
+  arrange(region)
+```
+
+Variances equal? Differences among groups?
+```{r}
+bartlett.test(r_repunit ~ region, repunittib)
+oneway.test(r_repunit ~ region, repunittib, var.equal = FALSE)
+```
+
+Plot
+```{r}
+# plot
+par(mar = c(5,4,1,1), mgp = c(2.5,1,0))
+boxplot(r_repunit ~ region, repunittib, col = mycols, xlab = "", ylab = expression(paste("Reporting unit random intercept (", alpha, "'"[r], ")")), axes = FALSE)
+axis(1, at = c(1:8), labels = FALSE)
+text(seq(1, 8, by = 1), par("usr")[3] - 0.2, labels = regions, srt = 20, pos = 1, xpd = TRUE)
+axis(2)
+mtext("Region", side = 1, line = 3.5)
+stripchart(r_repunit ~ region, repunittib, method = "jitter", pch = 1, add = TRUE, vertical = TRUE)
+```
+
+```{r}
+
+jpeg("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Spatial Pattern/RandomIntercepts_Boxplot.jpg", height = 3.75, width = 4, units = "in", res = 1000)
+par(mar = c(3.5,3.5,0.5,0.1), mgp = c(2,0.8,0))
+# boxplot(r_repunit ~ region, repunittib, col = mycols, xlab = "", ylab = expression(paste("Reporting unit random intercept (", alpha, "'"[r], ")")), axes = FALSE)
+# axis(1, labels = FALSE)
+# text(seq(1, 7, by = 1)-0.3, par("usr")[3] - 0.3, labels = regions, srt = 30, pos = 1, xpd = TRUE)
+# axis(2)
+# box(bty = "l")
+# mtext("Region", side = 1, line = 4)
+# stripchart(r_repunit ~ region, repunittib, method = "jitter", pch = 16, cex = 0.7, add = TRUE, vertical = TRUE)
+
+boxplot(r_repunit ~ region_short, repunittib, col = mycols, xlab = "Region", ylab = expression(paste("Reporting unit random intercept (", alpha, "'"[r], ")")), axes = F)
+axis(1, at = c(1:8), labels = region_short)
+axis(2)
+# text(seq(1, 8, by = 1)-0.5, par("usr")[3] - 0.27, labels = regions, srt = 40, pos = 1, xpd = TRUE)
+# axis(2)
+box(bty = "l")
+#mtext("Region", side = 1, line = 4)
+stripchart(r_repunit ~ region_short, repunittib, method = "jitter", pch = 16, cex = 0.7, add = TRUE, vertical = TRUE)
+
+dev.off()
+```
+
+
+Is there a relationship between random intercept and latitude?
+```{r}
+repunittib %>% ggplot(aes(x = lat, y = r_repunit)) + geom_point() + geom_smooth(method = "lm")
+mod <- lm(r_repunit ~ lat, repunittib)
+summary(mod)
+```
+
+
+```{r}
+x <- seq(from = min(repunittib$lat), to = max(repunittib$lat), length.out = 100)
+preds <- predict(mod, newdata = list(lat = x), se.fit = TRUE, interval = "confidence", level = 0.95)
+
+# order and colors
+# coltib <- tibble(region = regions, cols = mycols, region_short = c("BF", "SP", "GT", "JK", "LS", "HB", "GR"))
+# repunittib <- repunittib %>% left_join(coltib)
+
+jpeg("/Users/jeffbaldock/Library/CloudStorage/GoogleDrive-jbaldock@uwyo.edu/Shared drives/wyo-coop-baldock/UWyoming/Snake River Cutthroat/Analyses/Snake River GSI Quarto/Spatial Pattern/RandomIntercepts_IntxLat.jpg", height = 3.75, width = 3.5, units = "in", res = 1000)
+par(mar = c(3.5,3.5,0.5,0.1), mgp = c(2,0.8,0))
+plot(r_repunit ~ lat, repunittib,type = "n", xlab = "Latitude", ylab = expression(paste("Reporting unit random intercept (", alpha, "'"[r], ")")), bty = "l", xlim = c(max(repunittib$lat), min(repunittib$lat)))
+polygon(x = c(x, rev(x)), y = c(preds$fit[,2], rev(preds$fit[,3])), border = NA, col = "grey")
+points(r_repunit ~ lat, repunittib, pch = 21, bg = repunittib$cols)
+lines(preds$fit[,1] ~ x, lwd = 3)
+dev.off()
+```
+
+
+```{r fig.width=5, fig.height=5}
+par(mar = c(3.5,3.5,0.5,0.1), mgp = c(2,0.8,0))
+plot(r_repunit ~ lat, repunittib,type = "n", xlab = "Latitude", ylab = expression(paste("Reporting unit random intercept (", alpha, "'"[r], ")")), bty = "l", xlim = c(max(repunittib$lat), min(repunittib$lat)))
+polygon(x = c(x, rev(x)), y = c(preds$fit[,2], rev(preds$fit[,3])), border = NA, col = "grey")
+points(r_repunit ~ lat, repunittib, pch = 21, bg = repunittib$cols)
+lines(preds$fit[,1] ~ x, lwd = 3)
+```
+

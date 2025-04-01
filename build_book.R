@@ -2,6 +2,8 @@ library(quarto)
 library(knitr)
 
 # Render all
+# Delete cache/files for:
+#  - SpaceTimeZOID.qmd
 quarto::quarto_render(output_format = "html")
 
 # Render 'chapt_name' chpater only

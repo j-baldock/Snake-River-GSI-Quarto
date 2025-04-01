@@ -28,10 +28,11 @@ book:
       - Landscape Covariates/Flowline Distance/FlowlineDist.qmd
       - Landscape Covariates/Groundwater/GroundwaterIndex.qmd
       - Landscape Covariates/Barriers/Barriers.qmd
-    - part: "Modeling"
+    - part: "Modeling and analysis"
       chapters:
       - Obj1 Spatiotemporal Var/SpaceTimeZOID.qmd
       - Obj2 Model Contribution/ModelContributionZOIB.qmd
+      - Spatial Pattern/SpatialPattern.qmd
       
 
 format:
